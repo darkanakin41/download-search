@@ -1,0 +1,79 @@
+# COLONNES
+active: 'Actif'
+actions: 'Actions'
+background: 'Arrière Plan'
+banner: 'Bannière'
+category: 'Catégorie'
+creator: 'Créateur'
+date: 'Date'
+disable: 'Désactivé'
+done: "Fini"
+edit : 'Modifier'
+enable: 'Activé'
+end: 'Fin'
+existing: "Existant"
+featured: "Mis en avant"
+format: 'Format'
+fullscreen: "Plein écran"
+general: "Général"
+global: "Global"
+incoming: 'A venir'
+information: 'Information'
+logo: 'Logo'
+name: 'Nom'
+nationalite: 'Nationalité'
+nc: "#N/C"
+normal: "Normal"
+no_logo: "Pas de logo"
+organisation: 'Organisation'
+particulier: "Particulier"
+passed: 'Passé'
+pending: 'En cours'
+popout: "Détacher"
+preparation: 'Préparation'
+public: 'Publique'
+refresh: "Rafraichir"
+rules: "Règles"
+settings: "Paramètres"
+shortname: 'Nom court'
+start: 'Début'
+status: 'Statut'
+title: 'Titre'
+type: 'Type'
+updated: 'Mis à jour'
+version: 'Version'
+visual: 'Visuel'
+website: 'Site Web'
+
+# ROLES
+ROLE_USER: "Utilisateur Standard"
+ROLE_ADMIN: "Administrateur"
+
+# ACTIONS
+action:
+  add: "Ajouter"
+  back_to_list: "Retour à la liste"
+  create: "Créer"
+  delete:
+    confirm: "Oui j'en suis sûre !"
+    cancel: "Heu ... en fait non ..."
+  display: "Afficher"
+  display_all: "Tout Afficher"
+  edit: "Editer"
+  hide: "Cacher"
+  hide_all: "Tout Cacher"
+  match_update : "Mise à jour du match"
+  remove: "Supprimer"
+  replace: "Remplacer"
+  reset_columns: "Réinitialiser les colonnes"
+  reset_filter: "Retirer les filtres"
+  search: "Rechercher"
+  update: "Mettre à jour"
+  view: "Voir"
+
+
+# CALLOUTS
+callout:
+  no_result:
+    titre: "Oops ! On a rien trouvé !"
+    body: "Nous n'avons rien trouvé qui corresponde à vos critères de recherche ...<br/>Peut-être que vous avez fait une erreure dans votre sélection ?<br/>Ou alors, notre équipe doit être en train de rajouter les éléments concernées..."

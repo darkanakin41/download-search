@@ -1,0 +1,3 @@
+plejeune_userbundle:
+  resource: "@PLejeuneUserBundle/Controller"
+  type: annotation

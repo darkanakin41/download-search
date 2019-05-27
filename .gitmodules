@@ -1,3 +1,6 @@
 [submodule ".docker"]
 	path = .docker
 	url = https://gitlab.com/pierrelejeune/docker-symfony.git
+[submodule "assets/libs/theming"]
+	path = assets/libs/theming
+	url = https://gitlab.com/pierrelejeune/design-template
