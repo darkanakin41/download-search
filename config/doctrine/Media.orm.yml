@@ -1,0 +1,38 @@
+App\Entity\Media:
+    type: entity
+    table: media
+    repositoryClass: App\Repository\MediaRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 255
+            nullable: false
+        description:
+            type: text
+            nullable: true
+        category:
+            type: string
+            length: 50
+            nullable: true
+        poster:
+            type: string
+            length: 255
+            nullable: true
+        backdrop:
+            type: string
+            length: 255
+            nullable: true
+        updated:
+            type: datetime
+            nullable: true
+        theMovieDbId:
+            type: integer
+            nullable: true
+
+    lifecycleCallbacks: {  }

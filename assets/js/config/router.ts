@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter, {RouteConfig} from "vue-router";
 
+import itemRoutes from "../page/Item/router";
+
 Vue.use(VueRouter);
 
 const baseRoutes: Array<RouteConfig> = [
@@ -15,20 +17,9 @@ const baseRoutes: Array<RouteConfig> = [
             return import(/* webpackChunkName: 'home' */ "../page/HomePage.vue")
         }
     },
-    {
-        name: 'search',
-        meta: {
-            title: 'Recherche',
-            pageTitle: true,
-        },
-        path: '/search',
-        component: () => {
-            return import(/* webpackChunkName: 'item' */ "../page/SearchPage.vue")
-        }
-    },
 ];
 
-const routes: Array<RouteConfig> = baseRoutes.concat([]);
+const routes: Array<RouteConfig> = baseRoutes.concat(itemRoutes);
 
 export const router = new VueRouter({
     mode: 'hash',

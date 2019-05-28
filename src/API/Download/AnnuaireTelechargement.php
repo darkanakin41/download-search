@@ -1,12 +1,13 @@
 <?php
 
 
-namespace App\API;
+namespace App\API\Download;
 
 
 use App\DTO\AnnuaireTelechargement\SearchItemDTO;
 use App\Entity\Item;
 use App\Entity\Source;
+use App\Nomenclature\CategoryNomenclature;
 use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
@@ -130,5 +131,46 @@ class AnnuaireTelechargement implements AbstractAPI
         }
 
         return $this->source;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update(Item $item)
+    {
+        $client = $this->getClient();
+        $response = $client->get($item->getUrl());
+
+        return $this->parsePage($item, $response->getBody()->getContents());
+    }
+
+    /**
+     * Parse the content of the html page to extract informations
+     *
+     * @param Item   $item
+     * @param string $html
+     */
+    private function parsePage(Item $item, $html)
+    {
+        $domDocument = new DOMDocument();
+        $internalErrors = libxml_use_internal_errors(true);
+        $domDocument->loadHTML($html);
+        libxml_use_internal_errors($internalErrors);
+
+        $domXPath = new DOMXPath($domDocument);
+
+        /** @var DOMNodeList $nodes */
+        $nodes = $domXPath->query('//span[@class="link_cat"]');
+
+        for ($i = 0; $i < $nodes->length; $i++) {
+            $node = $nodes->item($i);
+            if (stripos($node->nodeValue, "animes") !== false) {
+                $item->setCategory(CategoryNomenclature::ANIME);
+            } elseif (stripos($node->nodeValue, "séries") !== false) {
+                $item->setCategory(CategoryNomenclature::TV);
+            } elseif (stripos($node->nodeValue, "films") !== false) {
+                $item->setCategory(CategoryNomenclature::MOVIE);
+            }
+        }
     }
 }

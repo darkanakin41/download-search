@@ -2,7 +2,6 @@
 
 namespace App\DTO\AnnuaireTelechargement;
 
-use App\API\AnnuaireTelechargement;
 use App\DTO\HTMLDTO;
 use App\Entity\Item;
 use DOMNode;

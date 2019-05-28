@@ -16,20 +16,20 @@
 
 <script lang="ts">
     import {Component, Vue, Watch} from "vue-property-decorator";
-    import FlexTable from "../components/Table/FlexTable.vue";
-    import Loading from "../components/Block/Loading.vue";
+    import FlexTable from "../../components/Table/FlexTable.vue";
+    import Loading from "../../components/Block/Loading.vue";
 
-    import tableConfig from "../config/table/search";
-    import ItemAPI from "../app/API/ItemAPI";
-    import Item from "../app/Entity/Item";
-    import TabbedFilter from "../components/Block/TabbedFilter.vue";
-    import Source from "../app/Entity/Source";
-    import SourceAPI from "../app/API/SourceAPI";
+    import tableConfig from "../../config/table/search";
+    import ItemAPI from "../../app/API/ItemAPI";
+    import Item from "../../app/Entity/Item";
+    import TabbedFilter from "../../components/Block/TabbedFilter.vue";
+    import Source from "../../app/Entity/Source";
+    import SourceAPI from "../../app/API/SourceAPI";
 
     @Component({
         components: {TabbedFilter, Loading, FlexTable}
     })
-    export default class HomePage extends Vue {
+    export default class SearchPage extends Vue {
         search = "";
         loading = false;
         itemsInput: Array<Item> = [];
@@ -52,7 +52,10 @@
 
         mounted(){
             SourceAPI.getAll((response) => {
-                this.filterValues = SourceAPI.convert(response.data);
+                this.filterValues = [];
+                response.data.forEach((item)=>{
+                    this.filterValues.push(SourceAPI.convert(item));
+                });
                 this.loading = false;
             });
         }
@@ -64,7 +67,10 @@
 
             this.loading = true;
             ItemAPI.search(this.search, (response) => {
-                this.itemsInput = ItemAPI.convert(response.data);
+                this.itemsInput = [];
+                response.data.forEach((item)=>{
+                    this.itemsInput.push(ItemAPI.convert(item));
+                });
                 this.onFilterChange();
                 this.loading = false;
             });
@@ -73,7 +79,6 @@
 
         @Watch('filter')
         onFilterChange() {
-            console.log("onFilterChange");
             this.loading = true;
             this.itemsDisplayed = this.itemsInput.filter(item => {
                 if (this.filter === null) {
@@ -87,8 +92,8 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "../../libs/theming/mixins";
-    @import "../../scss/common/config";
+    @import "../../../libs/theming/mixins";
+    @import "../../../scss/common/config";
 
     .search-form {
         position: relative;

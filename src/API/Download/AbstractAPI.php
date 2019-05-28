@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\API;
+namespace App\API\Download;
 
 
 use App\Entity\Item;
@@ -12,11 +12,20 @@ interface AbstractAPI
     /**
      * Search the $q parameter on the website
      *
-     * @param $q
+     * @param string $q
      *
      * @return Item[]
      */
     public function search($q);
+
+    /**
+     * Search the $q parameter on the website
+     *
+     * @param Item $item
+     *
+     * @return Item[]
+     */
+    public function update(Item $item);
 
     /**
      * Get the base url of the API

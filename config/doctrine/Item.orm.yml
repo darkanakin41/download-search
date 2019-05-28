@@ -13,6 +13,10 @@ App\Entity\Item:
             type: string
             length: 255
             nullable: false
+        category:
+            type: string
+            length: 50
+            nullable: true
         quality:
             type: string
             length: 50
@@ -33,6 +37,11 @@ App\Entity\Item:
             targetEntity: App\Entity\Source
             join Column:
                 name: source_id
+                referencedColumnName: id
+        media:
+            targetEntity: App\Entity\Media
+            join Column:
+                name: media_id
                 referencedColumnName: id
 
     lifecycleCallbacks: {  }

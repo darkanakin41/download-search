@@ -2,14 +2,10 @@
 
 namespace App\Controller\API;
 
-use App\API\GlobalAPI;
-use App\Entity\Item;
 use App\Entity\Source;
 use App\Helper\SerializeObject;
-use App\Service\ItemService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -29,7 +25,7 @@ class SourceController extends AbstractController
         $data = $this->get('doctrine')->getRepository(Source::class)->findAll();
 
         $retour = [];
-        foreach($data as $item){
+        foreach ($data as $item) {
             $retour[] = SerializeObject::serialize($item);
         }
 

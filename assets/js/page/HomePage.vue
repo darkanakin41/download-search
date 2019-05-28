@@ -38,7 +38,10 @@
 
         mounted() {
             SourceAPI.getAll((response) => {
-                this.sources = SourceAPI.convert(response.data);
+                this.sources = []
+                response.data.forEach((item) => {
+                    this.sources.push(SourceAPI.convert(item));
+                });
             })
         }
     }

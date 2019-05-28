@@ -6,7 +6,6 @@ use App\API\Download\GlobalAPI;
 use App\Entity\Item;
 use App\Helper\SerializeObject;
 use App\Service\ItemService;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class SearchController
  * @package App\Controller\API
- * @Route("/api/item")
+ * @Route("/api/media")
  */
-class ItemController extends AbstractController
+class MediaController extends AbstractController
 {
     /**
-     * @Route("/search", name="api_item_search", methods={"SEARCH"})
+     * @Route("/retrieve", name="api_media_retrieve", methods={"SEARCH"})
      *
      * @param Request     $request
      * @param GlobalAPI   $globalAPI
@@ -28,7 +27,7 @@ class ItemController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function search(Request $request, GlobalAPI $globalAPI, ItemService $itemService)
+    public function retrieve(Request $request, GlobalAPI $globalAPI, ItemService $itemService)
     {
         $query = json_decode($request->getContent(), true);
 
@@ -48,32 +47,5 @@ class ItemController extends AbstractController
         }
 
         return new JsonResponse($retour);
-    }
-
-    /**
-     * @Route("/retrieve", name="api_item_retrieve", methods={"POST"})
-     *
-     * @param Request     $request
-     * @param GlobalAPI   $globalAPI
-     *
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function retrieve(Request $request, GlobalAPI $globalAPI)
-    {
-        $query = json_decode($request->getContent(), true);
-
-        /** @var Item $item */
-        $item = $this->get('doctrine')->getRepository(Item::class)->find($query['id']);
-        if($item === null){
-            throw $this->createNotFoundException(sprintf("Item %s not found", $query['id']));
-        }
-
-        if($item->getCategory() === null){
-            $globalAPI->update($item);
-            $this->get('doctrine')->getManager()->persist($item);
-            $this->get('doctrine')->getManager()->flush();
-        }
-        return new JsonResponse(SerializeObject::serialize($item));
     }
 }

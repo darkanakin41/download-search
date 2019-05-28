@@ -186,6 +186,7 @@
                 margin-left: 0;
 
                 li {
+                    padding-right: 0;
                     a {
                         padding-left: 1.2rem;
                     }

@@ -1,12 +1,13 @@
 <?php
 
 
-namespace App\API;
+namespace App\API\Download;
 
 
 use App\DTO\ExtremeDownload\SearchItemDTO;
 use App\Entity\Item;
 use App\Entity\Source;
+use App\Nomenclature\CategoryNomenclature;
 use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
@@ -29,14 +30,6 @@ class ExtremeDownload implements AbstractAPI
     {
         $this->parameterBag = $parameterBag;
         $this->registry = $registry;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBaseURL()
-    {
-        return $this->parameterBag->get('api.extreme_download.base_url');
     }
 
     /**
@@ -77,6 +70,16 @@ class ExtremeDownload implements AbstractAPI
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getBaseURL()
+    {
+        return $this->parameterBag->get('api.extreme_download.base_url');
+    }
+
+    /**
+     * Parse the content of the results page
+     *
      * @param string $html
      *
      * @return Item[]
@@ -116,9 +119,9 @@ class ExtremeDownload implements AbstractAPI
      */
     public function getSource()
     {
-        if($this->source === null){
+        if ($this->source === null) {
             $source = $this->registry->getRepository(Source::class)->findOneBy(['title' => self::SOURCE_NAME]);
-            if($source === null){
+            if ($source === null) {
                 $source = new Source();
                 $source->setTitle(self::SOURCE_NAME);
             }
@@ -129,5 +132,46 @@ class ExtremeDownload implements AbstractAPI
         }
 
         return $this->source;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update(Item $item)
+    {
+        $client = $this->getClient();
+        $response = $client->get($item->getUrl());
+
+        return $this->parsePage($item, $response->getBody()->getContents());
+    }
+
+    /**
+     * Parse the content of the html page to extract informations
+     *
+     * @param Item   $item
+     * @param string $html
+     */
+    private function parsePage(Item $item, $html)
+    {
+        $domDocument = new DOMDocument();
+        $internalErrors = libxml_use_internal_errors(true);
+        $domDocument->loadHTML($html);
+        libxml_use_internal_errors($internalErrors);
+
+        $domXPath = new DOMXPath($domDocument);
+
+        /** @var DOMNodeList $nodes */
+        $nodes = $domXPath->query('//span[@id="dle-speedbar"]/span');
+
+        for ($i = 0; $i < $nodes->length; $i++) {
+            $node = $nodes->item($i);
+            if (stripos($node->nodeValue, "manga") !== false) {
+                $item->setCategory(CategoryNomenclature::ANIME);
+            } elseif (stripos($node->nodeValue, "series") !== false) {
+                $item->setCategory(CategoryNomenclature::TV);
+            } elseif (stripos($node->nodeValue, "films") !== false) {
+                $item->setCategory(CategoryNomenclature::MOVIE);
+            }
+        }
     }
 }

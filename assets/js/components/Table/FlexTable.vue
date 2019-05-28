@@ -45,19 +45,21 @@
                 return "";
             }
 
+            let fieldConfig = this.config.fields[fieldname];
+
             // Processing Object type
-            if(this.config.fields[fieldname].type === 'object'){
-                return this.getValue(item[fieldname], this.config.fields[fieldname].field);
+            if(fieldConfig.type === 'object'){
+                return this.getValue(item[fieldname], fieldConfig.field);
             }
 
             // Processing Image type
-            if(this.config.fields[fieldname].type === 'image'){
+            if(fieldConfig.type === 'image'){
                 return '<img src="' + item[fieldname] + '" alt="' + fieldname + '" />';
             }
 
             // Processing Array type
-            if(this.config.fields[fieldname].type === 'array'){
-                let join = this.config.fields[fieldname].join;
+            if(fieldConfig.type === 'array'){
+                let join = fieldConfig.join;
                 if(join === undefined){
                     join = ', ';
                 }
@@ -65,21 +67,50 @@
             }
 
             // Processing URL type
-            if(this.config.fields[fieldname].type === 'url'){
-                let label = [];
-                if(this.config.fields[fieldname].icon !== undefined){
-                    label.push('<i class="' + this.config.fields[fieldname].icon + '"></i>');
-                }
-                if(this.config.fields[fieldname].text !== undefined){
-                    label.push(this.config.fields[fieldname].text);
-                }
-                if(label.length === 0){
-                    label.push(fieldname);
-                }
-                return '<a href="' + item[fieldname] + '" target="_blank">' + label.join(' ') + '</a>';
+            if(fieldConfig.type === 'url'){
+                return this.getValueLink(fieldname, item[fieldname], "_blank");
             }
+
+            // Processing Route type
+            if(fieldConfig.type === 'route'){
+
+                let routeParams = {};
+                if(fieldConfig.routeParams !== undefined){
+                    Object.keys(fieldConfig.routeParams).forEach((key) => {
+                        let value = fieldConfig.routeParams[key];
+                        routeParams[key] = item[value];
+                    });
+                }
+                let url = this.$router.resolve({name: fieldConfig.route, params: routeParams});
+                return this.getValueLink(fieldname, url.href);
+            }
+
             // Default value
             return item[fieldname];
+        }
+
+        /**
+         * Create a link
+         *
+         * @param fieldname
+         * @param url
+         * @param target
+         *
+         * @return String
+         */
+        private getValueLink(fieldname:String, url:String, target:String = ""){
+            let label = [];
+            let fieldConfig = this.config.fields[fieldname];
+            if(fieldConfig.icon !== undefined){
+                label.push('<i class="' + fieldConfig.icon + '"></i>');
+            }
+            if(fieldConfig.text !== undefined){
+                label.push(fieldConfig.text);
+            }
+            if(label.length === 0){
+                label.push(fieldname);
+            }
+            return '<a href="' + url + '" target="' + target + '">' + label.join(' ') + '</a>';
         }
 
         @Watch('itemsInput')

@@ -18,6 +18,10 @@ class Item
     private $lastPart;
     /** @var string */
     private $url;
+    /** @var string */
+    private $category;
+    /** @var Media */
+    private $media;
 
     /** @var string */
     private $fullUrl;
@@ -121,5 +125,29 @@ class Item
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?string $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getMedia(): ?Media
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?Media $media): self
+    {
+        $this->media = $media;
+
+        return $this;
     }
 }

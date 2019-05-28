@@ -5,7 +5,6 @@ export default class SourceAPI{
 
     /**
      * Search on the server
-     * @param q
      * @param callback the code to be executed on success
      */
     static getAll(callback:any){
@@ -20,15 +19,9 @@ export default class SourceAPI{
      *
      * @param data
      *
-     * @return Source[]
+     * @return Source
      */
     static convert(data:Array<any>){
-        let retour:Array<Source> = [];
-
-        data.forEach((item) => {
-            retour.push(new Source(item));
-        });
-
-        return retour;
+        return new Source(data);
     }
 }

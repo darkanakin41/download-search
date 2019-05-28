@@ -2,7 +2,6 @@
 
 namespace App\DTO\ExtremeDownload;
 
-use App\API\ExtremeDownload;
 use App\DTO\HTMLDTO;
 use App\Entity\Item;
 use DOMNode;

@@ -6,11 +6,13 @@ The main functionnality is the aggregation of multiple download sites into one w
 
 ## Functionality
 * Search on different Download sites (Extreme Download and Annuaire Telechargement) and provide the original link
+* Link the information with [themoviedb](https://www.themoviedb.org/?language=fr)
+
+## WIP 
+* Create a detail page for a specific link
 
 ## TODO
 * Create an advanced research form
-* Create a detail page for a specific link
-* Link the information with [themoviedb](https://www.themoviedb.org/?language=fr) and [tvdb](https://www.thetvdb.com/)
 * Create a user section
 
 For connected users : 

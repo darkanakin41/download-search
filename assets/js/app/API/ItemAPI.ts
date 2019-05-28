@@ -17,21 +17,29 @@ export default class ItemAPI{
             }
         }).then(callback);
     }
+    /**
+     * Search on the server
+     * @param id
+     * @param callback the code to be executed on success
+     */
+    static retrieve(id:number, callback:any){
+        axios({
+            method: 'POST',
+            url: '/api/item/retrieve',
+            data: {
+                id: id,
+            }
+        }).then(callback);
+    }
 
     /**
      * Process input array and return the list of objects
      *
      * @param data
      *
-     * @return Item[]
+     * @return Item
      */
-    static convert(data:Array<any>){
-        let retour:Array<Item> = [];
-
-        data.forEach((item) => {
-            retour.push(new Item(item));
-        });
-
-        return retour;
+    static convert(data:Object){
+        return new Item(data);
     }
 }

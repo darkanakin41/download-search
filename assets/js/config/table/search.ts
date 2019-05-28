@@ -22,10 +22,14 @@ export default {
             type: "object",
             field: 'title'
         },
-        fullUrl: {
-            label : "Voir",
-            type: "url",
-            icon: 'fa fa-eye'
-        },
+        view:{
+            label: "Detail",
+            type: "route",
+            route: "view",
+            icon: 'fa fa-eye',
+            routeParams: {
+                id : 'id'
+            }
+        }
     }
 }
