@@ -1,0 +1,20 @@
+App\Entity\Source:
+    type: entity
+    table: source
+    repositoryClass: App\Repository\SourceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 50
+            nullable: false
+        baseUrl:
+            type: string
+            length: 255
+            nullable: false
+    lifecycleCallbacks: {  }

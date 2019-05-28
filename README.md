@@ -1,19 +1,19 @@
-# SF4 Template
+# DownloadSearch
 
-SF4 Template est mon modèle de projet SF4
+DownloadSearch is a sandbox for me to play with [Symfony 4](https://symfony.com/), [Guzzle](http://docs.guzzlephp.org/en/stable/), [Vue JS](https://vuejs.org/), [Webpack Encore](https://symfony.com/doc/current/frontend.html) and many more other stuff that i want.
 
-## Contenu du template
-Elle contient les éléments suivants 
-* [Symfony 4](https://symfony.com/)
-* [Foundation 6.5](https://foundation.zurb.com/)
-* [Quelques bundles](./doc/bundles.md)
+The main functionnality is the aggregation of multiple download sites into one with a common search form.
 
-## Bundles de la communauté 
-* [knplabs/knp-menu-bundle](https://github.com/KnpLabs/KnpMenuBundle)
-* [knplabs/knp-paginator-bundle](https://github.com/KnpLabs/KnpPaginatorBundle)
+## Functionality
+* Search on different Download sites (Extreme Download and Annuaire Telechargement) and provide the original link
 
-## Bundles personnels
-* [plejeune/core-bundle](https://gitlab.com/pierrelejeune/corebundle)
-* [plejeune/media-bundle](https://gitlab.com/pierrelejeune/mediabundle)
-* [plejeune/table-bundle](https://gitlab.com/pierrelejeune/tablebundle)
-* [plejeune/user-bundle](https://gitlab.com/pierrelejeune/userbundle)
+## TODO
+* Create an advanced research form
+* Create a detail page for a specific link
+* Link the information with [themoviedb](https://www.themoviedb.org/?language=fr) and [tvdb](https://www.thetvdb.com/)
+* Create a user section
+
+For connected users : 
+* Subscribe to a serie and be notified when a new episode is out
+* Display list of subscribed series
+* Add a checkbox which save if the episode/movie have been downloaded

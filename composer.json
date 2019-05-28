@@ -12,6 +12,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "beberlei/DoctrineExtensions": "^1.1",
+        "guzzlehttp/guzzle": "~6.0",
         "knplabs/knp-menu-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "dev-master",
         "phpoffice/phpword": "^0.16.0",
@@ -36,7 +37,9 @@
         "symfony/validator": "^4.2",
         "symfony/web-link": "^4.2",
         "symfony/webpack-encore-bundle": "^1.1",
-        "symfony/yaml": "^4.2"
+        "symfony/yaml": "^4.2",
+        "ext-dom": "*",
+        "ext-libxml": "*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",

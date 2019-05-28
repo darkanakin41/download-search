@@ -1,0 +1,33 @@
+.select2-selection{
+    &.select2-selection--single,
+    &.select2-selection--multiple {
+        border-radius: 0;
+        padding: 4px;
+        height: auto;
+        min-height: 35px;
+    }
+    &.select2-selection--multiple {
+        padding: 0;
+    }
+    .select2-search {
+        width: auto;
+        input {
+            height: auto !important;
+            padding: 4px 20px 4px 5px;
+            margin: 0;
+            box-shadow: none !important;
+        }
+    }
+}
+.select2-container {
+    width: 100% !important;
+    .select2-selection__arrow {
+        top: 4px !important;
+    }
+    .select2-dropdown {
+        border-radius: 0;
+        input {
+            margin: 0;
+        }
+    }
+}

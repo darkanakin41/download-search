@@ -1,0 +1,49 @@
+#drawer {
+    $drawer-width: 300px;
+    width: $drawer-width;
+    transform: translateX(-$drawer-width);
+    background: #161616;
+    color: white;
+
+    .menu {
+        li {
+            a {
+                color: inherit;
+                font-size: 1.1rem;
+                padding: 1.2rem 1rem;
+                @include transition(all .5s ease);
+
+                .link-icon {
+                    width: 30px;
+                    @include opacity(.5);
+                    text-align: center;
+                }
+
+                .link-label {
+                    @include opacity(.7);
+                    padding-left: 15px;
+                }
+
+                &:hover {
+                    background: transparentize(white, .95);
+                }
+
+                &.active {
+                    background: transparentize(white, .9);
+
+                    .link-icon {
+                        @include opacity(1);
+                    }
+                }
+            }
+
+            &.drawer-toggle {
+                margin-bottom: 200px;
+            }
+        }
+    }
+
+    &.is-open{
+        @include transform(translate(0,0));
+    }
+}

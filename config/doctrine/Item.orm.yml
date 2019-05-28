@@ -1,0 +1,38 @@
+App\Entity\Item:
+    type: entity
+    table: item
+    repositoryClass: App\Repository\ItemRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 255
+            nullable: false
+        quality:
+            type: string
+            length: 50
+            nullable: true
+        genres:
+            type: array
+            nullable: false
+        lastPart:
+            type: string
+            length: 50
+            nullable: true
+        url:
+            type: string
+            length: 255
+            nullable: true
+    manyToOne:
+        source:
+            targetEntity: App\Entity\Source
+            join Column:
+                name: source_id
+                referencedColumnName: id
+
+    lifecycleCallbacks: {  }

@@ -77,3 +77,5 @@ callout:
   no_result:
     titre: "Oops ! On a rien trouvé !"
     body: "Nous n'avons rien trouvé qui corresponde à vos critères de recherche ...<br/>Peut-être que vous avez fait une erreure dans votre sélection ?<br/>Ou alors, notre équipe doit être en train de rajouter les éléments concernées..."
+
+sitename: "Download Search"

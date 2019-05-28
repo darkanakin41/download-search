@@ -7,8 +7,11 @@ EXEC_SQL        = $(DOCKER_COMPOSE) exec -T database
 SYMFONY         = $(EXEC_PHP) php bin/console
 COMPOSER        = $(EXEC_PHP) composer
 MYSQL        	= $(EXEC_SQL) mysql
+MYSQLDUMP		= $(EXEC_SQL) mysqldump
 YARN 			= $(EXEC_JS) yarn
 
+
+DB_NAME 		= "downloadsearch"
 ##
 ## Project
 ## -------
@@ -39,6 +42,7 @@ start: ## Start the project
 	$(DOCKER_COMPOSE) up -d --remove-orphans
 
 stop: ## Stop the project
+stop: db-backup
 	$(DOCKER_COMPOSE) stop
 
 clean: ## Stop the project and remove generated files
@@ -62,10 +66,16 @@ db-install: .env vendor
 	@$(EXEC_PHP) php -r 'echo "Wait database...\n"; set_time_limit(15); require __DIR__."/vendor/autoload.php"; (new \Symfony\Component\Dotenv\Dotenv())->load(__DIR__."/.env"); $$u = parse_url(getenv("DATABASE_URL")); for(;;) { if(@fsockopen($$u["host"].":".($$u["port"] ?? 3306))) { break; }}'
 	-$(SYMFONY) doctrine:database:drop --if-exists --force
 	-$(SYMFONY) doctrine:database:create --if-not-exists
-	if [ -f dump/dump.sql ]; then $(MYSQL) -u root esports_results < dump/dump.sql; fi
+	if [ -f dump/dump.sql ]; then $(MYSQL) -u root $(DB_NAME) < dump/dump.sql; fi
 	$(SYMFONY) doctrine:schema:update --force
 #	$(SYMFONY) doctrine:migrations:migrate --no-interaction --allow-no-migration
 #	$(SYMFONY) doctrine:fixtures:load --no-interaction --purge-with-truncate
+
+db-backup: ## Dump the content of the database
+db-backup: 
+	@$(EXEC_PHP) php -r 'echo "Wait database...\n"; set_time_limit(15); require __DIR__."/vendor/autoload.php"; (new \Symfony\Component\Dotenv\Dotenv())->load(__DIR__."/.env"); $$u = parse_url(getenv("DATABASE_URL")); for(;;) { if(@fsockopen($$u["host"].":".($$u["port"] ?? 3306))) { break; }}'
+	$(MYSQLDUMP) -u root $(DB_NAME) > dump/dump.sql
+	mv dump/dump.sql dump/dump-`date +'%Y%m%d_%H%M%S'`.sql
 
 migration: ## Generate a new doctrine migration
 migration: vendor
@@ -75,7 +85,7 @@ db-validate-schema: ## Validate the doctrine ORM mapping
 db-validate-schema: .env vendor
 	$(SYMFONY) doctrine:schema:validate
 
-.PHONY: db migration
+.PHONY: db migration db-backup
 
 ##
 ## Javascript

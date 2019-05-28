@@ -1,34 +1,37 @@
 var Encore = require('@symfony/webpack-encore');
 
-Encore
 // the project directory where compiled assets will be stored
-    .setOutputPath('public/build/')
-    // the public path used by the web server to access the previous directory
-    .setPublicPath('/build')
-    .enableSourceMaps(!Encore.isProduction())
-    // uncomment to create hashed filenames (e.g. app.abc123.css)
-    .enableVersioning(Encore.isProduction())
+Encore.setOutputPath('public/build/');
 
-    // clean the output folder before build
-    .cleanupOutputBeforeBuild()
+// the public path used by the web server to access the previous directory
+Encore.setPublicPath('/build');
+Encore.enableSourceMaps(!Encore.isProduction());
 
-    // Common assets
-    .addEntry('app', './assets/js/app.js')
+// uncomment to create hashed filenames (e.g. app.abc123.css)
+Encore.enableVersioning(Encore.isProduction());
 
-    // Function specific assets
-    .addEntry('calendar', './assets/js/calendar.js')
+// clean the output folder before build
+Encore.cleanupOutputBeforeBuild();
 
-    // Split huge files
-    .enableSingleRuntimeChunk()
+// Common assets
+Encore.addEntry('app', './assets/js/app.ts');
 
-    // uncomment if you use Sass/SCSS files
-    .enableSassLoader()
+// Split huge files
+Encore.splitEntryChunks();
+Encore.disableSingleRuntimeChunk();
 
-    .autoProvideVariables({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery'
-    })
+Encore.enableSassLoader();
+Encore.enableVueLoader();
+Encore.enableTypeScriptLoader((options) => {
+    options.appendTsSuffixTo = [/\.vue$/]
+});
+Encore.enableForkedTypeScriptTypesChecking();
+
+Encore.autoProvideVariables({
+    $: 'jquery',
+    jQuery: 'jquery',
+    'window.jQuery': 'jquery'
+});
 
 // uncomment for legacy applications that require $/jQuery as a global variable
 // .autoProvidejQuery()
@@ -40,4 +43,4 @@ config.watchOptions = {
     poll: true,
 };
 
-module.exports = Encore.getWebpackConfig();
+module.exports = config;

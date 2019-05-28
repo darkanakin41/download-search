@@ -1,0 +1,15 @@
+@import "./common/config";
+@import "../libs/theming/mixins";
+
+body {
+    background: #f5f5f7;
+    color: #333333;
+}
+
+#content{
+    overflow : auto;
+}
+
+@import "./partial/content";
+@import "./partial/drawer";
+@import "./partial/footer";
