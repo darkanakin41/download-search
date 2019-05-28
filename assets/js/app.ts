@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import 'foundation-sites/dist/css/foundation.min.css';
 import 'foundation-sites/dist/js/foundation.min';
 
@@ -17,26 +18,15 @@ import {router} from "./config/router";
 
 const app = new Vue({
     el: '#app',
-    props: ['loading','pagename'],
+    props: ['loading','title'],
     components: {App},
-    template: '<App :pageName="pagename" :loading="loading"></App>',
+    template: '<App :title="title" :loading="loading"></App>',
     router,
 });
 
-let title = document.getElementsByTagName("title")[0].innerHTML;
+app.title = document.getElementsByTagName("title")[0].innerHTML;
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.title) {
-        document.title = to.meta.title + " | " + title;
-        if (to.meta.pageTitle === true) {
-            app.pagename = to.meta.title;
-        }else{
-            app.pagename = null;
-        }
-    } else {
-        document.title = title;
-        app.pagename = null;
-    }
     app.loading = true;
     window.scroll(0, 0);
     next();
@@ -44,4 +34,5 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     app.loading = false;
+    $("#drawer").find('a[data-close]').trigger('click');
 });

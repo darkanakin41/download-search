@@ -45,7 +45,7 @@ class ItemService
         $manager->flush();
     }
 
-    private function clean(Item $item){
-        $item->getUrl(str_ireplace("//","/", $item->getUrl()));
+    private function clean(Item &$item){
+        $item->setUrl(str_ireplace("//","/", $item->getUrl()));
     }
 }

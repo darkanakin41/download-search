@@ -82,22 +82,26 @@
                     border-bottom: 3px solid transparent;
                     display: block;
                     padding: 1rem 1.8rem;
-                    color: transparentize(white, .77);
-                    font-family: Roboto, sans-serif;
+                    color: $mainColor;
+                    font-family: 'Roboto Condensed', sans-serif;
                     text-transform: uppercase;
+                    font-weight: bold;
+                    @include opacity(.7);
+                    @include transition(all .35s linear);
 
                     &:hover {
-                        color: transparentize(white, .33);
+                        @include opacity(1);
+                        @include transition(all .15s linear);
                     }
                 }
 
                 &.active {
                     background: transparent;
-
                     a {
+                        @include opacity(1);
                         background: transparent;
-                        color: white;
-                        border-color: white;
+                        color: $mainColor;
+                        border-color: $mainColor;
                     }
                 }
             }

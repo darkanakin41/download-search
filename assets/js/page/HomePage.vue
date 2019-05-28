@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="text-center">
-            <router-link :to="{name: 'search'}" exact class="button custom">
+            <router-link :to="{name: 'search'}" exact class="button custom big">
                 <i class="fa fa-search"></i> Accéder à la recherche
             </router-link>
         </div>

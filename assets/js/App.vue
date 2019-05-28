@@ -24,7 +24,7 @@
 <script lang="ts">
     import $ from 'jquery';
 
-    import {Component, Prop, Vue} from "vue-property-decorator";
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import Loading from "./components/Block/Loading.vue";
     import LeftMenu from "./components/Block/LeftMenu";
     import TopBar from "./components/Block/TopBar";
@@ -36,11 +36,28 @@
     })
     export default class App extends Vue {
         @Prop({type: Boolean, default: false}) loading;
-        @Prop({type: String, default: ""}) pageName;
+        @Prop({type: String, default: ""}) title;
         leftMenuItems = leftmenuItems;
+        pageName = "";
 
-        mounted(){
+        mounted() {
             $(document).foundation();
+        }
+
+        @Watch('$route')
+        onRouteChange() {
+            let currentRoute = this.$route;
+            if (currentRoute.meta.title) {
+                document.title = currentRoute.meta.title + " | " + this.title;
+                if (currentRoute.meta.pageTitle === true) {
+                    this.pageName = currentRoute.meta.title;
+                } else {
+                    this.pageName = "";
+                }
+            } else {
+                document.title = this.title;
+                this.pageName = "";
+            }
         }
     }
 </script>
@@ -48,12 +65,16 @@
 <style lang="scss" scoped>
     @import "../libs/theming/mixins";
     @import "../scss/common/config";
-    footer{
-        a{
-            color : inherit;
+
+    footer {
+        margin-top: 15px;
+
+        a {
+            color: inherit;
             @include opacity(.8);
             @include transition(all .35s linear);
-            &:hover{
+
+            &:hover {
                 @include opacity(1);
                 @include transition(all .15s linear);
             }

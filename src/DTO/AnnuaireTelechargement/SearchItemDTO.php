@@ -47,7 +47,7 @@ class SearchItemDTO extends HTMLDTO
             return null;
         }
 
-        return trim($node->nodeValue);
+        return 	utf8_decode(trim($node->nodeValue));
     }
 
     /**
