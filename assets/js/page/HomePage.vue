@@ -1,87 +1,45 @@
 <template>
-    <div class="grid-container">
-        <form v-on:submit.prevent="onSubmitMethod">
-            <div class="search-form">
-                <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
+    <div>
+        <div class="callout success">
+            <div class="grid-container">
+                <h1 class="title">Bienvenue sur Download Search</h1>
+                <p>Cette application vous permet de rechercher des liens de téléchargements parmi les suites suivants :</p>
+                <ul>
+                    <li v-for="source in sources">
+                        <a :href="source.baseUrl">{{source.title}}</a>
+                    </li>
+                </ul>
             </div>
-        </form>
-        <TabbedFilter v-if="!loading" :valuesInput="filterValues" :displayedField="'title'" v-model="filter"/>
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <FlexTable v-if="!loading && itemsDisplayed.length > 0" :itemsInput="itemsDisplayed" :configInput="tableConfig" />
-        <div v-if="!loading && itemsDisplayed.length === 0" class="callout warning">
-            <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
+        </div>
+        <div class="text-center">
+            <router-link :to="{name: 'search'}" exact class="button custom">
+                <i class="fa fa-search"></i> Accéder à la recherche
+            </router-link>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from "vue-property-decorator";
-    import FlexTable from "../components/Table/FlexTable.vue";
-    import Loading from "../components/Block/Loading.vue";
-
-    import tableConfig from "../config/table/search";
-    import ItemAPI from "../app/API/ItemAPI";
-    import Item from "../app/Entity/Item";
-    import TabbedFilter from "../components/Block/TabbedFilter.vue";
+    import {Component, Vue} from "vue-property-decorator";
     import Source from "../app/Entity/Source";
     import SourceAPI from "../app/API/SourceAPI";
 
     @Component({
-        components: {TabbedFilter, Loading, FlexTable}
+        components: {}
     })
     export default class HomePage extends Vue {
-        search = "";
-        loading = false;
-        itemsInput: Array<Item> = [];
-        itemsDisplayed: Array<Item> = [];
-        tableConfig = tableConfig;
-        filter: Source;
-        filterValues:Array<Source>;
+        sources: Array<Source>;
 
         data() {
             return {
-                search: '',
-                filter: null,
-                loading: false,
-                itemsInput: [],
-                itemsDisplayed: [],
-                filterValues: [],
-                tableConfig: tableConfig,
-            }
+                sources: [],
+            };
         }
 
-        mounted(){
+        mounted() {
             SourceAPI.getAll((response) => {
-                this.filterValues = SourceAPI.convert(response.data);
-                this.loading = false;
-            });
-        }
-
-        onSubmitMethod() {
-            if (this.search.trim() === "") {
-                return false;
-            }
-
-            this.loading = true;
-            ItemAPI.search(this.search, (response) => {
-                this.itemsInput = ItemAPI.convert(response.data);
-                this.onFilterChange();
-                this.loading = false;
-            });
-            return false;
-        }
-
-        @Watch('filter')
-        onFilterChange() {
-            console.log("onFilterChange");
-            this.loading = true;
-            this.itemsDisplayed = this.itemsInput.filter(item => {
-                if (this.filter === null) {
-                    return true;
-                }
-                return item.source.id === this.filter.id;
-            });
-            this.loading = false;
+                this.sources = SourceAPI.convert(response.data);
+            })
         }
     }
 </script>
@@ -115,7 +73,8 @@
             background: rgb(254, 254, 254) none repeat scroll 0 0;
         }
     }
-    .tab-container{
-        background:$dark;
+
+    .tab-container {
+        background: $dark;
     }
 </style>

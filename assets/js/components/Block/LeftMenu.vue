@@ -6,7 +6,10 @@
             </li>
             <li v-for="item in items">
                 <template v-if="item.children === undefined">
-                    <router-link :to="{name: item.name}" exact>{{item.label}}</router-link>
+                    <router-link :to="{name: item.name}" exact>
+                        <i v-if="item.icon !== undefined" :class="getIconClasses(item.icon)"></i>
+                        {{item.label}}
+                    </router-link>
                 </template>
                 <template v-else>
                     <a>{{ item.label }}</a>

@@ -18,9 +18,14 @@ function createMenu(routes:Array<any>){
 
 export default [
     {
-        label: 'Homepage',
+        label: 'Accueil',
         name: 'home',
         icon: 'fa fa-home'
+    },
+    {
+        label: 'Recherche',
+        name: 'search',
+        icon: 'fa fa-search'
     },
     // {
     //     label: 'Timeline',

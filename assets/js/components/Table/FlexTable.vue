@@ -44,9 +44,18 @@
             if(this.config.fields[fieldname] === undefined){
                 return "";
             }
+
+            // Processing Object type
+            if(this.config.fields[fieldname].type === 'object'){
+                return this.getValue(item[fieldname], this.config.fields[fieldname].field);
+            }
+
+            // Processing Image type
             if(this.config.fields[fieldname].type === 'image'){
                 return '<img src="' + item[fieldname] + '" alt="' + fieldname + '" />';
             }
+
+            // Processing Array type
             if(this.config.fields[fieldname].type === 'array'){
                 let join = this.config.fields[fieldname].join;
                 if(join === undefined){
@@ -54,9 +63,8 @@
                 }
                 return item[fieldname].join(join);
             }
-            if(this.config.fields[fieldname].type === 'object'){
-                return item[fieldname][this.config.fields[fieldname].field];
-            }
+
+            // Processing URL type
             if(this.config.fields[fieldname].type === 'url'){
                 let label = [];
                 if(this.config.fields[fieldname].icon !== undefined){
@@ -70,6 +78,7 @@
                 }
                 return '<a href="' + item[fieldname] + '" target="_blank">' + label.join(' ') + '</a>';
             }
+            // Default value
             return item[fieldname];
         }
 
