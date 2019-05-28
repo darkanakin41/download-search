@@ -6,7 +6,7 @@
                 <p>Cette application vous permet de rechercher des liens de téléchargements parmi les suites suivants :</p>
                 <ul>
                     <li v-for="source in sources">
-                        <a :href="source.baseUrl">{{source.title}}</a>
+                        <a :href="source.baseUrl" target="_blank">{{source.title}}</a>
                     </li>
                 </ul>
             </div>
