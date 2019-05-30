@@ -15,6 +15,10 @@ class Item
     /** @var string */
     private $quality;
     /** @var string */
+    private $language;
+    /** @var integer */
+    private $season;
+    /** @var string */
     private $lastPart;
     /** @var string */
     private $url;
@@ -147,6 +151,30 @@ class Item
     public function setMedia(?Media $media): self
     {
         $this->media = $media;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): self
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getSeason(): ?int
+    {
+        return $this->season;
+    }
+
+    public function setSeason(?int $season): self
+    {
+        $this->season = $season;
 
         return $this;
     }

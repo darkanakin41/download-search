@@ -4,6 +4,8 @@
     background: #161616;
     color: white;
 
+    font-family: Montserrat, sans-serif;
+
     &.is-open{
         @include transform(translate(0,0));
     }

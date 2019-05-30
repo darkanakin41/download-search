@@ -114,7 +114,6 @@
             .id {
                 $paddingSides: 16px;
                 padding: 8px $paddingSides;
-                font-family: 'Roboto Condensed', sans-serif;
                 text-align: center;
 
                 & > * {
@@ -141,8 +140,6 @@
     }
 
     .menu {
-        font-family: "Roboto Condensed", sans-serif;
-
         li {
             padding-right: 16px;
 

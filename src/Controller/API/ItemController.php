@@ -63,17 +63,24 @@ class ItemController extends AbstractController
     {
         $query = json_decode($request->getContent(), true);
 
-        /** @var Item $item */
-        $item = $this->get('doctrine')->getRepository(Item::class)->find($query['id']);
-        if($item === null){
-            throw $this->createNotFoundException(sprintf("Item %s not found", $query['id']));
-        }
+        if(isset($query['id'])){
+            /** @var Item $item */
+            $item = $this->get('doctrine')->getRepository(Item::class)->find($query['id']);
+            if($item === null){
+                throw $this->createNotFoundException(sprintf("Item %s not found", $query['id']));
+            }
 
-        if($item->getCategory() === null){
-            $globalAPI->update($item);
-            $this->get('doctrine')->getManager()->persist($item);
-            $this->get('doctrine')->getManager()->flush();
+            if($item->getMedia() === null){
+                $globalAPI->update($item);
+                $this->get('doctrine')->getManager()->persist($item);
+                $this->get('doctrine')->getManager()->flush();
+            }
+            return new JsonResponse(SerializeObject::serialize($item));
+        }elseif(isset($query['mediaId'])){
+            /** @var Item[] $item */
+            $items = $this->get('doctrine')->getRepository(Item::class)->findBy(['media' => $query['mediaId']]);
+
+            return new JsonResponse(SerializeObject::serialize($items));
         }
-        return new JsonResponse(SerializeObject::serialize($item));
     }
 }

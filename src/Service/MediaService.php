@@ -42,7 +42,6 @@ class MediaService
             return;
         }
 
-
         $data = NULL;
         switch ($item->getCategory()) {
             case CategoryNomenclature::MOVIE :
@@ -52,6 +51,8 @@ class MediaService
             case CategoryNomenclature::TV :
                 $data = $this->theMovieDB->searchTvShow($item->getTitle());
                 break;
+            default:
+                return;
         }
         if (!is_null($data)) {
             $media = $this->registry->getRepository(Media::class)->findOneBy(["theMovieDbId" => $data['id']]);

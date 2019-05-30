@@ -21,9 +21,16 @@ App\Entity\Item:
             type: string
             length: 50
             nullable: true
+        language:
+            type: string
+            length: 50
+            nullable: true
         genres:
             type: array
             nullable: false
+        season:
+            type: integer
+            nullable: true
         lastPart:
             type: string
             length: 50

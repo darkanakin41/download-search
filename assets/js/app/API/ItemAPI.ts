@@ -1,35 +1,66 @@
 import axios from 'axios';
 import Item from "../Entity/Item";
 
-export default class ItemAPI{
+export default class ItemAPI {
 
     /**
      * Search on the server
      * @param q
      * @param callback the code to be executed on success
      */
-    static search(q:string, callback:any){
+    static search(q: string, callback: any) {
         axios({
             method: 'SEARCH',
             url: '/api/item/search',
             data: {
                 q: q,
             }
-        }).then(callback);
+        }).then((response) => {
+            let items: Array<Item> = [];
+            response.data.forEach((item: Object) => {
+                items.push(ItemAPI.convert(item));
+            });
+            callback(items);
+        });
     }
+
     /**
      * Search on the server
      * @param id
      * @param callback the code to be executed on success
      */
-    static retrieve(id:number, callback:any){
+    static get(id: number, callback: any) {
         axios({
             method: 'POST',
             url: '/api/item/retrieve',
             data: {
                 id: id,
             }
-        }).then(callback);
+        }).then((response) => {
+            let item:Item = ItemAPI.convert(response.data);
+            callback(item);
+        });
+    }
+
+    /**
+     * Search on the server
+     * @param mediaId
+     * @param callback the code to be executed on success
+     */
+    static getForMedia(mediaId: number, callback: any) {
+        axios({
+            method: 'POST',
+            url: '/api/item/retrieve',
+            data: {
+                mediaId: mediaId,
+            }
+        }).then((response) => {
+            let items: Array<Item> = [];
+            response.data.forEach((item: Object) => {
+                items.push(ItemAPI.convert(item));
+            });
+            callback(items);
+        });
     }
 
     /**
@@ -39,7 +70,7 @@ export default class ItemAPI{
      *
      * @return Item
      */
-    static convert(data:Object){
+    static convert(data: Object) {
         return new Item(data);
     }
 }

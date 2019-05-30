@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="text-center">
-            <router-link :to="{name: 'search'}" exact class="button custom big">
+            <router-link :to="{name: 'item-search'}" exact class="button custom big">
                 <i class="fa fa-search"></i> Accéder à la recherche
             </router-link>
         </div>
@@ -27,7 +27,7 @@
     @Component({
         components: {}
     })
-    export default class HomePage extends Vue {
+    export default class Home extends Vue {
         sources: Array<Source>;
 
         data() {
@@ -37,11 +37,8 @@
         }
 
         mounted() {
-            SourceAPI.getAll((response) => {
-                this.sources = []
-                response.data.forEach((item) => {
-                    this.sources.push(SourceAPI.convert(item));
-                });
+            SourceAPI.getAll((items) => {
+                this.sources = items;
             })
         }
     }

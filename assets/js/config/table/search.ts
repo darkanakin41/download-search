@@ -1,34 +1,34 @@
 export default {
     fields: {
         title: {
-            label : "Title",
+            label: "Title",
             type: "string"
         },
-        genres: {
-            label : "Genre(s)",
-            type: "array",
-            join: ", ",
+        category: {
+            label: "Catégorie",
+            type: "string",
         },
         quality: {
-            label : "Qualité",
+            label: "Qualité",
             type: "string"
         },
-        lastPart: {
-            label : "Dernière Partie",
+        language: {
+            label: "Langue",
             type: "string"
         },
         source: {
-            label : "Site Source",
+            label: "Site Source",
             type: "object",
             field: 'title'
         },
-        view:{
+        view: {
             label: "Detail",
             type: "route",
-            route: "view",
+            route: "item-view",
             icon: 'fa fa-eye',
+            class: 'text-center',
             routeParams: {
-                id : 'id'
+                id: 'id'
             }
         }
     }

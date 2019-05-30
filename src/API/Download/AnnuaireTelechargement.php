@@ -9,6 +9,7 @@ use App\Entity\Item;
 use App\Entity\Source;
 use App\Nomenclature\CategoryNomenclature;
 use DOMDocument;
+use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 use GuzzleHttp\Client;
@@ -31,15 +32,6 @@ class AnnuaireTelechargement implements AbstractAPI
         $this->parameterBag = $parameterBag;
         $this->registry = $registry;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBaseURL()
-    {
-        return $this->parameterBag->get('api.zone_telechargement.base_url');
-    }
-
 
     /**
      * Search the $q parameter on the ExtremeDownload website
@@ -77,6 +69,14 @@ class AnnuaireTelechargement implements AbstractAPI
     private function getClient()
     {
         return new Client(['base_uri' => $this->getBaseURL()]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBaseURL()
+    {
+        return $this->parameterBag->get('api.zone_telechargement.base_url');
     }
 
     /**
@@ -118,9 +118,9 @@ class AnnuaireTelechargement implements AbstractAPI
      */
     public function getSource()
     {
-        if($this->source === null){
+        if ($this->source === null) {
             $source = $this->registry->getRepository(Source::class)->findOneBy(['title' => self::SOURCE_NAME]);
-            if($source === null){
+            if ($source === null) {
                 $source = new Source();
                 $source->setTitle(self::SOURCE_NAME);
             }
@@ -154,10 +154,16 @@ class AnnuaireTelechargement implements AbstractAPI
     {
         $domDocument = new DOMDocument();
         $internalErrors = libxml_use_internal_errors(true);
-        $domDocument->loadHTML($html);
+        $domDocument->loadHTML(str_ireplace(['<br>','<br/>','<br />'], PHP_EOL, $html));
         libxml_use_internal_errors($internalErrors);
 
-        $domXPath = new DOMXPath($domDocument);
+        $this->parseHtmlCategory($item, $domDocument);
+        $this->parseHTMLCorpsHeader($item, $domDocument);
+    }
+
+    private function parseHtmlCategory(Item $item, DOMDocument $document)
+    {
+        $domXPath = new DOMXPath($document);
 
         /** @var DOMNodeList $nodes */
         $nodes = $domXPath->query('//span[@class="link_cat"]');
@@ -170,7 +176,74 @@ class AnnuaireTelechargement implements AbstractAPI
                 $item->setCategory(CategoryNomenclature::TV);
             } elseif (stripos($node->nodeValue, "films") !== false) {
                 $item->setCategory(CategoryNomenclature::MOVIE);
+            } elseif (stripos($node->nodeValue, "jeu") !== false) {
+                $item->setCategory(CategoryNomenclature::GAME);
             }
         }
     }
+
+    private function parseHTMLCorpsHeader(Item $item, DOMDocument $document)
+    {
+        $domXPath = new DOMXPath($document);
+
+        /** @var DOMNodeList $nodes */
+        $nodes = $domXPath->query('//div[@class="corps"]/div[1]/div');
+
+        for ($i = 0; $i < $nodes->length; $i++) {
+            $node = $nodes->item($i);
+            $this->nodeExtractQualite($item, $node);
+            $this->nodeExtractSeason($item, $node);
+        }
+    }
+
+    private function nodeExtractQualite(Item $item, DOMNode $node)
+    {
+        if (stripos($node->nodeValue, "qualité") === false) {
+            return;
+        }
+        $nodeValueExploded = explode('|', $node->nodeValue);
+        if (count($nodeValueExploded) === 1) {
+            return;
+        }
+        if (count($nodeValueExploded) > 1) {
+            $item->setLanguage(trim(array_pop($nodeValueExploded)));
+        }
+        $qualite = trim(str_ireplace("qualité", "", array_shift($nodeValueExploded)));
+        $item->setQuality($qualite);
+    }
+
+    private function nodeExtractSeason(Item $item, DOMNode $node)
+    {
+        if (stripos($node->nodeValue, "saison") === false) {
+            return;
+        }
+        $nodeValueExploded = explode('|', $node->nodeValue);
+        if (count($nodeValueExploded) === 1) {
+            return;
+        }
+        $lastPart = array_pop($nodeValueExploded);
+
+        // Récupération du numéro de saison
+        if(stripos($lastPart, PHP_EOL) !== false){
+            $lastPartExploded = explode(PHP_EOL, $lastPart);
+            $seasonRaw = array_pop($lastPartExploded);
+        }else{
+            $seasonRaw = $lastPart;
+        }
+        $season = intval(trim(str_ireplace(["saison", "complet", "complete"], "", $seasonRaw)));
+        $item->setSeason($season);
+
+        // Récupération du language
+        if (stripos($node->nodeValue, "qualité") !== false) {
+            if(stripos($lastPart, PHP_EOL) !== false){
+                $baseString = $lastPart;
+            }else{
+                $baseString = array_pop($nodeValueExploded);
+            }
+            $lastPartExploded = explode(PHP_EOL, $baseString);
+            $language = trim(strtolower(array_shift($lastPartExploded)));
+            $item->setLanguage($language);
+        }
+    }
+
 }

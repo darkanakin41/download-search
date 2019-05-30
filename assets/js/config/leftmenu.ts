@@ -1,4 +1,6 @@
+import accountRoutes from "../page/Account/router";
 import itemRoutes from "../page/Item/router";
+import mediaRoutes from "../page/Media/router";
 
 function createMenu(routes:Array<any>){
     let output:Array<Object> = [];
@@ -26,6 +28,14 @@ export default [
     {
         label: 'Items',
         children: createMenu(itemRoutes),
+    },
+    {
+        label: 'Media',
+        children: createMenu(mediaRoutes),
+    },
+    {
+        label: 'Mon Compte',
+        children: createMenu(accountRoutes),
     }
 ];
 

@@ -5,15 +5,15 @@ DownloadSearch is a sandbox for me to play with [Symfony 4](https://symfony.com/
 The main functionnality is the aggregation of multiple download sites into one with a common search form.
 
 ## Functionality
-* Search on different Download sites (Extreme Download and Annuaire Telechargement) and provide the original link
-* Link the information with [themoviedb](https://www.themoviedb.org/?language=fr)
-
-## WIP 
-* Create a detail page for a specific link
+* Search for *Item* on different Download sites (Extreme Download and Annuaire Telechargement) and provide the original link
+* Access the detail of the specific *Item* retrieved from a Download Site
+* Display the list of available *Media* stored (linked to [themoviedb](https://www.themoviedb.org/?language=fr))
+* Access the detail of a *Media* and see all available *Item*
 
 ## TODO
 * Create an advanced research form
 * Create a user section
+* Enhance site parsing to retrieve more data
 
 For connected users : 
 * Subscribe to a serie and be notified when a new episode is out

@@ -11,7 +11,13 @@ export default class SourceAPI{
         axios({
             method: 'GET',
             url: '/api/source/all',
-        }).then(callback);
+        }).then((response) => {
+            let items:Array<Source> = [];
+            response.data.forEach((item:Object) => {
+                items.push(SourceAPI.convert(item));
+            });
+            callback(items)
+        });
     }
 
     /**
@@ -21,7 +27,7 @@ export default class SourceAPI{
      *
      * @return Source
      */
-    static convert(data:Array<any>){
+    static convert(data:Object){
         return new Source(data);
     }
 }

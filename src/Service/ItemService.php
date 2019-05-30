@@ -30,12 +30,11 @@ class ItemService
         $manager = $this->registry->getManager();
 
         foreach($items as $key => $item){
+            $this->clean($item);
             $dbItem = $repository->findOneBy(['source' => $item->getSource(), 'url' => $item->getUrl()]);
             if($dbItem === null){
-                $this->clean($item);
                 $manager->persist($item);
             }else{
-                $this->clean($dbItem);
                 $dbItem->setLastPart($item->getLastPart());
                 $manager->persist($dbItem);
                 $items[$key] = $dbItem;

@@ -15,7 +15,7 @@
     @Component
     export default class TabbedFilter extends Vue {
         @Prop({type: Array}) valuesInput;
-        @Prop({type: String}) filter;
+        @Prop({default:null}) initialFilter;
         @Prop({type: String}) displayedField;
 
         filters;
@@ -55,12 +55,12 @@
             this.filters = [] as Object[];
             this.filters.push({
                 value: "tous",
-                active: true,
+                active: this.initialFilter === null,
             });
             this.valuesInput.forEach(value => {
                 this.filters.push({
                     value: value,
-                    active: false,
+                    active: this.initialFilter === value,
                 });
             });
         }

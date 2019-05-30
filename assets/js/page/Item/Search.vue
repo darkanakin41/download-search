@@ -5,7 +5,7 @@
                 <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
             </div>
         </form>
-        <TabbedFilter v-if="!loading" :valuesInput="filterValues" :displayedField="'title'" v-model="filter"/>
+        <TabbedFilter v-if="!loading" :valuesInput="filterValues" :initialFilter="filter" :displayedField="'title'" v-model="filter" />
         <Loading v-if="loading" :displayed="loading" :fixed="false" />
         <FlexTable v-if="!loading && itemsDisplayed.length > 0" :itemsInput="itemsDisplayed" :configInput="tableConfig" />
         <div v-if="!loading && itemsDisplayed.length === 0" class="callout warning">
@@ -26,17 +26,19 @@
     import Source from "../../app/Entity/Source";
     import SourceAPI from "../../app/API/SourceAPI";
 
+    import Session from "../../components/Session";
+
     @Component({
         components: {TabbedFilter, Loading, FlexTable}
     })
-    export default class SearchPage extends Vue {
+    export default class Search extends Vue {
         search = "";
         loading = false;
         itemsInput: Array<Item> = [];
         itemsDisplayed: Array<Item> = [];
         tableConfig = tableConfig;
         filter: Source;
-        filterValues:Array<Source>;
+        filterValues: Array<Source>;
 
         data() {
             return {
@@ -50,27 +52,45 @@
             }
         }
 
-        mounted(){
-            SourceAPI.getAll((response) => {
-                this.filterValues = [];
-                response.data.forEach((item)=>{
-                    this.filterValues.push(SourceAPI.convert(item));
-                });
+        mounted() {
+            SourceAPI.getAll((items:Array<Source>) => {
+                this.filterValues = items;
                 this.loading = false;
+                this.refreshSession();
+                if (this.search !== '') {
+                    this.onSubmitMethod();
+                }
             });
         }
 
+        private refreshSession() {
+            let sessionSearch = Session.get('item-search-value');
+            if (sessionSearch) {
+                this.$set(this, 'search', sessionSearch);
+            }
+
+            let sessionFilter = <Source>Session.getObject('item-search-filter');
+            if(sessionFilter != null){
+                let filter = null;
+                this.filterValues.forEach((item) => {
+                    if(item.id === sessionFilter.id){
+                        filter = item;
+                    }
+                });
+                this.$set(this, 'filter', filter);
+            }
+        }
+
         onSubmitMethod() {
-            if (this.search.trim() === "") {
+            Session.set('item-search-value', this.search.trim());
+
+            if (Session.get('item-search-value') === "") {
                 return false;
             }
 
             this.loading = true;
-            ItemAPI.search(this.search, (response) => {
-                this.itemsInput = [];
-                response.data.forEach((item)=>{
-                    this.itemsInput.push(ItemAPI.convert(item));
-                });
+            ItemAPI.search(Session.get('item-search-value'), (items) => {
+                this.itemsInput = items;
                 this.onFilterChange();
                 this.loading = false;
             });
@@ -79,9 +99,13 @@
 
         @Watch('filter')
         onFilterChange() {
+            Session.setObject('item-search-filter', this.filter);
+
+            let filter: Source = Session.getObject('item-search-filter');
+
             this.loading = true;
             this.itemsDisplayed = this.itemsInput.filter(item => {
-                if (this.filter === null) {
+                if (filter === null) {
                     return true;
                 }
                 return item.source.id === this.filter.id;
@@ -120,7 +144,8 @@
             background: rgb(254, 254, 254) none repeat scroll 0 0;
         }
     }
-    .tab-container{
-        background:$dark;
+
+    .tab-container {
+        background: $dark;
     }
 </style>

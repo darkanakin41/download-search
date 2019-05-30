@@ -1,17 +1,25 @@
 @import "./common/config";
 @import "../libs/theming/mixins";
 
+@include importGoogleFont("Roboto|Montserrat");
+
 @import "./foundation/foundation";
 
 body {
     background: #f5f5f7;
     color: #333333;
+    font-family: Roboto, sans-serif;
 }
 
-#content{
-    overflow : auto;
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+    font-family: Roboto, sans-serif;
 }
-
+#content {
+    overflow: auto;
+}
+.grid{
+    width : 100%;
+}
 @import "./partial/content";
 @import "./partial/drawer";
 @import "./partial/footer";
