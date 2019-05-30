@@ -14,8 +14,13 @@ The main functionnality is the aggregation of multiple download sites into one w
 * Create an advanced research form
 * Create a user section
 * Enhance site parsing to retrieve more data
+* Connect to a Video Game DB and a Music DB
 
 For connected users : 
 * Subscribe to a serie and be notified when a new episode is out
 * Display list of subscribed series
+* Display a calendar of upcoming episodes from TV Shows
 * Add a checkbox which save if the episode/movie have been downloaded
+
+For the system :
+* Add a command to retrieve last uploaded items
