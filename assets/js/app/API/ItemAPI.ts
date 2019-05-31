@@ -9,19 +9,14 @@ export default class ItemAPI {
      * @param callback the code to be executed on success
      */
     static search(q: string, callback: any) {
-        axios({
-            method: 'SEARCH',
-            url: '/api/item/search',
-            data: {
-                q: q,
-            }
-        }).then((response) => {
-            let items: Array<Item> = [];
-            response.data.forEach((item: Object) => {
-                items.push(ItemAPI.convert(item));
+        axios.post('/api/item/search', {q: q,})
+            .then((response) => {
+                let items: Array<Item> = [];
+                response.data.forEach((item: Object) => {
+                    items.push(ItemAPI.convert(item));
+                });
+                callback(items);
             });
-            callback(items);
-        });
     }
 
     /**
@@ -30,16 +25,11 @@ export default class ItemAPI {
      * @param callback the code to be executed on success
      */
     static get(id: number, callback: any) {
-        axios({
-            method: 'POST',
-            url: '/api/item/retrieve',
-            data: {
-                id: id,
-            }
-        }).then((response) => {
-            let item:Item = ItemAPI.convert(response.data);
-            callback(item);
-        });
+        axios.post('/api/item/retrieve', {id: id,})
+            .then((response) => {
+                let item: Item = ItemAPI.convert(response.data);
+                callback(item);
+            });
     }
 
     /**
@@ -48,19 +38,14 @@ export default class ItemAPI {
      * @param callback the code to be executed on success
      */
     static getForMedia(mediaId: number, callback: any) {
-        axios({
-            method: 'POST',
-            url: '/api/item/retrieve',
-            data: {
-                mediaId: mediaId,
-            }
-        }).then((response) => {
-            let items: Array<Item> = [];
-            response.data.forEach((item: Object) => {
-                items.push(ItemAPI.convert(item));
+        axios.post('/api/item/retrieve', {media: mediaId,})
+            .then((response) => {
+                let items: Array<Item> = [];
+                response.data.forEach((item: Object) => {
+                    items.push(ItemAPI.convert(item));
+                });
+                callback(items);
             });
-            callback(items);
-        });
     }
 
     /**

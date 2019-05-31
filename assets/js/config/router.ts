@@ -21,10 +21,10 @@ const baseRoutes: Array<RouteConfig> = [
     },
 ];
 
-const routes: Array<RouteConfig> = baseRoutes.concat(accountRoutes, itemRoutes, mediaRoutes);
+const routes: Array<RouteConfig> = baseRoutes.concat(accountRoutes, itemRoutes, mediaRoutes, [{ path: '*', redirect: '/' }]);
 
 export const router = new VueRouter({
-    mode: 'hash',
+    mode: 'history',
     base: process.env.ROUTER_BASE,
     linkActiveClass: '',
     linkExactActiveClass: 'active',

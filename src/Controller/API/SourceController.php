@@ -2,33 +2,49 @@
 
 namespace App\Controller\API;
 
-use App\Entity\Source;
-use App\Helper\SerializeObject;
+use App\Service\SourceService;
+use Exception;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class SearchController
  * @package App\Controller\API
  * @Route("/api/source")
  */
-class SourceController extends AbstractController
+final class SourceController extends AbstractController
 {
+
     /**
-     * @Route("/all", name="api_source_all", methods={"GET"})
+     * @var SerializerInterface
+     */
+    private $serializer;
+    /**
+     * @var SourceService
+     */
+    private $sourceService;
+
+    public function __construct(SerializerInterface $serializer, SourceService $sourceService)
+    {
+        $this->serializer = $serializer;
+        $this->sourceService = $sourceService;
+    }
+
+    /**
+     * @Rest\Get("/all" ,name="api_source_all")
      *
      * @return JsonResponse
+     * @throws Exception
      */
-    public function index()
+    public function allAction()
     {
-        $data = $this->get('doctrine')->getRepository(Source::class)->findAll();
+        $sourceEntities = $this->sourceService->all();
 
-        $retour = [];
-        foreach ($data as $item) {
-            $retour[] = SerializeObject::serialize($item);
-        }
+        $data = $this->serializer->serialize($sourceEntities, 'json');
 
-        return new JsonResponse($retour);
+        return new JsonResponse($data, 200, [], true);
     }
 }

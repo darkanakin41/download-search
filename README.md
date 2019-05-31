@@ -2,7 +2,7 @@
 
 DownloadSearch is a sandbox for me to play with [Symfony 4](https://symfony.com/), [Guzzle](http://docs.guzzlephp.org/en/stable/), [Vue JS](https://vuejs.org/), [Webpack Encore](https://symfony.com/doc/current/frontend.html) and many more other stuff that i want.
 
-The main functionnality is the aggregation of multiple download sites into one with a common search form.
+The main functionality is the aggregation of multiple download sites into one with a common search form.
 
 ## Functionality
 * Search for *Item* on different Download sites (Extreme Download and Annuaire Telechargement) and provide the original link

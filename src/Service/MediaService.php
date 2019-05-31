@@ -30,8 +30,31 @@ class MediaService
         $this->theMovieDB = $theMovieDB;
     }
 
+
     /**
-     * Read the MovieDB API and create associated Média
+     * Extract all media from database
+     *
+     * @return Media[]
+     */
+    public function all(){
+        return $this->registry->getRepository(Media::class)->findAll();
+    }
+
+    /**
+     * Retrieve an item based on his ID
+     *
+     * @param integer $id
+     *
+     * @return Media
+     * @throws Exception
+     */
+    public function retrieve($id){
+        /** @var Item $item */
+        return $this->registry->getRepository(Media::class)->find($id);
+    }
+
+    /**
+     * Read the MovieDB API and create associated Media
      *
      * @param Item $item
      *

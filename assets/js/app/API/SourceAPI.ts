@@ -1,23 +1,21 @@
 import axios from 'axios';
 import Source from "../Entity/Source";
 
-export default class SourceAPI{
+export default class SourceAPI {
 
     /**
      * Search on the server
      * @param callback the code to be executed on success
      */
-    static getAll(callback:any){
-        axios({
-            method: 'GET',
-            url: '/api/source/all',
-        }).then((response) => {
-            let items:Array<Source> = [];
-            response.data.forEach((item:Object) => {
-                items.push(SourceAPI.convert(item));
+    static getAll(callback: any) {
+        axios.get('/api/source/all')
+            .then((response) => {
+                let items: Array<Source> = [];
+                response.data.forEach((item: Object) => {
+                    items.push(SourceAPI.convert(item));
+                });
+                callback(items)
             });
-            callback(items)
-        });
     }
 
     /**
@@ -27,7 +25,7 @@ export default class SourceAPI{
      *
      * @return Source
      */
-    static convert(data:Object){
+    static convert(data:Object) {
         return new Source(data);
     }
 }

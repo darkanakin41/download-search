@@ -2,58 +2,68 @@
 
 namespace App\Controller\API;
 
-use App\API\Download\GlobalAPI;
-use App\Entity\Item;
-use App\Entity\Media;
-use App\Helper\SerializeObject;
+use App\Service\MediaService;
 use Exception;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class SearchController
  * @package App\Controller\API
  * @Route("/api/media")
  */
-class MediaController extends AbstractController
+final class MediaController extends AbstractController
 {
+
     /**
-     * @Route("/all", name="api_media_all", methods={"GET"})
-     *
-     * @return JsonResponse
+     * @var SerializerInterface
      */
-    public function index()
+    private $serializer;
+    /**
+     * @var MediaService
+     */
+    private $mediaService;
+
+    public function __construct(SerializerInterface $serializer, MediaService $mediaService)
     {
-        $data = $this->get('doctrine')->getRepository(Media::class)->findBy([], ['title' => 'ASC']);
-
-        $retour = [];
-        foreach ($data as $item) {
-            $retour[] = SerializeObject::serialize($item);
-        }
-
-        return new JsonResponse($retour);
+        $this->serializer = $serializer;
+        $this->mediaService = $mediaService;
     }
 
     /**
-     * @Route("/retrieve", name="api_imedia_retrieve", methods={"POST"})
+     * @Rest\Get("/all", name="api_media_all")
      *
-     * @param Request   $request
+     * @return JsonResponse
+     */
+    public function allAction()
+    {
+        $mediaEntities = $this->mediaService->all();
+        $data = $this->serializer->serialize($mediaEntities, 'json');
+
+        return new JsonResponse($data, 200, [], true);
+    }
+
+    /**
+     * @Rest\Post("/retrieve", name="api_media_retrieve")
+     *
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws Exception
      */
-    public function retrieve(Request $request)
+    public function retrieveAction(Request $request)
     {
-        $query = json_decode($request->getContent(), true);
-
-        /** @var Item $item */
-        $item = $this->get('doctrine')->getRepository(Media::class)->find($query['id']);
-        if ($item === null) {
-            throw $this->createNotFoundException(sprintf("Media %s not found", $query['id']));
+        $id = $request->request->get('id');
+        $mediaEntity = $this->mediaService->retrieve($id);
+        if ($mediaEntity === null) {
+            throw $this->createNotFoundException(sprintf("Media %s not found", $id));
         }
+        $data = $this->serializer->serialize($mediaEntity, 'json');
 
-        return new JsonResponse(SerializeObject::serialize($item));
+        return new JsonResponse($data, 200, [], true);
     }
 }

@@ -2,85 +2,77 @@
 
 namespace App\Controller\API;
 
-use App\API\Download\GlobalAPI;
-use App\Entity\Item;
-use App\Helper\SerializeObject;
 use App\Service\ItemService;
 use Exception;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class SearchController
  * @package App\Controller\API
  * @Route("/api/item")
  */
-class ItemController extends AbstractController
+final class ItemController extends AbstractController
 {
+
     /**
-     * @Route("/search", name="api_item_search", methods={"SEARCH"})
-     *
-     * @param Request     $request
-     * @param GlobalAPI   $globalAPI
-     * @param ItemService $itemService
-     *
-     * @return JsonResponse
+     * @var SerializerInterface
      */
-    public function search(Request $request, GlobalAPI $globalAPI, ItemService $itemService)
+    private $serializer;
+    /**
+     * @var ItemService
+     */
+    private $itemService;
+
+    public function __construct(SerializerInterface $serializer, ItemService $itemService)
     {
-        $query = json_decode($request->getContent(), true);
-
-        $data = $globalAPI->search($query['q']);
-        $itemService->saveAll($data);
-
-        usort($data, function(Item $item1, Item $item2){
-            if($item1->getTitle() === $item2->getTitle()){
-                return 0;
-            }
-            return $item1->getTitle() > $item2->getTitle();
-        });
-
-        $retour = [];
-        foreach($data as $item){
-            $retour[] = SerializeObject::serialize($item);
-        }
-
-        return new JsonResponse($retour);
+        $this->serializer = $serializer;
+        $this->itemService = $itemService;
     }
 
     /**
-     * @Route("/retrieve", name="api_item_retrieve", methods={"POST"})
+     * @Rest\Post("/search" ,name="api_item_search")
      *
-     * @param Request     $request
-     * @param GlobalAPI   $globalAPI
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchAction(Request $request): JsonResponse
+    {
+        $q = $request->request->get('q');
+        $itemsEntity = $this->itemService->search($q);
+        $data = $this->serializer->serialize($itemsEntity, 'json');
+
+        return new JsonResponse($data, 200, [], true);
+    }
+
+    /**
+     * @Rest\Post("/retrieve" ,name="api_item_retrieve")
+     *
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws Exception
      */
-    public function retrieve(Request $request, GlobalAPI $globalAPI)
+    public function retrieveAction(Request $request): JsonResponse
     {
-        $query = json_decode($request->getContent(), true);
+        $id = $request->request->get('id');
 
-        if(isset($query['id'])){
-            /** @var Item $item */
-            $item = $this->get('doctrine')->getRepository(Item::class)->find($query['id']);
-            if($item === null){
-                throw $this->createNotFoundException(sprintf("Item %s not found", $query['id']));
+        if ($id !== null) {
+            $itemsEntity = $this->itemService->retrieve($id);
+            if($itemsEntity === null){
+                throw $this->createNotFoundException(sprintf("Item %s not found", $id));
             }
-
-            if($item->getMedia() === null){
-                $globalAPI->update($item);
-                $this->get('doctrine')->getManager()->persist($item);
-                $this->get('doctrine')->getManager()->flush();
-            }
-            return new JsonResponse(SerializeObject::serialize($item));
-        }elseif(isset($query['mediaId'])){
-            /** @var Item[] $item */
-            $items = $this->get('doctrine')->getRepository(Item::class)->findBy(['media' => $query['mediaId']]);
-
-            return new JsonResponse(SerializeObject::serialize($items));
+        } else {
+            $itemsEntity = $this->itemService->retrieveBy($request->request->all());
         }
+
+        $data = $this->serializer->serialize($itemsEntity, 'json');
+
+        return new JsonResponse($data, 200, [], true);
     }
 }
