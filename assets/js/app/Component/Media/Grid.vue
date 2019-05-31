@@ -1,9 +1,12 @@
 <template>
     <div class="grid grid-x grid-padding-x grid-padding-y">
-        <div v-for="item in items" class="cell large-4 medium-6">
+        <div v-for="item in itemsDisplayed" class="cell large-4 medium-6">
             <router-link :to="{name: 'media-view', params:{id: item.id}}">
                 <Card :item="item" />
             </router-link>
+        </div>
+        <div class="cell medium-12">
+            <Pagination :itemsInput="items" :nbPerPage="9" v-model="itemsDisplayed"/>
         </div>
     </div>
 </template>
@@ -11,12 +14,29 @@
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
     import Card from "./Card.vue";
+    import Pagination from "../../../components/Pagination.vue";
+    import Media from "../../Entity/Media";
 
     @Component({
-        components: {Card}
+        components: {Pagination, Card}
     })
     export default class Grid extends Vue {
         @Prop({type: Array}) items;
+        @Prop({type: Boolean, default: true}) pagination;
+
+        itemsDisplayed:Array<Media> = [];
+
+        data(){
+            return{
+                itemsDisplayed: [],
+            }
+        }
+
+        mounted(){
+            if(!this.pagination){
+                this.itemsDisplayed = this.items;
+            }
+        }
     }
 </script>
 

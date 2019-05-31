@@ -46,7 +46,6 @@ class ItemRefreshCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $items = $this->registry->getRepository(Item::class)->findBy(['category' => null]);
-//        $items = $this->registry->getRepository(Item::class)->findAll();
         if (count($items) === 0) {
             $io->success('Process ended without any items to update');
             return;
@@ -59,9 +58,9 @@ class ItemRefreshCommand extends Command
         foreach ($items as $item) {
             $this->globalAPI->update($item);
             $this->registry->getManager()->persist($item);
+            $this->registry->getManager()->flush();
             $progressBar->advance();
         }
-        $this->registry->getManager()->flush();
 
         $io->success('All items have been processed');
 

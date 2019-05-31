@@ -23,10 +23,12 @@ const baseRoutes: Array<RouteConfig> = [
 
 const routes: Array<RouteConfig> = baseRoutes.concat(accountRoutes, itemRoutes, mediaRoutes, [{ path: '*', redirect: '/' }]);
 
-export const router = new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     base: process.env.ROUTER_BASE,
     linkActiveClass: '',
     linkExactActiveClass: 'active',
     routes: routes
 });
+
+export default router;

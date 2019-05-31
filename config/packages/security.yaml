@@ -1,10 +1,23 @@
 security:
+    encoders:
+        PLejeune\UserBundle\Entity\User: bcrypt
+    providers:
+        plejeune_user_provider:
+            id: PLejeune\UserBundle\Security\UserProvider
+    role_hierarchy:
+        ROLE_MEMBER: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_MEMBER]
 
-  role_hierarchy:
-    ROLE_USER: ROLE_USER
-  firewalls:
-    main:
-      pattern: ^/
-      anonymous: true
-  access_control:
-  - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    firewalls:
+        main:
+            entry_point: App\Security\AuthenticationEntryPoint
+            pattern: ^/
+            anonymous: true
+
+            json_login:
+                check_path: /api/security/login
+
+            logout:
+                path: /api/security/logout
+    access_control:
+        - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY }

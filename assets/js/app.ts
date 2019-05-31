@@ -14,7 +14,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import Vue from 'vue';
 import App from './App.vue';
 
-import {router} from "./config/router";
+import router from "./config/router";
 
 const app = new Vue({
     el: '#app',

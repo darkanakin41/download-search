@@ -11,6 +11,7 @@
         <div v-if="!loading && itemsDisplayed.length === 0" class="callout warning">
             <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
         </div>
+        <Pagination :itemsInput="itemsFiltered" :nbPerPage="9" v-model="itemsDisplayed"/>
     </div>
 </template>
 
@@ -27,16 +28,16 @@
     import SourceAPI from "../../app/API/SourceAPI";
 
     import Session from "../../components/Session";
+    import Pagination from "../../components/Pagination.vue";
 
     @Component({
-        components: {TabbedFilter, Loading, FlexTable}
+        components: {Pagination, TabbedFilter, Loading, FlexTable}
     })
     export default class Search extends Vue {
         search = "";
         loading = false;
         itemsInput: Array<Item> = [];
-        itemsDisplayed: Array<Item> = [];
-        tableConfig = tableConfig;
+        itemsFiltered: Array<Item> = [];
         filter: Source;
         filterValues: Array<Source>;
 
@@ -104,7 +105,7 @@
             let filter: Source = Session.getObject('item-search-filter');
 
             this.loading = true;
-            this.itemsDisplayed = this.itemsInput.filter(item => {
+            this.itemsFiltered = this.itemsInput.filter(item => {
                 if (filter === null) {
                     return true;
                 }

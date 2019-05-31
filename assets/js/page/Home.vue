@@ -16,6 +16,20 @@
                 <i class="fa fa-search"></i> Accéder à la recherche
             </router-link>
         </div>
+        <section class="grid-container">
+            <h2 class="section-title">
+                Derniers médias récupérés
+            </h2>
+            <Loading v-if="mediasLoading" :fixed="false" />
+            <Grid v-if="!mediasLoading" :items="lastDownloadedMedias" :pagination="false" />
+        </section>
+        <section class="grid-container">
+            <h2 class="section-title">
+                Derniers médias mis à jour
+            </h2>
+            <Loading v-if="mediasLoading" :fixed="false" />
+            <Grid v-if="!mediasLoading" :items="lastUpdatedMedias" :pagination="false" />
+        </section>
     </div>
 </template>
 
@@ -23,22 +37,44 @@
     import {Component, Vue} from "vue-property-decorator";
     import Source from "../app/Entity/Source";
     import SourceAPI from "../app/API/SourceAPI";
+    import MediaAPI from "../app/API/MediaAPI";
+    import Media from "../app/Entity/Media";
+    import Grid from "../app/Component/Media/Grid.vue";
+    import Loading from "../components/Block/Loading.vue";
 
     @Component({
-        components: {}
+        components: {Loading, Grid}
     })
     export default class Home extends Vue {
         sources: Array<Source>;
+        lastUpdatedMedias: Array<Media>;
+        lastDownloadedMedias: Array<Media>;
+        mediasLoading: Boolean = false;
 
         data() {
             return {
                 sources: [],
-            };
+                lastUpdatedMedias: [],
+                lastDownloadedMedias: [],
+                mediasLoading: false,
+            }
         }
 
         mounted() {
             SourceAPI.getAll((items) => {
                 this.sources = items;
+            });
+            this.mediasLoading = true;
+            MediaAPI.getAll((items) => {
+                items.sort((a: Media, b: Media) => {
+                    return a.updated < b.updated;
+                });
+                this.lastUpdatedMedias = items.slice(0, 6);
+                items.sort((a: Media, b: Media) => {
+                    return a.id < b.id;
+                });
+                this.lastDownloadedMedias = items.slice(0, 6);
+                this.mediasLoading = false;
             })
         }
     }
@@ -48,33 +84,20 @@
     @import "../../libs/theming/mixins";
     @import "../../scss/common/config";
 
-    .search-form {
-        position: relative;
-
-        &::before {
-            font-family: $fontawesomeFamily;
-            content: '\f002';
-            font-weight: $fontawesomeSolidWeight;
-            display: block;
-            position: absolute;
-            top: 0.4rem;
-            left: 0.9rem;
-            z-index: 1;
-            font-size: 1.75rem;
-            color: #8a8a8a;
+    section{
+        .section-title{
+            font-size : 1.2rem;
+            font-weight: $weightBold;
+            &::after{
+                display:block;
+                height: 4px;
+                content: " ";
+                background : linear-gradient(to right, $mainColor, transparentize($mainColor, 1));
+                width: 65%;
+            }
         }
-
-        input[name="search"] {
-            padding-left: 3rem;
-            font-size: 1.3rem;
-            height: 3.5rem;
-            font-weight: 300;
-            border: 1px solid #e0e0e0;
-            background: rgb(254, 254, 254) none repeat scroll 0 0;
+        .grid{
+            margin : 0;
         }
-    }
-
-    .tab-container {
-        background: $dark;
     }
 </style>

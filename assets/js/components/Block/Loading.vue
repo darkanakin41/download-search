@@ -11,7 +11,7 @@
 
     @Component
     export default class Loading extends Vue {
-        @Prop({type: Boolean}) displayed;
+        @Prop({type: Boolean, default: true}) displayed;
         @Prop({type: Boolean, default: true}) fixed;
     }
 </script>
