@@ -9,6 +9,7 @@ use App\Entity\Item;
 use App\Entity\Source;
 use App\Nomenclature\CategoryNomenclature;
 use DOMDocument;
+use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 use GuzzleHttp\Client;
@@ -158,7 +159,14 @@ class ExtremeDownload implements AbstractAPI
         $domDocument->loadHTML($html);
         libxml_use_internal_errors($internalErrors);
 
-        $domXPath = new DOMXPath($domDocument);
+        $this->parseHtmlCategory($item, $domDocument);
+        $this->parseHTMLUploadInfosTable($item, $domDocument);
+        $this->parseHTMLReleaseName($item, $domDocument);
+    }
+
+    private function parseHtmlCategory(Item $item, DOMDocument $document)
+    {
+        $domXPath = new DOMXPath($document);
 
         /** @var DOMNodeList $nodes */
         $nodes = $domXPath->query('//span[@id="dle-speedbar"]/span');
@@ -171,7 +179,74 @@ class ExtremeDownload implements AbstractAPI
                 $item->setCategory(CategoryNomenclature::TV);
             } elseif (stripos($node->nodeValue, "films") !== false) {
                 $item->setCategory(CategoryNomenclature::MOVIE);
+            } elseif (stripos($node->nodeValue, "jeu") !== false) {
+                $item->setCategory(CategoryNomenclature::GAME);
+            } elseif (stripos($node->nodeValue, "musique") !== false) {
+                $item->setCategory(CategoryNomenclature::MUSIC);
             }
         }
+    }
+
+    private function parseHTMLUploadInfosTable(Item $item, DOMDocument $document)
+    {
+        $domXPath = new DOMXPath($document);
+
+        /** @var DOMNodeList $nodes */
+        $nodes = $domXPath->query("//div[contains(concat(' ', normalize-space(@class), ' '), ' upload-infos ')]/table/tbody/*/td");
+        if($nodes->length === 0){
+            $nodes = $domXPath->query("//div[contains(concat(' ', normalize-space(@class), ' '), ' upload-infos ')]/table/*/td");
+        }
+        for ($i = 0; $i < $nodes->length; $i++) {
+            /** @var DOMNode $node */
+            $node = $nodes->item($i);
+            $this->nodeExtractQualite($item, $node);
+            $this->nodeExtractLanguage($item, $node);
+        }
+    }
+
+    private function parseHTMLReleaseName(Item $item, DOMDocument $document)
+    {
+        $domXPath = new DOMXPath($document);
+
+        /** @var DOMNodeList $nodes */
+        $nodes = $domXPath->query("//p[@class='release-name']");
+        for ($i = 0; $i < $nodes->length; $i++) {
+            /** @var DOMNode $node */
+            $node = $nodes->item($i);
+            $this->nodeExtractSeason($item, $node);
+        }
+    }
+
+    private function nodeExtractQualite(Item $item, DOMNode $node)
+    {
+        if (stripos($node->nodeValue, "qualité") === false) {
+            return;
+        }
+        $qualite = trim(str_ireplace("qualité", "", $node->nodeValue));
+        $item->setQuality($qualite);
+    }
+
+    private function nodeExtractLanguage(Item $item, DOMNode $node)
+    {
+        if (stripos($node->nodeValue, "Langue release") === false) {
+            return;
+        }
+        $qualite = trim(str_ireplace("Langue release", "", $node->nodeValue));
+        $item->setLanguage($qualite);
+    }
+
+    private function nodeExtractSeason(Item $item, DOMNode $node)
+    {
+        preg_match('/\.s(?<season>\d{1,2})e(?<episode>\d{1,2})\./', strtolower($node->nodeValue), $matches);
+        if(isset($matches["season"])){
+            $item->setSeason($matches["season"]);
+            return;
+        }
+        preg_match('/\.s(?<season>\d{1,2})\./', strtolower($node->nodeValue), $matches);
+        if(isset($matches["season"])){
+            $item->setSeason($matches["season"]);
+            return;
+        }
+
     }
 }

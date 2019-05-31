@@ -11,5 +11,6 @@ class CategoryNomenclature extends AbstractNomenclature
     const ANIME = 'animes';
     const GAME = 'game';
     const MOVIE = 'movie';
+    const MUSIC = 'music';
     const TV = 'tv';
 }
