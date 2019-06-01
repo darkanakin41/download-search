@@ -37,7 +37,7 @@ class MediaService
      * @return Media[]
      */
     public function all(){
-        return $this->registry->getRepository(Media::class)->findAll();
+        return $this->registry->getRepository(Media::class)->findBy([],['title' => 'ASC']);
     }
 
     /**

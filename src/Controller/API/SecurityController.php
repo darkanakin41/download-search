@@ -3,33 +3,44 @@
 
 namespace App\Controller\API;
 
-use PLejeune\UserBundle\Entity\User;
+use App\Entity\User;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class SecurityController
  * @package App\Controller\API
- * @Route("/api/security")
+ * @Route("/api/security/")
  */
 final class SecurityController extends AbstractController
 {
+
     /**
-     * @Route("login", name="login")
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+    /**
+     * @Route("login", name="api_security_login", methods={"POST"})
      * @return JsonResponse
      */
     public function loginAction(): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
-        $response = new JsonResponse($user->getRoles());
-        return $response;
+        $data = $this->serializer->serialize($user, 'json');
+        return new JsonResponse($data, 200, [], true);
     }
 
     /**
-     * @Route("logout", name="logout")
+     * @Route("logout", name="api_security_logout")
      * @throws RuntimeException
      */
     public function logoutAction(): void

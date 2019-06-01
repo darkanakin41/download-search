@@ -1,23 +1,30 @@
 <template>
     <div>
         <div class="drawer-header">
-            <div class="image">
-                <img src="../../../assets/leftmenu-header-background.jpg" alt="Banner profil image">
-            </div>
-            <div class="user">
-                <div class="avatar">
-                    <img src="../../../assets/avatar.jpg" alt="Darkanakin41" title="Darkanakin41" />
-                </div>
-                <div class="id">
-                    <span class="pseudo">Darkanakin41</span>
-                    <span class="mail">darkanakin41@gmail.com</span>
-                </div>
-            </div>
             <div class="close">
                 <a data-close>
                     <i class="fas fa-times link-icon"></i>
                 </a>
+                <a @click="logout" v-if="user !== null && !loading">
+                    <i class="fas fa-sign-out-alt link-icon"></i>
+                </a>
             </div>
+            <template v-if="user !== null && !loading">
+                <div class="image">
+                    <img src="../../../assets/leftmenu-header-background.jpg" alt="Banner profil image">
+                </div>
+                <div class="user">
+                    <div class="avatar">
+                        <img src="../../../assets/avatar.jpg" :alt="user.username" title="user.username" />
+                    </div>
+                    <div class="id">
+                        <span class="pseudo">{{user.username}}</span>
+                        <span class="mail">{{user.email}}</span>
+                    </div>
+                </div>
+            </template>
+            <Login v-else-if="!loading" v-model="user" />
+            <Loading v-if="loading" :fixed="false" />
         </div>
         <ul class="menu vertical accordion-menu" data-accordion-menu>
             <li v-for="item in items">
@@ -46,15 +53,39 @@
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
     import VueRouter from "vue-router";
+    import Session from "../Session";
+    import Login from "../../app/Security/Login.vue";
+    import SecurityAPI from "../../app/API/SecurityAPI";
+    import Loading from "./Loading.vue";
 
     Vue.use(VueRouter);
-
-    @Component
+    @Component({
+        components: {Loading, Login}
+    })
     export default class LeftMenu extends Vue {
         @Prop({type: Array}) items;
+        user:any = null;
+        loading: Boolean;
+
+        data() {
+            return {
+                loading: false,
+                user: Session.getObject('user'),
+            }
+        }
 
         getIconClasses(icon: String) {
             return icon + " link-icon";
+        }
+
+        logout() {
+            if (Session.getObject('user') !== null) {
+                this.loading = true;
+                SecurityAPI.logout(() => {
+                    this.user = null;
+                    this.loading = false;
+                })
+            }
         }
     }
 </script>
@@ -71,12 +102,14 @@
         @include transition(all .2s cubic-bezier(.4, 0, .2, 1));
 
         .close {
+            display:flex;
+            flex-direction: column;
             position: absolute;
             top: 5px;
             right: 0;
 
             a {
-                padding: .7rem 1rem;
+                padding: 0 1rem .7rem 1rem;
                 color: white;
                 @include opacity(.5);
                 @include transition(all .2s linear);
@@ -184,6 +217,7 @@
 
                 li {
                     padding-right: 0;
+
                     a {
                         padding-left: 1.2rem;
                     }

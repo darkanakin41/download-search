@@ -158,9 +158,6 @@
     "plejeune/media-bundle": {
         "version": "1.0"
     },
-    "plejeune/user-bundle": {
-        "version": "1.0"
-    },
     "psr/cache": {
         "version": "1.0.1"
     },

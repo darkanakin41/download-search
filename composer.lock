@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5a4acb0059ceab41863acdc0f54b3a8",
+    "content-hash": "86ebf79538d1411f301b14793b2f85cb",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2603,63 +2603,6 @@
                 "Core Bundle"
             ],
             "time": "2018-12-28T19:13:39+00:00"
-        },
-        {
-            "name": "plejeune/user-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git@gitlab.com:pierrelejeune/userbundle.git",
-                "reference": "0ee09a30f5b27b390137418b285c5460405a9650"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/pierrelejeune%2Fuserbundle/repository/archive.zip?sha=0ee09a30f5b27b390137418b285c5460405a9650",
-                "reference": "0ee09a30f5b27b390137418b285c5460405a9650",
-                "shasum": ""
-            },
-            "require": {
-                "knplabs/knp-menu-bundle": "^2.0",
-                "php": "^7.0",
-                "plejeune/core-bundle": "dev-master",
-                "symfony/form": "*",
-                "symfony/framework-bundle": "*",
-                "symfony/orm-pack": "*",
-                "symfony/security-bundle": "*",
-                "symfony/translation": "*",
-                "symfony/twig-bundle": "*",
-                "symfony/validator": "*",
-                "symfony/yaml": "*"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PLejeune\\UserBundle\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Pierre LEJEUNE",
-                    "email": "lejeune.pierre.41@gmail.com"
-                }
-            ],
-            "description": "Pierre LEJEUNE UserBundle",
-            "homepage": "https://gitlab.com/pierrelejeune/corebundle",
-            "keywords": [
-                "Core Bundle"
-            ],
-            "time": "2019-03-28T20:20:33+00:00"
         },
         {
             "name": "psr/cache",
@@ -8046,8 +7989,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "knplabs/knp-paginator-bundle": 20,
-        "plejeune/core-bundle": 20,
-        "plejeune/user-bundle": 20
+        "plejeune/core-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -1,23 +1,30 @@
 security:
     encoders:
-        PLejeune\UserBundle\Entity\User: bcrypt
+        App\Entity\User: auto
     providers:
-        plejeune_user_provider:
-            id: PLejeune\UserBundle\Security\UserProvider
+        in_memory: { memory: ~ }
+        database:
+            entity:
+                class: App\Entity\User
+                property: username
+
     role_hierarchy:
         ROLE_MEMBER: [ROLE_USER]
         ROLE_ADMIN: [ROLE_MEMBER]
 
     firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
         main:
             entry_point: App\Security\AuthenticationEntryPoint
-            pattern: ^/
+            provider: database
             anonymous: true
 
             json_login:
-                check_path: /api/security/login
+                check_path: api_security_login
 
             logout:
-                path: /api/security/logout
+                path: api_security_logout
     access_control:
-        - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY }

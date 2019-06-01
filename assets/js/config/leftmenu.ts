@@ -1,17 +1,16 @@
-import accountRoutes from "../page/Account/router";
 import itemRoutes from "../page/Item/router";
 import mediaRoutes from "../page/Media/router";
 
-function createMenu(routes:Array<any>){
-    let output:Array<Object> = [];
+function createMenu(routes: Array<any>) {
+    let output: Array<Object> = [];
 
     routes.forEach(item => {
-        if(!item.meta.leftMenu){
+        if (!item.meta.leftMenu) {
             return;
         }
         output.push({
-            name : item.name,
-            label : item.meta.title,
+            name: item.name,
+            label: item.meta.title,
             icon: item.meta.icon
         });
     });
@@ -19,7 +18,7 @@ function createMenu(routes:Array<any>){
     return output;
 }
 
-export default [
+let routes = [
     {
         label: 'Accueil',
         name: 'home',
@@ -33,9 +32,11 @@ export default [
         label: 'Media',
         children: createMenu(mediaRoutes),
     },
-    {
-        label: 'Mon Compte',
-        children: createMenu(accountRoutes),
-    }
+    // {
+    //     label: 'Mon Compte',
+    //     children: createMenu(securityRoutes),
+    // }
 ];
+
+export default routes;
 

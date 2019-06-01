@@ -21,7 +21,6 @@
         "knplabs/knp-paginator-bundle": "dev-master",
         "phpoffice/phpword": "^0.16.0",
         "plejeune/core-bundle": "dev-master",
-        "plejeune/user-bundle": "dev-master",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "*",
         "symfony/console": "*",

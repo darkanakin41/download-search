@@ -3,11 +3,11 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
-use PLejeune\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -30,16 +30,10 @@ final class UserFixtures extends Fixture
     {
         $userEntity = new User();
         $userEntity->setUsername('darkanakin41');
-        $userEntity->setFirstname('Pierre');
-        $userEntity->setLastname('Lejeune');
         $userEntity->setEmail('darkanakin41@gmail.com');
         $userEntity->setRoles(['ROLE_USER']);
-        $userEntity->setDateRegistration(new DateTime());
-        $userEntity->setDateValidation(new DateTime());
-        $userEntity->setEnable(true);
 
-        $password = $this->userPasswordEncoder->encodePassword($userEntity, "azerty123");
-        $userEntity->setPassword($password);
+        $userEntity->setPlainPassword("azerty123");
 
         $manager->persist($userEntity);
         $manager->flush();
