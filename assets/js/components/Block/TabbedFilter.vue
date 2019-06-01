@@ -15,7 +15,7 @@
     @Component
     export default class TabbedFilter extends Vue {
         @Prop({type: Array}) valuesInput;
-        @Prop({default:null}) initialFilter;
+        @Prop({default: null}) initialFilter;
         @Prop({type: String}) displayedField;
 
         filters;
@@ -26,8 +26,8 @@
             }
         }
 
-        displayFilter(filter){
-            if(this.displayedField !== undefined && filter.value[this.displayedField] !== undefined){
+        displayFilter(filter) {
+            if (this.displayedField !== undefined && filter.value[this.displayedField] !== undefined) {
                 return filter.value[this.displayedField];
             }
             return filter.value;
@@ -46,7 +46,7 @@
             }
         }
 
-        mounted(){
+        mounted() {
             this.onValuesInputChange();
         }
 
@@ -79,10 +79,8 @@
         .menu {
             li {
                 a {
-                    border-bottom: 3px solid transparent;
                     display: block;
                     padding: 1rem 1.8rem;
-                    color: $mainColor;
                     font-family: 'Roboto Condensed', sans-serif;
                     text-transform: uppercase;
                     font-weight: bold;
@@ -97,11 +95,10 @@
 
                 &.active {
                     background: transparent;
+
                     a {
                         @include opacity(1);
                         background: transparent;
-                        color: $mainColor;
-                        border-color: $mainColor;
                     }
                 }
             }

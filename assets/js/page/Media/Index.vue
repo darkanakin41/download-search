@@ -5,34 +5,38 @@
                 <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
             </div>
         </form>
+        <TabbedFilter v-if="!loading" :valuesInput="filterValues" v-model="filter" />
         <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <Grid v-if="!loading && itemsDisplayed.length > 0" :items="itemsDisplayed"/>
-        <div v-if="!loading && itemsDisplayed.length === 0" class="callout warning">
+        <Grid v-if="!loading && itemsFiltered.length > 0" :items="itemsFiltered"/>
+        <div v-if="!loading && itemsFiltered.length === 0" class="callout warning">
             <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from "vue-property-decorator";
+    import {Component, Vue, Watch} from "vue-property-decorator";
     import FlexTable from "../../components/Table/FlexTable.vue";
     import Loading from "../../components/Block/Loading.vue";
+    import TabbedFilter from "../../components/Block/TabbedFilter";
 
     import tableConfig from "../../config/table/search";
-    import Item from "../../app/Entity/Item";
 
     import Session from "../../components/Session";
     import MediaAPI from "../../app/API/MediaAPI";
     import Grid from "../../app/Component/Media/Grid.vue";
+    import Media from "../../app/Entity/Media";
 
     @Component({
-        components: {Grid, Loading, FlexTable}
+        components: {Grid, Loading, FlexTable, TabbedFilter}
     })
     export default class Index extends Vue {
         search = "";
         loading = false;
-        itemsInput: Array<Item> = [];
-        itemsDisplayed: Array<Item> = [];
+        filter = "";
+        itemsInput: Array<Media> = [];
+        itemsFiltered: Array<Media> = [];
+        itemsDisplayed: Array<Media> = [];
 
         data() {
             return {
@@ -41,6 +45,7 @@
                 itemsInput: [],
                 itemsDisplayed: [],
                 tableConfig: tableConfig,
+                filterValues: ['animes','movie','tv']
             }
         }
 
@@ -61,17 +66,33 @@
             }
         }
 
-        onSubmitMethod() {
-            let search = <string> Session.set('media-search-value', this.search.trim());
 
+        @Watch('filter')
+        onFilterChange() {
             this.loading = true;
-            this.itemsDisplayed = this.itemsInput.filter((item) => {
-                if(search === ""){
-                    return true;
+            let search = <string> Session.get('media-search-value');
+            let searchSet:Boolean = (search !== null && search.trim() !== "");
+            let filterSet:Boolean = (this.filter !== null && this.filter.trim() !== "");
+
+            this.itemsFiltered = this.itemsInput.filter(item => {
+                let filterResult = true;
+                let searchResult = true;
+
+                if(searchSet){
+                    searchResult = item.title.toLowerCase().indexOf(search.toLowerCase()) !== -1;
                 }
-                return item.title.toLowerCase().startsWith(search.toLowerCase());
+                if(filterSet){
+                    filterResult = item.category === this.filter;
+                }
+
+                return searchResult && filterResult;
             });
             this.loading = false;
+        }
+
+        onSubmitMethod() {
+            Session.set('media-search-value', this.search.trim());
+            this.onFilterChange();
             return false;
         }
     }
@@ -107,7 +128,7 @@
         }
     }
 
-    .tab-container {
-        background: $dark;
+    .grid-container{
+        max-width : 100%;
     }
 </style>

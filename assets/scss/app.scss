@@ -23,3 +23,26 @@ body {
 @import "./partial/content";
 @import "./partial/drawer";
 @import "./partial/footer";
+
+.tab-container{
+    background: $dark;
+    color : $green;
+    .menu{
+        li{
+            a{
+                color : $mainColor;
+                border-bottom: 3px solid transparent;
+                &:hover{
+                    color: $mainColor;
+                }
+            }
+
+            &.active {
+                a{
+                    color: $mainColor;
+                    border-color: $mainColor;
+                }
+            }
+        }
+    }
+}

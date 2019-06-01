@@ -21,6 +21,7 @@ For connected users :
 * Display list of subscribed series
 * Display a calendar of upcoming episodes from TV Shows
 * Add a checkbox which save if the episode/movie have been downloaded
+* Add a notification system when a new episode is out
 
 For the system :
 * Add a command to retrieve last uploaded items

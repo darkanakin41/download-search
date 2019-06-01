@@ -97,7 +97,7 @@
          */
         @Watch("itemsInput")
         onItemsInputUpdate() {
-            if (this.itemsInput.length < this.nbPerPage) {
+            if (this.itemsInput.length <= this.nbPerPage) {
                 this.lastPage = 0;
             } else {
                 this.lastPage = Math.trunc(this.itemsInput.length / this.nbPerPage);

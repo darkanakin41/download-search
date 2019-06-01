@@ -1,13 +1,11 @@
 <template>
-    <div class="card visual">
-        <div>
-            <div class="banner">
-                <img :src="item.backdrop" :alt="item.title" :title="item.title">
-            </div>
-            <div class="content">
-                <h1>{{item.title}}</h1>
-                <span><i class="fa fa-tag"></i> {{ item.category }}</span>
-            </div>
+    <div class="card media visual">
+        <div class="banner">
+            <img :src="item.poster" :alt="item.title" :title="item.title">
+        </div>
+        <div class="content">
+            <h1 class="title">{{item.title}}</h1>
+            <span><i class="fa fa-tag"></i> {{ item.category }}</span>
         </div>
     </div>
 </template>
@@ -29,21 +27,18 @@
     @import "../../../../scss/common/config";
 
     .card {
-        @include make-card();
-        border: none;
-
         &.visual {
             width: 100%;
-            padding-bottom: 45%;
             position: relative;
             margin: 0;
+            background: white;
 
-            & > div {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
+            border: 2px solid transparent;
+            @include transition(border-color .35s linear);
+
+            &:hover {
+                border-color: $mainColor;
+                @include transition(border-color .15s linear);
             }
 
             .banner {
@@ -57,36 +52,29 @@
             }
 
             .content {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: transparentize(black, .3);
-                color: white;
+                color: $dark;
                 padding: .5rem 1rem;
-                text-align: center;
+                text-align: left;
                 font-weight: $weightExtraBold;
 
-                h1 {
-                    font-size: 1.1rem;
-                    padding: 0 0 5px;
-                    margin: 0;
+                .title, span {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                     color: inherit;
                 }
 
-                h2 {
-                    font-size: .8rem;
-                    padding: 0;
+                .title {
+                    font-size: 1rem;
                     margin: 0;
-                    color: inherit;
+                    padding: 0;
                 }
 
                 span {
                     font-weight: $weightMedium;
-                    color: inherit;
                     display: inline-block;
                     font-size: .8rem;
-                    @include opacity(.8);
+                    @include opacity(.6);
 
                     .fa, .fas {
                         width: 23px;
