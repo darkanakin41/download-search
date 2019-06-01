@@ -126,17 +126,21 @@ class MediaService
         $media->setAverageNote($data['vote_average']);
         $media->setUpdated(new DateTime("now"));
         $media->setStatus($data['status']);
+        $releaseDate = null;
         if(isset($data['release_date'])){
             try{
-                $media->setReleaseDate(DateTime::createFromFormat('Y-m-d', $data['release_date']));
+                $releaseDate = DateTime::createFromFormat('Y-m-d', $data['release_date']);
+
             }catch(Exception $e){}
         }
         if(isset($data['last_air_date'])){
             try{
-                $media->setReleaseDate(DateTime::createFromFormat('Y-m-d', $data['last_air_date']));
+                $releaseDate = DateTime::createFromFormat('Y-m-d', $data['last_air_date']);
             }catch(Exception $e){}
         }
-
+        if($releaseDate !== false){
+            $media->setReleaseDate($releaseDate);
+        }
         $genreRepository = $this->registry->getRepository(Genre::class);
         foreach($data['genres'] as $g){
             $genre = $genreRepository->findOneBy(['title' => $g['name']]);
