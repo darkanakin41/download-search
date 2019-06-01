@@ -22,7 +22,7 @@ const itemRoutes: Array<RouteConfig> = [
         },
         path: '/item/:id/view/',
         component: () => {
-            return import(/* webpackChunkName: 'item' */ "./View.vue")
+            return import(/* webpackChunkName: 'item' */ "./Display.vue")
         }
     },
 ];

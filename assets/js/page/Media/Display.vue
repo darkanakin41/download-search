@@ -26,7 +26,7 @@
     @Component({
         components: {Header, ItemCard, Loading}
     })
-    export default class View extends Vue {
+    export default class Display extends Vue {
         media: Media;
         items: Array<Item>;
         loading: boolean;

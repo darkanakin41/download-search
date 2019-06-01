@@ -22,7 +22,7 @@ const mediaRoutes: Array<RouteConfig> = [
         },
         path: '/media/:id/view/',
         component: () => {
-            return import(/* webpackChunkName: 'media' */ "./View.vue")
+            return import(/* webpackChunkName: 'media' */ "./Display.vue")
         }
     },
 ];

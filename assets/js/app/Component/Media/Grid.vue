@@ -22,6 +22,8 @@
     })
     export default class Grid extends Vue {
         @Prop({type: Array}) items;
+        @Prop({type: Number}) itemsPerRowForced;
+        @Prop({type: Number}) nbRowsForced;
         @Prop({type: Boolean, default: true}) pagination;
 
         itemsDisplayed: Array<Media>;
@@ -55,18 +57,32 @@
         calculWidth() {
             let windowWidth = window.innerWidth;
 
-            if(windowWidth <= 375){
-                this.itemsPerRow = 2;
-                this.rowsPerPage = 4;
-            }else if (windowWidth <= 768){
-                this.itemsPerRow = 3;
-                this.rowsPerPage = 4;
-            }else if(windowWidth < 1920){
-                this.itemsPerRow = 6;
-                this.rowsPerPage = 2;
+            if(this.itemsPerRowForced !== undefined){
+                this.itemsPerRow = this.itemsPerRowForced;
             }else{
-                this.itemsPerRow = 12;
-                this.rowsPerPage = 2;
+                if(windowWidth <= 375){
+                    this.itemsPerRow = 2;
+                }else if (windowWidth <= 768){
+                    this.itemsPerRow = 3;
+                }else if(windowWidth < 1920){
+                    this.itemsPerRow = 6;
+                }else{
+                    this.itemsPerRow = 12;
+                }
+            }
+
+            if(this.nbRowsForced !== undefined){
+                this.rowsPerPage = this.itemsPerRowForced;
+            }else{
+                if(windowWidth <= 375){
+                    this.rowsPerPage = 4;
+                }else if (windowWidth <= 768){
+                    this.rowsPerPage = 4;
+                }else if(windowWidth < 1920){
+                    this.rowsPerPage = 2;
+                }else{
+                    this.rowsPerPage = 2;
+                }
             }
 
             this.itemsPerPage = this.itemsPerRow * this.rowsPerPage;

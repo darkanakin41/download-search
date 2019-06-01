@@ -21,14 +21,14 @@
                 Derniers médias récupérés
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :items="lastDownloadedMedias" :pagination="false" />
+            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastDownloadedMedias" :pagination="false" />
         </section>
         <section class="grid-container">
             <h2 class="section-title">
                 Derniers médias mis à jour
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :items="lastUpdatedMedias" :pagination="false" />
+            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastUpdatedMedias" :pagination="false" />
         </section>
     </div>
 </template>

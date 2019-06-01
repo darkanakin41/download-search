@@ -19,7 +19,7 @@
     @Component({
         components: {ItemContent, Loading, MediaHeader}
     })
-    export default class View extends Vue {
+    export default class Display extends Vue {
         loading: Boolean = true;
         item: Item;
 

@@ -18,7 +18,7 @@ Encore.addEntry('app', './assets/js/app.ts');
 
 // Split huge files
 Encore.splitEntryChunks();
-Encore.disableSingleRuntimeChunk();
+Encore.enableSingleRuntimeChunk();
 
 Encore.enableSassLoader();
 Encore.enableVueLoader();
