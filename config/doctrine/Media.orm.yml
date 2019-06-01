@@ -31,8 +31,28 @@ App\Entity\Media:
         updated:
             type: datetime
             nullable: true
+        status:
+            type: string
+            length: 255
+            nullable: true
+        releaseDate:
+            type: date
+            nullable: true
+        averageNote:
+            type: float
+            nullable: true
         theMovieDbId:
             type: integer
             nullable: true
+
+    manyToMany:
+        genres:
+            targetEntity: App\Entity\Genre
+            joinColumn:
+                name: media_id
+                referencedColumnName: id
+            inverseJoinColumns:
+                name: group_id
+                referencedColumnName: id
 
     lifecycleCallbacks: {  }

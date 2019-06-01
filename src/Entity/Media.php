@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\API\Data\TheMovieDB;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class Media
 {
@@ -20,7 +22,20 @@ class Media
 
     private $updated;
 
+    private $status;
+
+    private $releaseDate;
+
+    private $averageNote;
+
     private $theMovieDbId;
+
+    private $genres;
+
+    public function __construct()
+    {
+        $this->genres = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,6 +78,11 @@ class Media
         return $this;
     }
 
+    public function getPosterFullURL()
+    {
+        return TheMovieDB::MEDIA_URL."/".$this->getPoster();
+    }
+
     public function getPoster(): ?string
     {
         return $this->poster;
@@ -73,10 +93,6 @@ class Media
         $this->poster = $poster;
 
         return $this;
-    }
-
-    public function getPosterFullURL(){
-        return TheMovieDB::MEDIA_URL . "/" . $this->getPoster();
     }
 
     public function getUpdated(): ?\DateTimeInterface
@@ -103,6 +119,11 @@ class Media
         return $this;
     }
 
+    public function getBackdropFullURL()
+    {
+        return TheMovieDB::MEDIA_URL."/".$this->getBackdrop();
+    }
+
     public function getBackdrop(): ?string
     {
         return $this->backdrop;
@@ -115,7 +136,65 @@ class Media
         return $this;
     }
 
-    public function getBackdropFullURL(){
-        return TheMovieDB::MEDIA_URL . "/" . $this->getBackdrop();
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(?\DateTimeInterface $releaseDate): self
+    {
+        $this->releaseDate = $releaseDate;
+
+        return $this;
+    }
+
+    public function getAverageNote(): ?float
+    {
+        return $this->averageNote;
+    }
+
+    public function setAverageNote(?float $averageNote): self
+    {
+        $this->averageNote = $averageNote;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Genre[]
+     */
+    public function getGenres(): Collection
+    {
+        return $this->genres;
+    }
+
+    public function addGenre(Genre $genre): self
+    {
+        if (!$this->genres->contains($genre)) {
+            $this->genres[] = $genre;
+        }
+
+        return $this;
+    }
+
+    public function removeGenre(Genre $genre): self
+    {
+        if ($this->genres->contains($genre)) {
+            $this->genres->removeElement($genre);
+        }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

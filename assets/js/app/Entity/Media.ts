@@ -1,3 +1,5 @@
+import Genre from "./Genre";
+
 export default class Media {
     id: number;
     title: String;
@@ -7,6 +9,10 @@ export default class Media {
     backdrop: String;
     updated: String;
     theMovieDbId: String;
+    status: String;
+    releaseDate: Date|undefined = undefined;
+    averageNote: Number;
+    genres: Array<Genre> = [];
 
     constructor(data: any) {
         this.id = data.id;
@@ -17,5 +23,13 @@ export default class Media {
         this.backdrop = data.backdropFullURL;
         this.updated = data.updated;
         this.theMovieDbId = data.theMovieDbId;
+        this.status = data.status;
+        if(data.releaseDate !== null){
+            this.releaseDate = new Date(data.releaseDate);
+        }
+        this.averageNote = data.averageNote;
+        data.genres.forEach((g:Object) => {
+            this.genres.push(new Genre(g));
+        })
     }
 }

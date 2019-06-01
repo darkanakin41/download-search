@@ -2,16 +2,29 @@ import {RouteConfig} from "vue-router";
 
 const mediaRoutes: Array<RouteConfig> = [
     {
-        name: 'media-last',
+        name: 'media-last-released',
         meta: {
-            title: 'Derniers médias',
+            title: 'Dernières Sorties',
             pageTitle: true,
             leftMenu: true,
             icon: 'far fa-clock',
         },
-        path: '/media/last',
+        path: '/media/last-released',
         component: () => {
-            return import(/* webpackChunkName: 'media' */ "./Last.vue")
+            return import(/* webpackChunkName: 'media' */ "./LastReleased.vue")
+        }
+    },
+    {
+        name: 'media-last-updated',
+        meta: {
+            title: 'Dernières MAJ',
+            pageTitle: true,
+            leftMenu: true,
+            icon: 'fas fa-sync-alt',
+        },
+        path: '/media/last-updated',
+        component: () => {
+            return import(/* webpackChunkName: 'media' */ "./LastUpdated.vue")
         }
     },
     {

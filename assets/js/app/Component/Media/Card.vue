@@ -53,7 +53,7 @@
 
             .content {
                 color: $dark;
-                padding: .5rem 1rem;
+                padding: .5rem .3rem;
                 text-align: left;
                 font-weight: $weightExtraBold;
 

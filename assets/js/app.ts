@@ -36,3 +36,4 @@ router.afterEach((to, from) => {
     app.loading = false;
     $("#drawer").find('a[data-close]').trigger('click');
 });
+

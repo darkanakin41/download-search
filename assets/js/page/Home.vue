@@ -18,10 +18,10 @@
         </div>
         <section class="grid-container">
             <h2 class="section-title">
-                Derniers médias récupérés
+                Derniers médias sortis
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastDownloadedMedias" :pagination="false" />
+            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastReleasedMedias" :pagination="false" />
         </section>
         <section class="grid-container">
             <h2 class="section-title">
@@ -29,6 +29,13 @@
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
             <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastUpdatedMedias" :pagination="false" />
+        </section>
+        <section class="grid-container">
+            <h2 class="section-title">
+                Derniers médias récupérés
+            </h2>
+            <Loading v-if="mediasLoading" :fixed="false" />
+            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastDownloadedMedias" :pagination="false" />
         </section>
     </div>
 </template>
@@ -49,6 +56,7 @@
         sources: Array<Source>;
         lastUpdatedMedias: Array<Media>;
         lastDownloadedMedias: Array<Media>;
+        lastReleasedMedias: Array<Media>;
         mediasLoading: Boolean = false;
 
         data() {
@@ -56,6 +64,7 @@
                 sources: [],
                 lastUpdatedMedias: [],
                 lastDownloadedMedias: [],
+                lastReleasedMedias: [],
                 mediasLoading: false,
             }
         }
@@ -74,6 +83,10 @@
                     return a.id < b.id;
                 });
                 this.lastDownloadedMedias = items.slice(0, 6);
+                items.sort((a: Media, b: Media) => {
+                    return a.releaseDate < b.releaseDate;
+                });
+                this.lastReleasedMedias = items.slice(0, 6);
                 this.mediasLoading = false;
             })
         }

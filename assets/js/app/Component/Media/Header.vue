@@ -7,23 +7,44 @@
             </div>
             <div class="infos">
                 <h1>{{ media.title }}</h1>
-                <div class="detail"><i class="fa fa-tag"></i> {{ media.category }}</div>
-                <div class="description"><i class="fa fa-book-open"></i> Résumé : <br/> {{ media.description }}</div>
+                <div class="detail">
+                    <i class="far fa-folder"></i> {{ media.category }}
+                    <i class="fas fa-thermometer-three-quarters"></i> {{ media.status }}
+                    <template v-if="media.releaseDate"><i class="fa fa-calendar"></i> {{ displayDate(media.releaseDate)}}</template>
+                    <i class="fa fa-star"></i> {{ media.averageNote }}
+                </div>
+                <div class="detail" v-if="media.genres.length > 0">
+                    <i class="fa fa-tag"></i> Genre :
+                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}<template v-if="k < media.genres.length-1">, </template></template>
+                </div>
+                <div class="description"><i class="fa fa-book-open"></i> Résumé : <br /> {{ media.description }}</div>
             </div>
         </div>
     </header>
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+    import {Component, Prop, Vue} from "vue-property-decorator";
     import Media from "../../Entity/Media";
 
     @Component
     export default class Header extends Vue {
         @Prop({type: Media}) media;
 
-        mounted(){
+        mounted() {
             document.querySelector("header.media div.backdrop").style.backgroundImage = "url('" + this.media.backdrop + "')";
+        }
+
+        displayDate(date:Date|undefined){
+            if(date === undefined){
+                return "";
+            }
+
+            let dd = (date.getDay() < 10 ? '0' : '') + date.getDay();
+            let MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+            let yyyy = date.getFullYear();
+
+            return (dd + "/" + MM + "/" + yyyy);
         }
     }
 </script>
@@ -52,12 +73,13 @@
         .content {
             margin: 0 auto;
             color: white;
-            width:100%;
+            width: 100%;
             max-width: 1280px;
             display: flex;
             align-items: center;
 
             $avatar-width: 200px;
+
             .avatar {
                 flex: 0 0 $avatar-width;
                 overflow: hidden;
@@ -66,7 +88,7 @@
 
                 img {
                     @include border-radius(15px);
-                    border : 2px solid $mainColor;
+                    border: 2px solid $mainColor;
                 }
             }
 
@@ -82,9 +104,10 @@
                 .detail, .description {
                     font-size: 1rem;
                     opacity: .7;
-                    .fa{
-                        width: 40px;
-                        text-align : center;
+
+                    .fa, .far, .fas, .fab {
+                        width: 30px;
+                        text-align: center;
                     }
                 }
             }

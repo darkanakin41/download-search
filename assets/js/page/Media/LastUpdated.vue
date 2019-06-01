@@ -25,8 +25,7 @@
     @Component({
         components: {Grid, Loading, FlexTable, TabbedFilter}
     })
-    export default class Index extends Vue {
-        search = "";
+    export default class LastUpdated extends Vue {
         loading = false;
         filter = "";
         itemsInput: Array<Media> = [];
@@ -34,7 +33,6 @@
 
         data() {
             return {
-                search: '',
                 loading: false,
                 itemsInput: [],
                 itemsDisplayed: [],
@@ -47,11 +45,15 @@
             this.loading = true;
             MediaAPI.getAll((items) => {
                 this.itemsInput = items;
-                this.itemsInput.sort((a:Media, b:Media) => {
-                    return a.updated < b.updated;
-                });
+                this.sortItems();
                 this.onFilterChange();
                 this.loading = false;
+            });
+        }
+
+        sortItems(){
+            this.itemsInput.sort((a:Media, b:Media) => {
+                return a.updated < b.updated;
             });
         }
 

@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\API\Data\TheMovieDB;
+use App\Entity\Genre;
 use App\Entity\Item;
 use App\Entity\Media;
 use App\Nomenclature\CategoryNomenclature;
@@ -82,13 +83,9 @@ class MediaService
 
             if (is_null($media)) {
                 $media = new Media();
-                $media->setTitle(isset($data['title']) ? $data['title'] : $data['name']);
-                $media->setTheMovieDbId($data['id']);
                 $media->setCategory($item->getCategory());
-                $media->setDescription($data['overview']);
-                $media->setPoster($data['poster_path']);
-                $media->setBackdrop($data['backdrop_path']);
-                $media->setUpdated(new DateTime("now"));
+
+                $this->updateMediaData($media, $data);
 
                 $this->registry->getManager()->persist($media);
             }
@@ -96,6 +93,59 @@ class MediaService
             $item->setMedia($media);
             $this->registry->getManager()->persist($item);
             $this->registry->getManager()->flush();
+        }
+    }
+
+    /**
+     * Update Media's information based on TheMovieDB information
+     * @param Media $media
+     */
+    public function update(Media $media){
+
+        switch ($media->getCategory()) {
+            case CategoryNomenclature::MOVIE :
+                $data = $this->theMovieDB->getMovie($media->getTheMovieDbId());
+                break;
+            case CategoryNomenclature::ANIME :
+            case CategoryNomenclature::TV :
+                $data = $this->theMovieDB->getTvShow($media->getTheMovieDbId());
+                break;
+            default:
+                return;
+        }
+
+        $this->updateMediaData($media, $data);
+    }
+
+    private function updateMediaData(Media $media, array $data){
+        $media->setTitle(isset($data['title']) ? $data['title'] : $data['name']);
+        $media->setTheMovieDbId($data['id']);
+        $media->setDescription($data['overview']);
+        $media->setPoster($data['poster_path']);
+        $media->setBackdrop($data['backdrop_path']);
+        $media->setAverageNote($data['vote_average']);
+        $media->setUpdated(new DateTime("now"));
+        $media->setStatus($data['status']);
+        if(isset($data['release_date'])){
+            try{
+                $media->setReleaseDate(DateTime::createFromFormat('Y-m-d', $data['release_date']));
+            }catch(Exception $e){}
+        }
+        if(isset($data['last_air_date'])){
+            try{
+                $media->setReleaseDate(DateTime::createFromFormat('Y-m-d', $data['last_air_date']));
+            }catch(Exception $e){}
+        }
+
+        $genreRepository = $this->registry->getRepository(Genre::class);
+        foreach($data['genres'] as $g){
+            $genre = $genreRepository->findOneBy(['title' => $g['name']]);
+            if($genre === null){
+                $genre = new Genre();
+                $genre->setTitle($g['name']);
+                $this->registry->getManager()->persist($genre);
+            }
+            $media->addGenre($genre);
         }
     }
 }
