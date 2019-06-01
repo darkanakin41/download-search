@@ -11,6 +11,7 @@ use App\Nomenclature\CategoryNomenclature;
 use DOMDocument;
 use DOMNode;
 use DOMNodeList;
+use DOMText;
 use DOMXPath;
 use GuzzleHttp\Client;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -191,19 +192,38 @@ class AnnuaireTelechargement implements AbstractAPI
         /** @var DOMNodeList $nodes */
         $nodes = $domXPath->query('//div[@class="corps"]/div[1]/div');
 
+        $textElements = [];
         for ($i = 0; $i < $nodes->length; $i++) {
-            $node = $nodes->item($i);
-            $this->nodeExtractQualite($item, $node);
-            $this->nodeExtractSeason($item, $node);
+            $textElements = self::customMerge($textElements, $this->getMashaIndexNodes($nodes->item($i)));
+        }
+
+        foreach($textElements as $textElement){
+            $this->nodeExtractQualite($item, $textElement);
+            $this->nodeExtractSeason($item, $textElement);
         }
     }
 
-    private function nodeExtractQualite(Item $item, DOMNode $node)
+    private function getMashaIndexNodes(DOMNode $node){
+        $retour = [];
+        $childs = $node->childNodes;
+        for ($i = 0; $i < $childs->length; $i++) {
+            $n = $childs->item($i);
+            if($n->nodeName === "#text"){
+                return [$n->nodeValue];
+            }
+            if($n->hasChildNodes()){
+                $retour = self::customMerge($retour, $this->getMashaIndexNodes($n));
+            }
+        }
+        return $retour;
+    }
+
+    private function nodeExtractQualite(Item $item, $string)
     {
-        if (stripos($node->nodeValue, "qualité") === false) {
+        if (stripos($string, "qualité") === false) {
             return;
         }
-        $nodeValueExploded = explode('|', $node->nodeValue);
+        $nodeValueExploded = explode('|', $string);
         if (count($nodeValueExploded) === 1) {
             return;
         }
@@ -214,12 +234,12 @@ class AnnuaireTelechargement implements AbstractAPI
         $item->setQuality($qualite);
     }
 
-    private function nodeExtractSeason(Item $item, DOMNode $node)
+    private function nodeExtractSeason(Item $item, $string)
     {
-        if (stripos($node->nodeValue, "saison") === false) {
+        if (stripos($string, "saison") === false) {
             return;
         }
-        $nodeValueExploded = explode('|', $node->nodeValue);
+        $nodeValueExploded = explode('|', $string);
         if (count($nodeValueExploded) === 1) {
             return;
         }
@@ -236,7 +256,7 @@ class AnnuaireTelechargement implements AbstractAPI
         $item->setSeason($season);
 
         // Récupération du language
-        if (stripos($node->nodeValue, "qualité") !== false) {
+        if (stripos($string, "qualité") !== false) {
             if(stripos($lastPart, PHP_EOL) !== false){
                 $baseString = $lastPart;
             }else{
@@ -248,4 +268,11 @@ class AnnuaireTelechargement implements AbstractAPI
         }
     }
 
+    private static function customMerge($array1, $array2){
+        $retour = $array1;
+        foreach($array2 as $item){
+            $retour[] = $item;
+        }
+        return $retour;
+    }
 }

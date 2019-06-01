@@ -29,21 +29,54 @@ final class ItemService
 
     /**
      * Search for items based on user input
+     *
      * @param string $q
+     *
      * @return Item[]
      */
-    public function search($q){
+    public function search($q)
+    {
         $data = $this->globalAPI->search($q);
         $this->saveAll($data);
 
-        usort($data, function(Item $item1, Item $item2){
-            if($item1->getTitle() === $item2->getTitle()){
+        usort($data, function (Item $item1, Item $item2) {
+            if ($item1->getTitle() === $item2->getTitle()) {
                 return 0;
             }
             return $item1->getTitle() > $item2->getTitle();
         });
 
         return $data;
+    }
+
+    /**
+     * Save all itemInput if they are not existing
+     *
+     * @param array $items
+     */
+    private function saveAll(array &$items)
+    {
+        $repository = $this->registry->getRepository(Item::class);
+        $manager = $this->registry->getManager();
+
+        foreach ($items as $key => $item) {
+            $this->clean($item);
+            $dbItem = $repository->findOneBy(['source' => $item->getSource(), 'url' => $item->getUrl()]);
+            if ($dbItem === null) {
+                $manager->persist($item);
+            } else {
+                $dbItem->setLastPart($item->getLastPart());
+                $manager->persist($dbItem);
+                $items[$key] = $dbItem;
+            }
+        }
+
+        $manager->flush();
+    }
+
+    private function clean(Item &$item)
+    {
+        $item->setUrl(str_ireplace("//", "/", $item->getUrl()));
     }
 
     /**
@@ -54,7 +87,8 @@ final class ItemService
      * @return Item
      * @throws Exception
      */
-    public function retrieve($id){
+    public function retrieve($id)
+    {
         /** @var Item $item */
         $item = $this->registry->getRepository(Item::class)->find($id);
         if ($item === null) {
@@ -78,35 +112,8 @@ final class ItemService
      * @return Item[]
      * @throws Exception
      */
-    public function retrieveBy(array $parameters){
+    public function retrieveBy(array $parameters)
+    {
         return $this->registry->getRepository(Item::class)->findBy($parameters);
-    }
-
-    /**
-     * Save all itemInput if they are not existing
-     *
-     * @param array $items
-     */
-    private function saveAll(array &$items){
-        $repository = $this->registry->getRepository(Item::class);
-        $manager = $this->registry->getManager();
-
-        foreach($items as $key => $item){
-            $this->clean($item);
-            $dbItem = $repository->findOneBy(['source' => $item->getSource(), 'url' => $item->getUrl()]);
-            if($dbItem === null){
-                $manager->persist($item);
-            }else{
-                $dbItem->setLastPart($item->getLastPart());
-                $manager->persist($dbItem);
-                $items[$key] = $dbItem;
-            }
-        }
-
-        $manager->flush();
-    }
-
-    private function clean(Item &$item){
-        $item->setUrl(str_ireplace("//","/", $item->getUrl()));
     }
 }

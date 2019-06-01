@@ -30,7 +30,6 @@ export default class SecurityAPI {
                 callbackError(response.data.error);
                 return;
             }
-            console.log(response.data);
             let item = SecurityAPI.convert(response.data);
             Session.setObject('user', item);
             callback(item);
