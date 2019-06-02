@@ -40,7 +40,7 @@
                 return "";
             }
 
-            let dd = (date.getDay() < 10 ? '0' : '') + date.getDay();
+            let dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
             let MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
             let yyyy = date.getFullYear();
 

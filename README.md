@@ -1,6 +1,6 @@
 # DownloadSearch
 
-DownloadSearch is a sandbox for me to play with [Symfony 4](https://symfony.com/), [Guzzle](http://docs.guzzlephp.org/en/stable/), [Vue JS](https://vuejs.org/), [Webpack Encore](https://symfony.com/doc/current/frontend.html) and many more other stuff that i want.
+DownloadSearch is a sandbox for me to play with [Symfony 4](https://symfony.com/), [Guzzle](http://docs.guzzlephp.org/en/stable/), [Vue JS](https://vuejs.org/), [Webpack Encore](https://symfony.com/doc/current/frontend.html) and many more other stuff that I want to learn.
 
 The main functionality is the aggregation of multiple download sites into one with a common search form.
 
@@ -13,6 +13,7 @@ The main functionality is the aggregation of multiple download sites into one wi
 ## TODO
 * Create an advanced research form
 * Create a user section
+* Create a register form
 * Enhance site parsing to retrieve more data
 * Connect to a Video Game DB and a Music DB
 
