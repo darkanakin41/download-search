@@ -1,0 +1,43 @@
+App\Entity\MediaSeason:
+    type: entity
+    table: media_season
+    repositoryClass: App\Repository\MediaSeasonRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: 255
+            nullable: false
+        number:
+            type: integer
+            nullable: true
+        description:
+            type: text
+            nullable: true
+        poster:
+            type: string
+            length: 255
+            nullable: true
+        releaseDate:
+            type: date
+            nullable: true
+        updated:
+            type: datetime
+            nullable: true
+        theMovieDbId:
+            type: integer
+            nullable: true
+
+    manyToOne:
+        media:
+            targetEntity: App\Entity\Media
+            joinColumn:
+                name: media_id
+                referencedColumnName: id
+
+    lifecycleCallbacks: {  }

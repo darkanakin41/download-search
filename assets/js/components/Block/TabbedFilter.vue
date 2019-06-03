@@ -74,14 +74,14 @@
 
     .tab-container {
         display: flex;
-        flex-direction: row-reverse;
+        flex-direction: row;
+        justify-content: flex-end;
 
         .menu {
             li {
                 a {
                     display: block;
                     padding: 1rem 1.8rem;
-                    font-family: 'Roboto Condensed', sans-serif;
                     text-transform: uppercase;
                     font-weight: bold;
                     @include opacity(.7);

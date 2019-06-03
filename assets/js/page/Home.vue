@@ -21,21 +21,21 @@
                 Derniers médias sortis
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastReleasedMedias" :pagination="false" />
+            <Grid v-if="!mediasLoading" :items="lastReleasedMedias" :config="mediaGridConfig()" />
         </section>
         <section class="grid-container">
             <h2 class="section-title">
                 Derniers médias mis à jour
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastUpdatedMedias" :pagination="false" />
+            <Grid v-if="!mediasLoading" :items="lastUpdatedMedias" :config="mediaGridConfig()" />
         </section>
         <section class="grid-container">
             <h2 class="section-title">
                 Derniers médias récupérés
             </h2>
             <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :itemsPerRowForced="6" :nbRowsForced="1" :items="lastDownloadedMedias" :pagination="false" />
+            <Grid v-if="!mediasLoading" :items="lastDownloadedMedias" :config="mediaGridConfig()" />
         </section>
     </div>
 </template>
@@ -46,13 +46,16 @@
     import SourceAPI from "../app/API/SourceAPI";
     import MediaAPI from "../app/API/MediaAPI";
     import Media from "../app/Entity/Media";
-    import Grid from "../app/Component/Media/Grid.vue";
+    import Grid from "../components/Grid/Grid.vue";
+    import Card from "../app/Component/Media/Card.vue";
     import Loading from "../components/Block/Loading.vue";
+    import GridConfig from "../components/Grid/GridConfig";
 
     @Component({
         components: {Loading, Grid}
     })
     export default class Home extends Vue {
+        mediaCardComponent: Vue = Card;
         sources: Array<Source>;
         lastUpdatedMedias: Array<Media>;
         lastDownloadedMedias: Array<Media>;
@@ -90,6 +93,19 @@
                 this.mediasLoading = false;
             })
         }
+
+        mediaGridConfig() {
+            return new GridConfig({
+                component: Card,
+                itemsPerRowForced: 6,
+                nbRowsForced: 1,
+                pagination: false,
+                onclick: (item: Media) => {
+                    this.$router.push({name: 'media-view-items', params: {'id': item.id}});
+                    return false;
+                }
+            });
+        }
     }
 </script>
 
@@ -97,20 +113,22 @@
     @import "../../libs/theming/mixins";
     @import "../../scss/common/config";
 
-    section{
-        .section-title{
-            font-size : 1.2rem;
+    section {
+        .section-title {
+            font-size: 1.2rem;
             font-weight: $weightBold;
-            &::after{
-                display:block;
+
+            &::after {
+                display: block;
                 height: 4px;
                 content: " ";
-                background : linear-gradient(to right, $mainColor, transparentize($mainColor, 1));
+                background: linear-gradient(to right, $mainColor, transparentize($mainColor, 1));
                 width: 65%;
             }
         }
-        .grid{
-            margin : 0;
+
+        .grid {
+            margin: 0;
         }
     }
 </style>

@@ -156,7 +156,7 @@ class TheMovieDB
             "include_image_language" => "fr",
         ];
 
-        $response = $client->get(sprintf('serie/%d/season/%d?%s', $id, $sid, http_build_query($urlParameters)));
+        $response = $client->get(sprintf('tv/%d/season/%d?%s', $id, $sid, http_build_query($urlParameters)));
 
         $data = json_decode($response->getBody()->getContents(), true);
         if (isset($data['status_code'])) {

@@ -4,6 +4,7 @@ import User from "../Entity/User";
 import Session from "../../components/Session";
 
 export default class SecurityAPI {
+    static baseUrl:String = '/api/security/';
 
     /**
      * Login the user
@@ -11,13 +12,14 @@ export default class SecurityAPI {
      * @param login
      * @param password
      * @param callback the code to be executed on success
+     * @param callbackError
      */
     static login(login:String, password:String, callback: CallableFunction, callbackError: CallableFunction) {
         if(Session.getObject('user') !== null){
             return callback(Session.getObject('user'));
         }
 
-        axios.post('/api/security/login', {
+        axios.post(this.baseUrl + 'login', {
             username:login,
             password:password,
         })
@@ -30,7 +32,7 @@ export default class SecurityAPI {
                 callbackError(response.data.error);
                 return;
             }
-            let item = SecurityAPI.convert(response.data);
+            let item = this.convert(response.data);
             Session.setObject('user', item);
             callback(item);
         }).catch(() => {
@@ -46,7 +48,7 @@ export default class SecurityAPI {
         if(Session.getObject('user') === null){
             return callback();
         }
-        axios.post('/api/security/logout')
+        axios.post(this.baseUrl + 'logout')
             .then(() => {
                 callback();
             });

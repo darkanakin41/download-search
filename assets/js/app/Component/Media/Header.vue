@@ -10,7 +10,7 @@
                 <div class="detail">
                     <i class="far fa-folder"></i> {{ media.category }}
                     <i class="fas fa-thermometer-three-quarters"></i> {{ media.status }}
-                    <template v-if="media.releaseDate"><i class="fa fa-calendar"></i> {{ displayDate(media.releaseDate)}}</template>
+                    <template v-if="media.releaseDate"><i class="fa fa-calendar"></i> {{ formatDate(media.releaseDate)}}</template>
                     <i class="fa fa-star"></i> {{ media.averageNote }}
                 </div>
                 <div class="detail" v-if="media.genres.length > 0">
@@ -33,18 +33,6 @@
 
         mounted() {
             document.querySelector("header.media div.backdrop").style.backgroundImage = "url('" + this.media.backdrop + "')";
-        }
-
-        displayDate(date:Date|undefined){
-            if(date === undefined){
-                return "";
-            }
-
-            let dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
-            let MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
-            let yyyy = date.getFullYear();
-
-            return (dd + "/" + MM + "/" + yyyy);
         }
     }
 </script>
@@ -109,6 +97,16 @@
                         width: 30px;
                         text-align: center;
                     }
+                }
+            }
+        }
+    }
+
+    @media (max-width: $breakpointSmall){
+        header{
+            .content{
+                .avatar{
+                    display : none;
                 }
             }
         }

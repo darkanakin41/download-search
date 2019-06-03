@@ -1,13 +1,10 @@
 <template>
     <div>
+        <Loading v-if="loading" :displayed="loading" :fixed="false" />
         <Header v-if="!loading && media" :media="media" />
-        <div class="grid-container">
-            <Loading v-if="loading" :displayed="loading" :fixed="false" />
-            <div v-if="!loading && items.length > 0" class="grid grid-x grid-padding-y">
-                <div class="cell medium-12" v-for="item in items">
-                    <ItemCard :item="item" />
-                </div>
-            </div>
+        <TabbedMenu v-if="!loading" :items="pageRoutes" :isCentered="true"/>
+        <div class="grid-container" v-if="!loading">
+            <router-view></router-view>
         </div>
     </div>
 </template>
@@ -16,26 +13,28 @@
     import {Component, Vue} from "vue-property-decorator";
     import Loading from "../../components/Block/Loading.vue";
 
-    import ItemAPI from "../../app/API/ItemAPI";
+    import routes from "./router";
+
     import MediaAPI from "../../app/API/MediaAPI";
-    import Item from "../../app/Entity/Item";
     import Media from "../../app/Entity/Media";
-    import ItemCard from "../../app/Component/Item/Card.vue";
     import Header from "../../app/Component/Media/Header.vue";
+    import {RouteConfig} from "vue-router";
+    import TabbedMenu from "../../components/Block/TabbedMenu.vue";
 
     @Component({
-        components: {Header, ItemCard, Loading}
+        components: {TabbedMenu, Header, Loading}
     })
     export default class Display extends Vue {
         media: Media;
-        items: Array<Item>;
         loading: boolean;
+        pageRoutes: Array<RouteConfig>;
 
         data() {
             return {
                 media: null,
                 loading: false,
                 items: [],
+                pageRoutes: [],
             }
         }
 
@@ -45,21 +44,20 @@
             MediaAPI.get(id, (media) => {
                 this.media = media;
                 this.loading = false;
-                this.refreshmedias();
+                this.refreshRoutes();
             });
         }
 
-        refreshmedias() {
-            this.loading = true;
-            ItemAPI.getForMedia(this.media.id, (items) => {
-                this.items = items;
-                this.loading = false;
-            });
+        refreshRoutes(){
+            if(this.media.category === 'tv' || this.media.category === 'animes'){
+                let route:Array<RouteConfig>|undefined = this.getRouteByName(routes, "media-view");
+                if(route !== undefined && route.children !== undefined){
+                    this.pageRoutes = route.children;
+                }
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    @import "../../../libs/theming/mixins";
-    @import "../../../scss/common/config";
 </style>

@@ -52,6 +52,11 @@
                 return this.getValue(item[fieldname], fieldConfig.field);
             }
 
+            // Processing Object type
+            if(fieldConfig.type === 'date'){
+                return this.formatDate(item[fieldname]);
+            }
+
             // Processing Image type
             if(fieldConfig.type === 'image'){
                 return '<img src="' + item[fieldname] + '" alt="' + fieldname + '" />';

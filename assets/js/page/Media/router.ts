@@ -46,10 +46,36 @@ const mediaRoutes: Array<RouteConfig> = [
             pageTitle: false,
             leftMenu: false,
         },
-        path: '/media/:id/view/',
+        path: '/media/:id',
         component: () => {
             return import(/* webpackChunkName: 'media' */ "./Display.vue")
-        }
+        },
+        children:[
+            {
+                name: 'media-view-items',
+                meta: {
+                    title: 'Téléchargement',
+                    pageTitle: false,
+                    leftMenu: false,
+                },
+                path: '/media/:id/items',
+                component: () => {
+                    return import(/* webpackChunkName: 'media' */ "./Display/Items.vue")
+                },
+            },
+            {
+                name: 'media-view-seasons',
+                meta: {
+                    title: 'Saisons',
+                    pageTitle: false,
+                    leftMenu: false,
+                },
+                path: '/media/:id/seasons',
+                component: () => {
+                    return import(/* webpackChunkName: 'media' */ "./Display/Seasons.vue")
+                },
+            },
+        ]
     },
 ];
 

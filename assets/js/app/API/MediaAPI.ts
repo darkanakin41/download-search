@@ -2,17 +2,18 @@ import axios from 'axios';
 import Media from "../Entity/Media";
 
 export default class MediaAPI {
+    static baseUrl:String = '/api/media/';
 
     /**
      * Search on the server
      * @param callback the code to be executed on success
      */
     static getAll(callback: any) {
-        axios.get('/api/media/all')
+        axios.get(this.baseUrl + 'all')
             .then((response) => {
                 let items: Array<Media> = [];
                 response.data.forEach((item: Object) => {
-                    items.push(MediaAPI.convert(item));
+                    items.push(this.convert(item));
                 });
                 callback(items)
             });
@@ -24,9 +25,9 @@ export default class MediaAPI {
      * @param callback the code to be executed on success
      */
     static get(id: number, callback: any) {
-        axios.post('/api/media/retrieve', {id: id})
+        axios.post(this.baseUrl + 'retrieve', {id: id})
             .then((response) => {
-                let item: Media = MediaAPI.convert(response.data);
+                let item: Media = this.convert(response.data);
                 callback(item);
             });
     }

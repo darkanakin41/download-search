@@ -2,6 +2,7 @@ import axios from 'axios';
 import Item from "../Entity/Item";
 
 export default class ItemAPI {
+    static baseUrl:String = '/api/item/';
 
     /**
      * Search on the server
@@ -9,11 +10,11 @@ export default class ItemAPI {
      * @param callback the code to be executed on success
      */
     static search(q: string, callback: any) {
-        axios.post('/api/item/search', {q: q,})
+        axios.post(this.baseUrl + 'search', {q: q,})
             .then((response) => {
                 let items: Array<Item> = [];
                 response.data.forEach((item: Object) => {
-                    items.push(ItemAPI.convert(item));
+                    items.push(this.convert(item));
                 });
                 callback(items);
             });
@@ -25,9 +26,9 @@ export default class ItemAPI {
      * @param callback the code to be executed on success
      */
     static get(id: number, callback: any) {
-        axios.post('/api/item/retrieve', {id: id,})
+        axios.post(this.baseUrl + 'retrieve', {id: id,})
             .then((response) => {
-                let item: Item = ItemAPI.convert(response.data);
+                let item: Item = this.convert(response.data);
                 callback(item);
             });
     }
@@ -38,11 +39,11 @@ export default class ItemAPI {
      * @param callback the code to be executed on success
      */
     static getForMedia(mediaId: number, callback: any) {
-        axios.post('/api/item/retrieve', {media: mediaId,})
+        axios.post(this.baseUrl + 'retrieve', {media: mediaId,})
             .then((response) => {
                 let items: Array<Item> = [];
                 response.data.forEach((item: Object) => {
-                    items.push(ItemAPI.convert(item));
+                    items.push(this.convert(item));
                 });
                 callback(items);
             });

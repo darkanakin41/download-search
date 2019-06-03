@@ -7,7 +7,7 @@
         </form>
         <TabbedFilter v-if="!loading" :valuesInput="filterValues" v-model="filter" />
         <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <Grid v-if="!loading && itemsFiltered.length > 0" :items="itemsFiltered"/>
+        <Grid v-if="!loading && itemsFiltered.length > 0" :config="mediaGridConfig()" :items="itemsFiltered"/>
         <div v-if="!loading && itemsFiltered.length === 0" class="callout warning">
             <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
         </div>
@@ -17,6 +17,7 @@
 <script lang="ts">
     import {Component, Vue, Watch} from "vue-property-decorator";
     import FlexTable from "../../components/Table/FlexTable.vue";
+    import Grid from "../../components/Grid/Grid.vue";
     import Loading from "../../components/Block/Loading.vue";
     import TabbedFilter from "../../components/Block/TabbedFilter";
 
@@ -24,19 +25,20 @@
 
     import Session from "../../components/Session";
     import MediaAPI from "../../app/API/MediaAPI";
-    import Grid from "../../app/Component/Media/Grid.vue";
     import Media from "../../app/Entity/Media";
+    import Card from "../../app/Component/Media/Card.vue";
+    import GridConfig from "../../components/Grid/GridConfig";
 
     @Component({
         components: {Grid, Loading, FlexTable, TabbedFilter}
     })
     export default class Index extends Vue {
+        mediaCardComponent:Function = Card;
         search = "";
         loading = false;
         filter = "";
         itemsInput: Array<Media> = [];
         itemsFiltered: Array<Media> = [];
-        itemsDisplayed: Array<Media> = [];
 
         data() {
             return {
@@ -47,6 +49,16 @@
                 tableConfig: tableConfig,
                 filterValues: ['animes','movie','tv']
             }
+        }
+
+        mediaGridConfig() {
+            return new GridConfig({
+                component: Card,
+                onclick: (item: Media) => {
+                    this.$router.push({name: 'media-view-items', params: {'id': item.id}});
+                    return false;
+                }
+            });
         }
 
         mounted() {

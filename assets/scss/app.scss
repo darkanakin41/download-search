@@ -9,36 +9,66 @@ body {
     background: #f5f5f7;
     color: #333333;
     font-family: Roboto, sans-serif;
+    &.no-scroll{
+        overflow:hidden;
+    }
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     font-family: Roboto, sans-serif;
 }
+
 #content {
     overflow: auto;
 }
-.grid{
-    width : 100%;
+
+.grid {
+    width: 100%;
 }
+
 @import "./partial/content";
 @import "./partial/drawer";
 @import "./partial/footer";
 
-.tab-container{
+.tab-container,
+.tab-menu {
     background: $dark;
-    color : $green;
-    .menu{
-        li{
-            a{
-                color : $mainColor;
+    color: $green;
+
+    .menu {
+        li {
+            a {
+                color: $mainColor;
                 border-bottom: 3px solid transparent;
-                &:hover{
+                font-family: 'Roboto Condensed', sans-serif;
+
+                &:hover {
                     color: $mainColor;
                 }
             }
+        }
+    }
+}
 
+.tab-container {
+    .menu {
+        li {
             &.active {
-                a{
+                a {
+                    color: $mainColor;
+                    border-color: $mainColor;
+                }
+            }
+        }
+    }
+}
+
+.tab-menu {
+
+    .menu {
+        li {
+            a {
+                &.active {
                     color: $mainColor;
                     border-color: $mainColor;
                 }

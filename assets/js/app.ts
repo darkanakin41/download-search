@@ -15,6 +15,11 @@ import Vue from 'vue';
 import App from './App.vue';
 
 import router from "./config/router";
+import routerMixins from "./app/Mixin/router";
+import dateMixins from "./app/Mixin/date";
+
+Vue.mixin(routerMixins);
+Vue.mixin(dateMixins);
 
 const app = new Vue({
     el: '#app',
@@ -36,4 +41,3 @@ router.afterEach((to, from) => {
     app.loading = false;
     $("#drawer").find('a[data-close]').trigger('click');
 });
-

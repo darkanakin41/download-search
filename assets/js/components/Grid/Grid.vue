@@ -1,11 +1,13 @@
 <template>
-    <div class="my-grid">
-        <div v-for="item in itemsDisplayed" class="cell" :style="{width:itemWidth + 'px'}">
-            <router-link :to="{name: 'media-view', params:{id: item.id}}">
-                <Card :item="item" />
-            </router-link>
+    <div class="grid grid-x">
+        <div v-for="item in itemsDisplayed" class="cell" v-bind:class="classes">
+            <template v-if="config.onclick">
+                <a v-on:click="config.onclick(item)">
+                    <component :is="config.component" :item="item"></component>
+                </a>
+            </template>
         </div>
-        <div class="cell full-width">
+        <div class="cell medium-12">
             <Pagination :itemsInput="items" :nbPerPage="itemsPerPage" v-model="itemsDisplayed" />
         </div>
     </div>
@@ -13,24 +15,22 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
-    import Card from "./Card.vue";
-    import Pagination from "../../../components/Pagination.vue";
-    import Media from "../../Entity/Media";
+    import Pagination from "../Pagination.vue";
+    import GridConfig from "./GridConfig";
 
     @Component({
-        components: {Pagination, Card}
+        components: {Pagination}
     })
     export default class Grid extends Vue {
         @Prop({type: Array}) items;
-        @Prop({type: Number}) itemsPerRowForced;
-        @Prop({type: Number}) nbRowsForced;
-        @Prop({type: Boolean, default: true}) pagination;
+        @Prop({type: GridConfig}) config:GridConfig;
 
-        itemsDisplayed: Array<Media>;
+        itemsDisplayed: Array<any>;
         itemsPerPage: Number;
         itemsPerRow: Number;
         rowsPerPage: Number;
-        itemWidth: Number;
+
+        classes:Array<String> = [];
 
         data() {
             return {
@@ -38,14 +38,14 @@
                 itemsPerPage: 24,
                 itemsPerRow: 8,
                 rowsPerPage: 3,
-                itemWidth: '',
+                classes : [],
             }
         }
 
         mounted() {
             this.calculWidth();
 
-            if (!this.pagination) {
+            if (!this.config.pagination) {
                 this.itemsDisplayed = this.items;
             }
 
@@ -57,51 +57,51 @@
         calculWidth() {
             let windowWidth = window.innerWidth;
 
-            if(this.itemsPerRowForced !== undefined){
-                this.itemsPerRow = this.itemsPerRowForced;
+            this.classes = [];
+
+            let itemsPerRowSmall = 2;
+            let itemsPerRowMedium = 3;
+            let itemsPerRowLarge = 12;
+
+            if(this.config.itemsPerRowForced !== undefined){
+                this.itemsPerRow = this.config.itemsPerRowForced;
+                this.classes.push('small-6');
+                this.classes.push('medium-' + (12/this.itemsPerRow));
+                this.classes.push('large-' + (12/this.itemsPerRow));
             }else{
+                // small
                 if(windowWidth <= 375){
-                    this.itemsPerRow = 2;
+                    this.itemsPerRow = itemsPerRowSmall;
                 }else if (windowWidth <= 768){
-                    this.itemsPerRow = 3;
-                }else if(windowWidth < 1920){
-                    this.itemsPerRow = 6;
+                    this.itemsPerRow = itemsPerRowMedium;
                 }else{
-                    this.itemsPerRow = 12;
+                    this.itemsPerRow = itemsPerRowLarge;
                 }
+                this.classes.push('small-' + (12/itemsPerRowSmall));
+                this.classes.push('medium-' + (12/itemsPerRowMedium));
+                this.classes.push('large-' + (12/itemsPerRowLarge));
             }
 
-            if(this.nbRowsForced !== undefined){
-                this.rowsPerPage = this.itemsPerRowForced;
+            if(this.config.nbRowsForced !== undefined){
+                this.rowsPerPage = this.config.nbRowsForced;
             }else{
                 if(windowWidth <= 375){
                     this.rowsPerPage = 4;
                 }else if (windowWidth <= 768){
                     this.rowsPerPage = 4;
-                }else if(windowWidth < 1920){
-                    this.rowsPerPage = 2;
                 }else{
                     this.rowsPerPage = 2;
                 }
             }
 
             this.itemsPerPage = this.itemsPerRow * this.rowsPerPage;
-
-            let style = this.$el.currentStyle || window.getComputedStyle(this.$el);
-            let width = this.$el.offsetWidth;
-            let border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
-            let padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-
-            let totalWidth = width - border - padding;
-
-            this.itemWidth = (totalWidth / this.itemsPerRow) - 15;
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    @import "../../../../libs/theming/mixins";
-    @import "../../../../scss/common/config";
+    @import "../../../libs/theming/mixins";
+    @import "../../../scss/common/config";
 
     .my-grid {
         display: flex;
