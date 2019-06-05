@@ -100,7 +100,6 @@
             this.menuItems = this.filterItems(this.items);
             this.$nextTick(()=>{
                 new Foundation.AccordionMenu($(this.$el).find('[data-accordion-menu]'), {});
-                console.log("on refresh le menu de gauche après le tick")
             })
         }
 
