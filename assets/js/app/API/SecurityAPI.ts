@@ -11,47 +11,25 @@ export default class SecurityAPI {
      *
      * @param login
      * @param password
-     * @param callback the code to be executed on success
-     * @param callbackError
      */
-    static login(login:String, password:String, callback: CallableFunction, callbackError: CallableFunction) {
-        if(Session.getObject('user') !== null){
-            return callback(Session.getObject('user'));
-        }
-
-        axios.post(this.baseUrl + 'login', {
+    static login(login:String, password:String) {
+        return axios.post(this.baseUrl + 'login', {
             username:login,
             password:password,
-        })
-        .then((response) => {
-            if(response.data === {}){
-                callbackError("Identifiant/Mot de passe invalide");
-                return;
-            }
-            if(response.data.error !== undefined){
-                callbackError(response.data.error);
-                return;
-            }
-            let item = this.convert(response.data);
-            Session.setObject('user', item);
-            callback(item);
-        }).catch(() => {
-            callbackError("Une erreur est survenue durant votre authentification");
         });
     }
     /**
-     * Logout current user
+     * Check if the user is logged in or not
      *
-     * @param callback the code to be executed on success
      */
-    static logout(callback: any = () => {}) {
-        if(Session.getObject('user') === null){
-            return callback();
-        }
-        axios.post(this.baseUrl + 'logout')
-            .then(() => {
-                callback();
-            });
+    static loginCheck() {
+        return axios.get(this.baseUrl + 'login');
+    }
+    /**
+     * Logout current user
+     */
+    static logout() {
+        return axios.post(this.baseUrl + 'logout');
     }
 
     /**

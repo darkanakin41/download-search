@@ -28,7 +28,7 @@ final class SecurityController extends AbstractController
         $this->serializer = $serializer;
     }
     /**
-     * @Route("login", name="api_security_login", methods={"POST"})
+     * @Route("login", name="api_security_login", methods={"GET", "POST"})
      * @return JsonResponse
      */
     public function loginAction(): JsonResponse

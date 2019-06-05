@@ -18,6 +18,8 @@ import router from "./config/router";
 import routerMixins from "./app/Mixin/router";
 import dateMixins from "./app/Mixin/date";
 
+import store from "./app/Store";
+
 Vue.mixin(routerMixins);
 Vue.mixin(dateMixins);
 
@@ -27,6 +29,7 @@ const app = new Vue({
     components: {App},
     template: '<App :title="title" :loading="loading"></App>',
     router,
+    store
 });
 
 app.title = document.getElementsByTagName("title")[0].innerHTML;

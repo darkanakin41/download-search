@@ -5,18 +5,20 @@
                 <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
             </div>
         </form>
-        <TabbedFilter v-if="!loading" :valuesInput="filterValues" :initialFilter="filter" :displayedField="'title'" v-model="filter" />
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <FlexTable v-if="!loading && itemsDisplayed.length > 0" :itemsInput="itemsDisplayed" :configInput="tableConfig" />
-        <div v-if="!loading && itemsDisplayed.length === 0" class="callout warning">
-            <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
+        <TabbedFilter v-if="!isLoading()" :valuesInput="sourcesState.sources" :initialFilter="filter" :displayedField="'title'" v-model="filter" />
+        <Loading v-if="isLoading()" :displayed="loading" :fixed="false" />
+        <FlexTable v-if="!isLoading() && itemsDisplayed.length > 0" :itemsInput="itemsDisplayed" :configInput="tableConfig" />
+        <div v-if="!isLoading() && itemsDisplayed.length === 0" class="callout warning text-center">
+            <b>Aucun résultat</b>
         </div>
-        <Pagination :itemsInput="itemsFiltered" :nbPerPage="9" v-model="itemsDisplayed"/>
+        <Pagination :itemsInput="itemsFiltered" :nbPerPage="9" v-model="itemsDisplayed" />
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue, Watch} from "vue-property-decorator";
+    import {Action, Getter, State} from 'vuex-class';
+
     import FlexTable from "../../components/Table/FlexTable.vue";
     import Loading from "../../components/Block/Loading.vue";
 
@@ -25,21 +27,26 @@
     import Item from "../../app/Entity/Item";
     import TabbedFilter from "../../components/Block/TabbedFilter.vue";
     import Source from "../../app/Entity/Source";
-    import SourceAPI from "../../app/API/SourceAPI";
 
     import Session from "../../components/Session";
     import Pagination from "../../components/Pagination.vue";
+    import {SourceState} from "../../app/Store/Source/types";
+
+    const namespace: string = 'source';
 
     @Component({
         components: {Pagination, TabbedFilter, Loading, FlexTable}
     })
     export default class Search extends Vue {
+        @State('source') sourcesState: SourceState;
+        @Action('getAll', {namespace}) refreshSources: any;
+        @Getter('isLoading', {namespace}) isSourceLoading: Boolean;
+
         search = "";
         loading = false;
         itemsInput: Array<Item> = [];
         itemsFiltered: Array<Item> = [];
         filter: Source;
-        filterValues: Array<Source>;
 
         data() {
             return {
@@ -48,20 +55,36 @@
                 loading: false,
                 itemsInput: [],
                 itemsDisplayed: [],
-                filterValues: [],
                 tableConfig: tableConfig,
             }
         }
 
         mounted() {
-            SourceAPI.getAll((items:Array<Source>) => {
-                this.filterValues = items;
-                this.loading = false;
+            console.log(this.sourcesState.loaded);
+            if(!this.sourcesState.loaded){
+                console.log("on refresh");
+                this.refreshSources();
+            }else{
                 this.refreshSession();
                 if (this.search !== '') {
                     this.onSubmitMethod();
                 }
-            });
+            }
+        }
+
+        @Watch('isSourceLoading')
+        onSourceLoadingEnded(){
+            if(this.isSourceLoading){
+                return;
+            }
+            this.refreshSession();
+            if (this.search !== '') {
+                this.onSubmitMethod();
+            }
+        }
+
+        isLoading(){
+            return this.isSourceLoading || this.loading;
         }
 
         private refreshSession() {
@@ -71,10 +94,10 @@
             }
 
             let sessionFilter = <Source>Session.getObject('item-search-filter');
-            if(sessionFilter != null){
+            if (sessionFilter != null) {
                 let filter = null;
-                this.filterValues.forEach((item) => {
-                    if(item.id === sessionFilter.id){
+                this.sourcesState.sources.forEach((item) => {
+                    if (item.id === sessionFilter.id) {
                         filter = item;
                     }
                 });

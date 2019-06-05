@@ -17,6 +17,7 @@
         "beberlei/DoctrineExtensions": "^1.1",
         "friendsofsymfony/rest-bundle": "^2.5",
         "guzzlehttp/guzzle": "~6.0",
+        "jaymoulin/guzzlehttp-cloudflare": "^0.2.1",
         "knplabs/knp-menu-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "dev-master",
         "phpoffice/phpword": "^0.16.0",

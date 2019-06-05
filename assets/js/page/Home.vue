@@ -5,7 +5,7 @@
                 <h1 class="title">Bienvenue sur Download Search</h1>
                 <p>Cette application vous permet de rechercher des liens de téléchargements parmi les suites suivants :</p>
                 <ul>
-                    <li v-for="source in sources">
+                    <li v-for="source in sourcesState.sources">
                         <a :href="source.baseUrl" target="_blank">{{source.title}}</a>
                     </li>
                 </ul>
@@ -42,21 +42,24 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import Source from "../app/Entity/Source";
-    import SourceAPI from "../app/API/SourceAPI";
+    import {Action, State} from 'vuex-class';
     import MediaAPI from "../app/API/MediaAPI";
     import Media from "../app/Entity/Media";
     import Grid from "../components/Grid/Grid.vue";
     import Card from "../app/Component/Media/Card.vue";
     import Loading from "../components/Block/Loading.vue";
     import GridConfig from "../components/Grid/GridConfig";
+    import {SourceState} from "../app/Store/Source/types";
+
+    const namespace: string = 'source';
 
     @Component({
         components: {Loading, Grid}
     })
     export default class Home extends Vue {
-        mediaCardComponent: Vue = Card;
-        sources: Array<Source>;
+        @State('source') sourcesState: SourceState;
+        @Action('getAll', {namespace}) refreshSources: any;
+
         lastUpdatedMedias: Array<Media>;
         lastDownloadedMedias: Array<Media>;
         lastReleasedMedias: Array<Media>;
@@ -64,7 +67,6 @@
 
         data() {
             return {
-                sources: [],
                 lastUpdatedMedias: [],
                 lastDownloadedMedias: [],
                 lastReleasedMedias: [],
@@ -73,9 +75,9 @@
         }
 
         mounted() {
-            SourceAPI.getAll((items) => {
-                this.sources = items;
-            });
+            if(!this.sourcesState.loaded){
+                this.refreshSources();
+            }
             this.mediasLoading = true;
             MediaAPI.getAll((items) => {
                 items.sort((a: Media, b: Media) => {

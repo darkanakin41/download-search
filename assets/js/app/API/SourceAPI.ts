@@ -6,17 +6,9 @@ export default class SourceAPI {
 
     /**
      * Search on the server
-     * @param callbackSuccess the code to be executed on success
      */
-    static getAll(callbackSuccess: any) {
-        axios.get(this.baseUrl + 'all')
-            .then((response) => {
-                let items: Array<Source> = [];
-                response.data.forEach((item: Object) => {
-                    items.push(this.convert(item));
-                });
-                callbackSuccess(items)
-            });
+    static getAll() {
+        return axios.get(this.baseUrl + 'all');
     }
 
     /**

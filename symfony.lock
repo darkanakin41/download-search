@@ -122,6 +122,9 @@
     "guzzlehttp/psr7": {
         "version": "1.5.2"
     },
+    "jaymoulin/guzzlehttp-cloudflare": {
+        "version": "0.2.1"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -136,6 +139,9 @@
     },
     "knplabs/knp-paginator-bundle": {
         "version": "2.8.x-dev"
+    },
+    "kyranrana/cloudflare-bypass": {
+        "version": "v2.0.1"
     },
     "monolog/monolog": {
         "version": "1.24.0"

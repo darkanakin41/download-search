@@ -22,6 +22,7 @@ For everyone :
 * Create a register form
 * Enhance site parsing to retrieve more data
 * Connect to a Video Game DB and a Music DB
+* Bypass cloudflare protection
 
 For connected users : 
 * Create a profil page

@@ -5,29 +5,29 @@
                 <a data-close>
                     <i class="fas fa-times link-icon"></i>
                 </a>
-                <a @click="logout" v-if="user !== null && !loading">
+                <a @click="onLogout()" v-if="isAuthenticated && !securityState.loading">
                     <i class="fas fa-sign-out-alt link-icon"></i>
                 </a>
             </div>
-            <template v-if="user !== null && !loading">
+            <template v-if="isAuthenticated && !securityState.loading">
                 <div class="image">
                     <img src="../../../assets/leftmenu-header-background.jpg" alt="Banner profil image">
                 </div>
                 <div class="user">
                     <div class="avatar">
-                        <img src="../../../assets/avatar.jpg" :alt="user.username" title="user.username" />
+                        <img src="../../../assets/avatar.jpg" :alt="securityState.user.username" :title="securityState.user.username" />
                     </div>
                     <div class="id">
-                        <span class="pseudo">{{user.username}}</span>
-                        <span class="mail">{{user.email}}</span>
+                        <span class="pseudo">{{securityState.user.username}}</span>
+                        <span class="mail">{{securityState.user.email}}</span>
                     </div>
                 </div>
             </template>
-            <Login v-else-if="!loading" v-model="user" />
-            <Loading v-if="loading" :fixed="false" />
+            <Login v-else-if="!securityState.loading" />
+            <Loading v-if="securityState.loading" :fixed="false" />
         </div>
         <ul class="menu vertical accordion-menu" data-accordion-menu>
-            <li v-for="item in items">
+            <li v-for="item in menuItems">
                 <template v-if="item.children === undefined">
                     <router-link :to="{name: item.name}" exact>
                         <i v-if="item.icon !== undefined" :class="getIconClasses(item.icon)"></i>
@@ -52,12 +52,14 @@
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+    import {Action, Getter, State} from 'vuex-class';
+    import Foundation from 'foundation-sites';
     import VueRouter from "vue-router";
-    import Session from "../Session";
     import Login from "../../app/Security/Login.vue";
-    import SecurityAPI from "../../app/API/SecurityAPI";
     import Loading from "./Loading.vue";
-    import User from "../../app/Entity/User";
+    import {SecurityState} from "../../app/Store/Security/types";
+
+    const namespace: string = 'security';
 
     Vue.use(VueRouter);
     @Component({
@@ -65,44 +67,71 @@
     })
     export default class LeftMenu extends Vue {
         @Prop({type: Array}) items;
-        user: User | null = null;
+        @State('security') securityState: SecurityState;
+        @Action('logout', {namespace}) logout: any;
+        @Getter('isAuthenticated', {namespace}) isAuthenticated: Boolean;
+
         loading: Boolean;
         menuItems: Array = [];
 
         data() {
             return {
                 menuItems: [],
-                loading: false,
-                user: Session.getObject('user'),
             }
+        }
+
+        mounted() {
+            new Foundation.AccordionMenu($(this.$el).find('[data-accordion-menu]'), {});
+            this.onUserUpdated();
         }
 
         getIconClasses(icon: String) {
             return icon + " link-icon";
         }
 
-        logout() {
-            if (Session.getObject('user') !== null) {
-                this.loading = true;
-                SecurityAPI.logout(() => {
-                    this.user = null;
-                    this.loading = false;
-                })
+        onLogout() {
+            if (this.isAuthenticated) {
+                this.logout();
             }
         }
 
-        @Watch('user')
-        onUserUpdate() {
-            this.menuItems = [];
-            this.items.forEach((item) => {
-                if(item.connected === false){
-                    this.menuItems.push(item);
-                }else{
-                    if(this.user !== null){
-                        this.menuItems.push(item);
+        @Watch('isAuthenticated')
+        onUserUpdated() {
+            this.menuItems = this.filterItems(this.items);
+            this.$nextTick(()=>{
+                new Foundation.AccordionMenu($(this.$el).find('[data-accordion-menu]'), {});
+                console.log("on refresh le menu de gauche après le tick")
+            })
+        }
+
+        /**
+         * Filter items of the menu
+         * @param items
+         * @return items
+         */
+        filterItems(items: Array) {
+            let filtered = [];
+
+            items.forEach((item) => {
+                if (item.children !== undefined) {
+                    let itemCloned = Object.assign({}, item);
+                    let children = this.filterItems(item.children);
+                    if (children.length > 0) {
+                        itemCloned.children = children;
+                        filtered.push(itemCloned);
+                    }
+                } else {
+                    if (item.connected === false || item.connected === undefined) {
+                        filtered.push(item);
+                    } else {
+                        if (this.isAuthenticated) {
+                            filtered.push(item);
+                        }
                     }
                 }
             });
+
+            return filtered;
         }
     }
 </script>

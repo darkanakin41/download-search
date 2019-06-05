@@ -8,12 +8,15 @@ use App\DTO\AnnuaireTelechargement\SearchItemDTO;
 use App\Entity\Item;
 use App\Entity\Source;
 use App\Nomenclature\CategoryNomenclature;
+use CloudflareBypass\Storage;
 use DOMDocument;
 use DOMNode;
 use DOMNodeList;
-use DOMText;
 use DOMXPath;
+use ErrorException;
+use GuzzleCloudflare\Middleware;
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\FileCookieJar;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -40,6 +43,7 @@ class AnnuaireTelechargement implements AbstractAPI
      * @param $q
      *
      * @return Item[]
+     * @throws ErrorException
      */
     public function search($q)
     {
@@ -56,20 +60,29 @@ class AnnuaireTelechargement implements AbstractAPI
             'cstart' => 0,
         ];
 
-        $options = [
-            'headers' => [
-                'Referer' => $this->getBaseURL(),
-            ]
-        ];
-
-        $response = $client->get('/engine/ajax/controller.php?'.http_build_query($urlParameters), $options);
+        $response = $client->get('/engine/ajax/controller.php?'.http_build_query($urlParameters));
 
         return $this->parseSearchResults($response->getBody()->getContents());
     }
 
+    /**
+     * @return Client
+     * @throws ErrorException
+     */
     private function getClient()
     {
-        return new Client(['base_uri' => $this->getBaseURL()]);
+        $client = new Client([
+            'cookies' => new FileCookieJar(tempnam('/tmp', __CLASS__)),
+            'base_uri' => $this->getBaseURL(),
+            'headers' => [
+                'Referer' => $this->getBaseURL(),
+                'Host' => str_ireplace(['https://','/'], '', $this->getBaseURL()),
+                'X-Requested-With' => 'XMLHttpRequest',
+            ]
+        ]);
+        $handler = $client->getConfig('handler');
+        $handler->push(Middleware::create(    ['cache' => new Storage($this->parameterBag->get('kernel.cache_dir') . "/guzzle")]));
+        return $client;
     }
 
     /**
@@ -155,7 +168,7 @@ class AnnuaireTelechargement implements AbstractAPI
     {
         $domDocument = new DOMDocument();
         $internalErrors = libxml_use_internal_errors(true);
-        $domDocument->loadHTML(str_ireplace(['<br>','<br/>','<br />'], PHP_EOL, $html));
+        $domDocument->loadHTML(str_ireplace(['<br>', '<br/>', '<br />'], PHP_EOL, $html));
         libxml_use_internal_errors($internalErrors);
 
         $this->parseHtmlCategory($item, $domDocument);
@@ -197,21 +210,31 @@ class AnnuaireTelechargement implements AbstractAPI
             $textElements = self::customMerge($textElements, $this->getMashaIndexNodes($nodes->item($i)));
         }
 
-        foreach($textElements as $textElement){
+        foreach ($textElements as $textElement) {
             $this->nodeExtractQualite($item, $textElement);
             $this->nodeExtractSeason($item, $textElement);
         }
     }
 
-    private function getMashaIndexNodes(DOMNode $node){
+    private static function customMerge($array1, $array2)
+    {
+        $retour = $array1;
+        foreach ($array2 as $item) {
+            $retour[] = $item;
+        }
+        return $retour;
+    }
+
+    private function getMashaIndexNodes(DOMNode $node)
+    {
         $retour = [];
         $childs = $node->childNodes;
         for ($i = 0; $i < $childs->length; $i++) {
             $n = $childs->item($i);
-            if($n->nodeName === "#text"){
+            if ($n->nodeName === "#text") {
                 return [$n->nodeValue];
             }
-            if($n->hasChildNodes()){
+            if ($n->hasChildNodes()) {
                 $retour = self::customMerge($retour, $this->getMashaIndexNodes($n));
             }
         }
@@ -246,10 +269,10 @@ class AnnuaireTelechargement implements AbstractAPI
         $lastPart = array_pop($nodeValueExploded);
 
         // Récupération du numéro de saison
-        if(stripos($lastPart, PHP_EOL) !== false){
+        if (stripos($lastPart, PHP_EOL) !== false) {
             $lastPartExploded = explode(PHP_EOL, $lastPart);
             $seasonRaw = array_pop($lastPartExploded);
-        }else{
+        } else {
             $seasonRaw = $lastPart;
         }
         $season = intval(trim(str_ireplace(["saison", "complet", "complete"], "", $seasonRaw)));
@@ -257,22 +280,14 @@ class AnnuaireTelechargement implements AbstractAPI
 
         // Récupération du language
         if (stripos($string, "qualité") !== false) {
-            if(stripos($lastPart, PHP_EOL) !== false){
+            if (stripos($lastPart, PHP_EOL) !== false) {
                 $baseString = $lastPart;
-            }else{
+            } else {
                 $baseString = array_pop($nodeValueExploded);
             }
             $lastPartExploded = explode(PHP_EOL, $baseString);
             $language = trim(strtolower(array_shift($lastPartExploded)));
             $item->setLanguage($language);
         }
-    }
-
-    private static function customMerge($array1, $array2){
-        $retour = $array1;
-        foreach($array2 as $item){
-            $retour[] = $item;
-        }
-        return $retour;
     }
 }

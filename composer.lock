@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86ebf79538d1411f301b14793b2f85cb",
+    "content-hash": "f9f7c78e9f5487d0d1761b1b1ce7a33d",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1651,6 +1651,51 @@
             "time": "2018-12-04T20:46:45+00:00"
         },
         {
+            "name": "jaymoulin/guzzlehttp-cloudflare",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jaymoulin/guzzlehttp-cloudflare.git",
+                "reference": "2d9a62c9a9495f8304a5ed3787be0c59ad39281c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jaymoulin/guzzlehttp-cloudflare/zipball/2d9a62c9a9495f8304a5ed3787be0c59ad39281c",
+                "reference": "2d9a62c9a9495f8304a5ed3787be0c59ad39281c",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3",
+                "kyranrana/cloudflare-bypass": "^v2.0",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phploc/phploc": "^4.0",
+                "phpmd/phpmd": "^2.4",
+                "phpunit/phpunit": "^7.0",
+                "sebastian/phpcpd": "^4.0",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GuzzleCloudflare\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jay MOULIN",
+                    "email": "jaymoulin@gmail.com"
+                }
+            ],
+            "description": "Bypass Cloudflare protection using GuzzleHTTP",
+            "time": "2019-03-24T12:53:43+00:00"
+        },
+        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -1951,6 +1996,46 @@
                 "symfony"
             ],
             "time": "2019-03-17T16:19:30+00:00"
+        },
+        {
+            "name": "kyranrana/cloudflare-bypass",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KyranRana/cloudflare-bypass.git",
+                "reference": "5fde39d4c3b9e4a9670747bacc9e18663818208e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KyranRana/cloudflare-bypass/zipball/5fde39d4c3b9e4a9670747bacc9e18663818208e",
+                "reference": "5fde39d4c3b9e4a9670747bacc9e18663818208e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.3",
+                "phpunit/phpunit": "~5.7",
+                "symfony/cache": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CloudflareBypass\\": "src/CloudflareBypass"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Library for helping bypass the Cloudflare IUAM page",
+            "homepage": "https://github.com/KyranRana/cloudflare-bypass",
+            "keywords": [
+                "bypass",
+                "cloudflare"
+            ],
+            "time": "2019-03-23T16:32:44+00:00"
         },
         {
             "name": "monolog/monolog",

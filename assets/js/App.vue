@@ -25,11 +25,14 @@
     import $ from 'jquery';
 
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+    import {Action} from 'vuex-class';
     import Loading from "./components/Block/Loading.vue";
     import LeftMenu from "./components/Block/LeftMenu";
     import TopBar from "./components/Block/TopBar";
 
     import leftmenuItems from "./config/leftmenu";
+
+    const namespace: string = 'security';
 
     @Component({
         components: {LeftMenu, Loading, TopBar}
@@ -37,11 +40,13 @@
     export default class App extends Vue {
         @Prop({type: Boolean, default: false}) loading;
         @Prop({type: String, default: ""}) title;
+        @Action('checkAuthentification', {namespace}) checkAuthentification: any;
         leftMenuItems = leftmenuItems;
         pageName = "";
 
         mounted() {
-            $(document).foundation();
+            new Foundation.OffCanvas($(this.$el).find('[data-off-canvas]'), {});
+            this.checkAuthentification();
         }
 
         @Watch('$route')
