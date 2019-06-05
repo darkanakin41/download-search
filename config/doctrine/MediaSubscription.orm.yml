@@ -1,0 +1,27 @@
+App\Entity\MediaSubscription:
+    type: entity
+    table: media_subscription
+    repositoryClass: App\Repository\MediaSubscriptionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        created:
+            type: datetime
+
+    manyToOne:
+        media:
+            targetEntity: App\Entity\Media
+            joinColumn:
+                name: media_id
+                referencedColumnName: id
+        user:
+            targetEntity: App\Entity\User
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+
+    lifecycleCallbacks: {}

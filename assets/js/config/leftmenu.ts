@@ -1,3 +1,4 @@
+import accountRoutes from "../page/Account/router";
 import itemRoutes from "../page/Item/router";
 import mediaRoutes from "../page/Media/router";
 
@@ -11,7 +12,8 @@ function createMenu(routes: Array<any>) {
         output.push({
             name: item.name,
             label: item.meta.title,
-            icon: item.meta.icon
+            icon: item.meta.icon,
+            connected: item.meta.connected||false,
         });
     });
 
@@ -32,10 +34,10 @@ let routes = [
         label: 'Media',
         children: createMenu(mediaRoutes),
     },
-    // {
-    //     label: 'Mon Compte',
-    //     children: createMenu(securityRoutes),
-    // }
+    {
+        label: 'Mon Compte',
+        children: createMenu(accountRoutes),
+    }
 ];
 
 export default routes;

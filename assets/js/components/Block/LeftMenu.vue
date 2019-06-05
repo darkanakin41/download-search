@@ -51,12 +51,13 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import VueRouter from "vue-router";
     import Session from "../Session";
     import Login from "../../app/Security/Login.vue";
     import SecurityAPI from "../../app/API/SecurityAPI";
     import Loading from "./Loading.vue";
+    import User from "../../app/Entity/User";
 
     Vue.use(VueRouter);
     @Component({
@@ -64,11 +65,13 @@
     })
     export default class LeftMenu extends Vue {
         @Prop({type: Array}) items;
-        user:any = null;
+        user: User | null = null;
         loading: Boolean;
+        menuItems: Array = [];
 
         data() {
             return {
+                menuItems: [],
                 loading: false,
                 user: Session.getObject('user'),
             }
@@ -87,6 +90,20 @@
                 })
             }
         }
+
+        @Watch('user')
+        onUserUpdate() {
+            this.menuItems = [];
+            this.items.forEach((item) => {
+                if(item.connected === false){
+                    this.menuItems.push(item);
+                }else{
+                    if(this.user !== null){
+                        this.menuItems.push(item);
+                    }
+                }
+            });
+        }
     }
 </script>
 
@@ -102,7 +119,7 @@
         @include transition(all .2s cubic-bezier(.4, 0, .2, 1));
 
         .close {
-            display:flex;
+            display: flex;
             flex-direction: column;
             position: absolute;
             top: 5px;
