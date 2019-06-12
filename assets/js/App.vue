@@ -31,15 +31,17 @@
     import TopBar from "./components/Block/TopBar";
 
     import leftmenuItems from "./config/leftmenu";
+    import Login from "./app/Security/Login.vue";
 
     const namespace: string = 'security';
 
     @Component({
-        components: {LeftMenu, Loading, TopBar}
+        components: {Login, LeftMenu, Loading, TopBar}
     })
     export default class App extends Vue {
         @Prop({type: Boolean, default: false}) loading;
         @Prop({type: String, default: ""}) title;
+
         @Action('checkAuthentification', {namespace}) checkAuthentification: any;
         leftMenuItems = leftmenuItems;
         pageName = "";
@@ -62,6 +64,10 @@
             } else {
                 document.title = this.title;
                 this.pageName = "";
+            }
+
+            if(currentRoute.meta.connected === true){
+                this.$router.push({name:'home'});
             }
         }
     }

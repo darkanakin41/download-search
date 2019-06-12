@@ -23,8 +23,6 @@
                     </div>
                 </div>
             </template>
-            <Login v-else-if="!securityState.loading" />
-            <Loading v-if="securityState.loading" :fixed="false" />
         </div>
         <ul class="menu vertical accordion-menu" data-accordion-menu>
             <li v-for="item in menuItems">
@@ -45,6 +43,12 @@
                         </li>
                     </ul>
                 </template>
+            </li>
+            <li v-if="!isAuthenticated">
+                <router-link :to="{name: 'security-sign-in'}" exact>
+                    <i class="fas fa-sign-in-alt link-icon"></i>
+                    Connexion
+                </router-link>
             </li>
         </ul>
     </div>
@@ -141,6 +145,7 @@
 
     .drawer-header {
         position: relative;
+        min-height: 50px;
         z-index: 1;
         background-color: #161616;
         @include box-shadow(0 -2px 3px rgba(0, 0, 0, .33), 0 -7px 7px rgba(0, 0, 0, .2), 0 -20px 20px rgba(0, 0, 0, .1));

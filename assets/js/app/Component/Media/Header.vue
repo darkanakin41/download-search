@@ -16,17 +16,17 @@
                 </div>
                 <div class="detail" v-if="media.genres.length > 0">
                     <i class="fa fa-tag"></i> Genre :
-                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}
-                        <template v-if="k < media.genres.length-1">,</template>
+                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}<template v-if="k < media.genres.length-1">, </template>
                     </template>
                 </div>
                 <div class="description"><i class="fa fa-book-open"></i> Résumé : <br /> {{ media.description }}</div>
             </div>
             <div v-if="allowSubscription()" class="actions">
-                <a title="Suivre" v-if="!subscription" v-on:click="addSubscription()">
+                <i class="fa fa-spinner fa-spin" v-if="subscriptionLoading"></i>
+                <a title="Suivre" v-if="!subscription && !subscriptionLoading" v-on:click="addSubscription()">
                     <i class="far fa-bell"></i>
                 </a>
-                <a title="Ne plus suivre" v-if="subscription" v-on:click="removeSubscription()">
+                <a title="Ne plus suivre" v-if="subscription && !subscriptionLoading" v-on:click="removeSubscription()">
                     <i class="far fa-bell-slash"></i>
                 </a>
             </div>
@@ -52,34 +52,41 @@
         @Getter('isAuthenticated', {namespace}) isAuthenticated: Boolean;
 
         subscription: MediaSubscription | undefined;
+        subscriptionLoading: Boolean;
 
         data() {
             return {
                 subscription: undefined,
+                subscriptionLoading: false,
             }
         }
 
         mounted() {
             document.querySelector("header.media div.backdrop").style.backgroundImage = "url('" + this.media.backdrop + "')";
 
-
             if (this.isAuthenticated !== null) {
+                this.subscriptionLoading = true;
                 MediaSubscriptionAPI.getForMedia(this.media.id, (subscription: MediaSubscription | undefined) => {
                     this.subscription = subscription;
+                    this.subscriptionLoading = false;
                 });
             }
         }
 
         addSubscription() {
+            this.subscriptionLoading = true;
             MediaSubscriptionAPI.add(this.media.id, (subscription: MediaSubscription) => {
                 this.subscription = subscription;
+                this.subscriptionLoading = false;
             });
             return false;
         }
 
         removeSubscription() {
+            this.subscriptionLoading = true;
             MediaSubscriptionAPI.remove(this.media.id, (subscription: undefined) => {
                 this.subscription = subscription;
+                this.subscriptionLoading = false;
             });
             return false;
         }
@@ -154,8 +161,8 @@
             }
 
             .actions {
+                font-size: 2rem;
                 a {
-                    font-size: 2rem;
                     color: white;
                     @include opacity(.7);
                     @include transition(opacity .35s linear);

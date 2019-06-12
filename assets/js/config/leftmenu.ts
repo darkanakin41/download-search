@@ -2,6 +2,10 @@ import accountRoutes from "../page/Account/router";
 import itemRoutes from "../page/Item/router";
 import mediaRoutes from "../page/Media/router";
 
+/**
+ * @param routes
+ * @return Array<Object>
+ */
 function createMenu(routes: Array<any>) {
     let output: Array<Object> = [];
 
@@ -39,6 +43,5 @@ let routes = [
         children: createMenu(accountRoutes),
     }
 ];
-
 export default routes;
 
