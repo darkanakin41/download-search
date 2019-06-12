@@ -25,7 +25,7 @@
     import $ from 'jquery';
 
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-    import {Action} from 'vuex-class';
+    import {Action, Getter} from 'vuex-class';
     import Loading from "./components/Block/Loading.vue";
     import LeftMenu from "./components/Block/LeftMenu";
     import TopBar from "./components/Block/TopBar";
@@ -43,6 +43,7 @@
         @Prop({type: String, default: ""}) title;
 
         @Action('checkAuthentification', {namespace}) checkAuthentification: any;
+        @Getter('isAuthenticated', {namespace}) isAuthenticated: Boolean;
         leftMenuItems = leftmenuItems;
         pageName = "";
 
@@ -66,7 +67,7 @@
                 this.pageName = "";
             }
 
-            if(currentRoute.meta.connected === true){
+            if(currentRoute.meta.connected === true && !this.isAuthenticated){
                 this.$router.push({name:'home'});
             }
         }
