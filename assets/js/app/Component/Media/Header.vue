@@ -36,31 +36,34 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
+    import {Getter, State} from 'vuex-class';
     import Media from "../../Entity/Media";
-    import Session from "../../../components/Session";
-    import User from "../../Entity/User";
     import MediaSubscription from "../../Entity/MediaSubscription";
     import MediaSubscriptionAPI from "../../API/MediaSubscriptionAPI";
+    import {SecurityState} from "../../Store/Security/types";
+
+    const namespace: string = 'security';
 
     @Component
     export default class Header extends Vue {
         @Prop({type: Media}) media;
 
-        user: User | null;
+        @State('security') securityState: SecurityState;
+        @Getter('isAuthenticated', {namespace}) isAuthenticated: Boolean;
+
         subscription: MediaSubscription | undefined;
 
         data() {
             return {
-                user: undefined,
                 subscription: undefined,
             }
         }
 
         mounted() {
             document.querySelector("header.media div.backdrop").style.backgroundImage = "url('" + this.media.backdrop + "')";
-            this.user = Session.getObject('user');
 
-            if (this.user !== null) {
+
+            if (this.isAuthenticated !== null) {
                 MediaSubscriptionAPI.getForMedia(this.media.id, (subscription: MediaSubscription | undefined) => {
                     this.subscription = subscription;
                 });
@@ -82,7 +85,7 @@
         }
 
         allowSubscription() {
-            return this.user !== undefined && ['tv', 'animes'].indexOf(this.media.category) !== -1;
+            return this.isAuthenticated && ['tv', 'animes'].indexOf(this.media.category) !== -1;
         }
     }
 </script>
