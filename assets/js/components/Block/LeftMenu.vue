@@ -50,6 +50,12 @@
                     Connexion
                 </router-link>
             </li>
+            <li v-if="!isAuthenticated">
+                <router-link :to="{name: 'security-sign-up'}" exact>
+                    <i class="fas fas fa-user-plus link-icon"></i>
+                    Inscription
+                </router-link>
+            </li>
         </ul>
     </div>
 </template>

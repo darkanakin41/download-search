@@ -4,10 +4,13 @@
 namespace App\Controller\API;
 
 use App\Entity\User;
+use App\Service\SecurityService;
+use Exception;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -22,11 +25,17 @@ final class SecurityController extends AbstractController
      * @var SerializerInterface
      */
     private $serializer;
+    /**
+     * @var SecurityService
+     */
+    private $securityService;
 
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(SerializerInterface $serializer, SecurityService $securityService)
     {
         $this->serializer = $serializer;
+        $this->securityService = $securityService;
     }
+
     /**
      * @Route("login", name="api_security_login", methods={"GET", "POST"})
      * @return JsonResponse
@@ -37,6 +46,25 @@ final class SecurityController extends AbstractController
         $user = $this->getUser();
         $data = $this->serializer->serialize($user, 'json');
         return new JsonResponse($data, 200, [], true);
+    }
+
+    /**
+     * @Route("register", name="api_security_register", methods={"POST"})
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function registerAction(Request $request): JsonResponse
+    {
+        try{
+            /** @var User $user */
+            $user = $this->securityService->register($request->request->all());
+            $data = $this->serializer->serialize($user, 'json');
+            return new JsonResponse($data, 200, [], true);
+        }catch(Exception $e){
+            $data = $this->serializer->serialize(['error' => $e->getMessage()], 'json');
+            return new JsonResponse($data, 500, [], true);
+        }
     }
 
     /**

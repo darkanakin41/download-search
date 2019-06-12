@@ -1,10 +1,9 @@
 import axios from 'axios';
 import Item from "../Entity/Item";
 import User from "../Entity/User";
-import Session from "../../components/Session";
 
 export default class SecurityAPI {
-    static baseUrl:String = '/api/security/';
+    static baseUrl: String = '/api/security/';
 
     /**
      * Login the user
@@ -12,12 +11,13 @@ export default class SecurityAPI {
      * @param login
      * @param password
      */
-    static login(login:String, password:String) {
+    static login(login: String, password: String) {
         return axios.post(this.baseUrl + 'login', {
-            username:login,
-            password:password,
+            username: login,
+            password: password,
         });
     }
+
     /**
      * Check if the user is logged in or not
      *
@@ -25,6 +25,15 @@ export default class SecurityAPI {
     static loginCheck() {
         return axios.get(this.baseUrl + 'login');
     }
+
+    /**
+     * Register the account of the user
+     * @param payload
+     */
+    static register(payload: Object) {
+        return axios.post(this.baseUrl + 'register', payload);
+    }
+
     /**
      * Logout current user
      */

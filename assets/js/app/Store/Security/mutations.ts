@@ -17,6 +17,11 @@ export const mutations: MutationTree<SecurityState> = {
         state.error = null;
         state.user = null;
     },
+    SECURITY_REGISTER(state, payload: User) {
+        state.loading = false;
+        state.error = null;
+        state.user = payload;
+    },
     SECURITY_ERROR(state, error) {
         state.loading = false;
         state.error = error;

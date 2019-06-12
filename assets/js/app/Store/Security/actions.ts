@@ -12,6 +12,13 @@ export const actions: ActionTree<SecurityState, RootState> = {
             .then(res => commit('SECURITY_LOGIN', res.data))
             .catch(err => commit('SECURITY_ERROR', err));
     },
+    register({commit}, payload): any {
+        commit('SECURITY_LOADING');
+
+        return SecurityAPI.register(payload)
+            .then(res => commit('SECURITY_REGISTER', res.data))
+            .catch(err => commit('SECURITY_ERROR', err));
+    },
     logout({commit}): any {
         commit('SECURITY_LOADING');
 
