@@ -10,12 +10,14 @@ For everyone :
 * Access the detail of the specific *Item* retrieved from a Download Site
 * Display the list of available *Media* stored (linked to [themoviedb](https://www.themoviedb.org/?language=fr))
 * Access the detail of a *Media* and see all available *Item*
+* Display a calendar of upcoming episodes from TV Shows
 * User can log in
 * Can create an account
 
 For connected users : 
-* Subscribe to a serie
-* Display list of subscribed series
+* Subscribe to a TV Show
+* Display list of subscribed TV Shows
+* Display a calendar of upcoming episodes from TV Shows subscribed
 
 ## TODO
 For everyone : 
@@ -27,7 +29,6 @@ For everyone :
 For connected users : 
 * Create a profil page
 * Create an edit password page
-* Display a calendar of upcoming episodes from TV Shows
 * Add a notification system when a new episode is out on a TV Show or Animes subscribed
 * Add a checkbox which save if the episode/movie have been downloaded
 
