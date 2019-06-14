@@ -9,8 +9,9 @@ body {
     background: #f5f5f7;
     color: #333333;
     font-family: Roboto, sans-serif;
-    &.no-scroll{
-        overflow:hidden;
+
+    &.no-scroll {
+        overflow: hidden;
     }
 }
 
@@ -26,6 +27,7 @@ body {
     width: 100%;
 }
 
+@import "./partial/calendar";
 @import "./partial/content";
 @import "./partial/drawer";
 @import "./partial/footer";

@@ -18,6 +18,9 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.7.1",
+        "@fullcalendar/core": "^4.2.0",
+        "@fullcalendar/daygrid": "^4.2.0",
+        "@fullcalendar/vue": "^4.2.2",
         "@types/jquery": "^3.3.29",
         "axios": "^0.18.0",
         "encore": "^0.0.30-beta",

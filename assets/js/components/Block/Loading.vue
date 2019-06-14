@@ -1,5 +1,5 @@
 <template>
-    <div id="loading" :class="{active:displayed, fixed:fixed}" v-if="displayed">
+    <div id="loading" v-bind:class="getClasses()" v-if="displayed">
         <div class="spinner">
             <i class="fa fa-spin fa-spinner"></i>
         </div>
@@ -13,6 +13,22 @@
     export default class Loading extends Vue {
         @Prop({type: Boolean, default: true}) displayed;
         @Prop({type: Boolean, default: true}) fixed;
+        @Prop({type: String, default: ''}) position;
+
+        mounted(){
+            if(this.position == '' && this.fixed){
+                this.$set(this, 'position', 'fixed');
+            }
+        }
+
+        getClasses(){
+            let classes = [];
+            classes.push(this.position);
+            if(this.displayed){
+                classes.push('active');
+            }
+            return classes;
+        }
     }
 </script>
 
@@ -38,6 +54,9 @@
 
         &.fixed {
             position : fixed;
+        }
+        &.absolute{
+            position : absolute;
         }
         &.active {
             visibility: visible;

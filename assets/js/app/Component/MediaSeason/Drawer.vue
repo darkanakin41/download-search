@@ -87,12 +87,8 @@
     @import "../../../../scss/common/config";
 
     .drawer-container {
-        @include opacity(0);
-        visibility: hidden;
-        @include transition(opacity .5 ease, visibility .5s ease);
-
         .drawer-overlay {
-            background: transparentize(black, .5);
+            background: linear-gradient(transparentize(black, 1), transparentize(black, .66));
             position: fixed;
             bottom: 0;
             left: 0;
@@ -100,6 +96,9 @@
             right: 0;
 
             overflow: hidden;
+            visibility: hidden;
+            @include opacity(0);
+            @include transition(all 0.25s ease-in-out);
         }
 
         .season-drawer {
@@ -114,6 +113,9 @@
             left: 0;
             max-height: 70%;
             overflow: auto;
+
+            @include transform(translateY(100%));
+            @include transition(all .25s ease-in-out);
 
             .drawer-header {
                 .drawer-title {
@@ -149,11 +151,17 @@
         }
 
         &.open {
-            @include opacity(1);
-            visibility: visible;
 
             .drawer-overlay {
+                @include opacity(1);
+                visibility: visible;
+                @include transition(all .15s ease-in-out);
                 cursor: pointer;
+            }
+
+            .season-drawer{
+                @include transform(translateY(0));
+                @include transition(all .2s ease-in-out);
             }
         }
     }

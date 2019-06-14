@@ -15,6 +15,20 @@ const accountRoutes: Array<RouteConfig> = [
             return import(/* webpackChunkName: 'account' */ "./Subscription.vue")
         }
     },
+    {
+        name: 'account-agenda',
+        meta: {
+            title: 'Mon agenda',
+            pageTitle: true,
+            leftMenu: true,
+            icon: 'far fa-calendar-alt',
+            connected: true,
+        },
+        path: '/account/agenda',
+        component: () => {
+            return import(/* webpackChunkName: 'account' */ "./AgendaAccount.vue")
+        }
+    },
 ];
 
 export default accountRoutes;

@@ -21,6 +21,23 @@ export default class MediaSeasonEpisodeAPI {
     }
 
     /**
+     * Search on the server
+     * @param start
+     * @param end
+     * @param callback the code to be executed on success
+     */
+    static calendar(start:Date, end:Date, user:Boolean, callback: any) {
+        axios.post(this.baseUrl + 'calendar', {start: start, end: end, user: user})
+            .then((response) => {
+                let items: Array<MediaSeasonEpisode> = [];
+                response.data.forEach((item: Object) => {
+                    items.push(this.convert(item));
+                });
+                callback(items);
+            });
+    }
+
+    /**
      * Process input array and return the list of objects
      *
      * @param data

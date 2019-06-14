@@ -15,6 +15,19 @@ const mediaRoutes: Array<RouteConfig> = [
         }
     },
     {
+        name: 'media-agenda',
+        meta: {
+            title: 'Agenda des Épisodes',
+            pageTitle: true,
+            leftMenu: true,
+            icon: 'far fa-calendar-alt',
+        },
+        path: '/media/agenda',
+        component: () => {
+            return import(/* webpackChunkName: 'media' */ "./AgendaMedia.vue")
+        }
+    },
+    {
         name: 'media-last-updated',
         meta: {
             title: 'Dernières MAJ',

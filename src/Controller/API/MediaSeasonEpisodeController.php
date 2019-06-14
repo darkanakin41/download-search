@@ -2,9 +2,8 @@
 
 namespace App\Controller\API;
 
-use App\Entity\MediaSeasonEpisode;
 use App\Service\MediaSeasonEpisodeService;
-use App\Service\MediaService;
+use DateTime;
 use Exception;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,12 +49,47 @@ final class MediaSeasonEpisodeController extends AbstractController
 
         if ($id !== null) {
             $itemsEntity = $this->mediaSeasonEpisodeService->retrieve($id);
-            if($itemsEntity === null){
+            if ($itemsEntity === null) {
                 throw $this->createNotFoundException(sprintf("Episode %s not found", $id));
             }
         } else {
             $itemsEntity = $this->mediaSeasonEpisodeService->retrieveBy($request->request->all());
         }
+
+        $data = $this->serializer->serialize($itemsEntity, 'json');
+
+        return new JsonResponse($data, 200, [], true);
+    }
+
+    /**
+     * @Rest\Post("/calendar" ,name="api_media_season_episode_calendar")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function calendarAction(Request $request): JsonResponse
+    {
+        if ($request->request->get("start") != NULL) {
+            $start = new DateTime($request->request->get("start"));
+        } else {
+            $start = new DateTime("now");
+            $start->modify('first day of this month');
+        }
+        if ($request->request->get("end") != NULL) {
+            $end = new DateTime($request->request->get("end"));
+        } else {
+            $end = new DateTime("now");
+            $end->modify('last day of this month');
+        }
+
+        $user = null;
+        if($request->request->get('user',false)){
+            $user = $this->getUser();
+        }
+
+        $itemsEntity = $this->mediaSeasonEpisodeService->getBetween($start, $end, $user);
 
         $data = $this->serializer->serialize($itemsEntity, 'json');
 

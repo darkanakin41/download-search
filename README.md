@@ -11,6 +11,7 @@ For everyone :
 * Display the list of available *Media* stored (linked to [themoviedb](https://www.themoviedb.org/?language=fr))
 * Access the detail of a *Media* and see all available *Item*
 * User can log in
+* Can create an account
 
 For connected users : 
 * Subscribe to a serie
@@ -19,10 +20,9 @@ For connected users :
 ## TODO
 For everyone : 
 * Create an advanced research form
-* Create a register form
 * Enhance site parsing to retrieve more data
 * Connect to a Video Game DB and a Music DB
-* Bypass cloudflare protection
+* Add validation mail 
 
 For connected users : 
 * Create a profil page
@@ -33,3 +33,4 @@ For connected users :
 
 For the system :
 * Add a command to retrieve last uploaded items
+* Add a command to update series

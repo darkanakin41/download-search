@@ -44,6 +44,7 @@
 
         @Action('checkAuthentification', {namespace}) checkAuthentification: any;
         @Getter('isAuthenticated', {namespace}) isAuthenticated: Boolean;
+        @Getter('isLoading', {namespace}) isCheckingAuthentication: Boolean;
         leftMenuItems = leftmenuItems;
         pageName = "";
 
