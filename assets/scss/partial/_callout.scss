@@ -1,0 +1,15 @@
+.callout{
+    padding : .7rem 1rem;
+    &.warning{
+        background-color: $warningsColor !important;
+        border-color: $warningsColor !important;
+    }
+    &.success{
+        background-color: $successColor !important;
+        border-color: $successColor!important;
+    }
+    &.alert{
+        background-color: $alertColor !important;
+        border-color: $alertColor!important;
+    }
+}

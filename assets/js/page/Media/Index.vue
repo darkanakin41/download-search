@@ -1,17 +1,24 @@
 <template>
-    <div class="grid-container">
-        <form v-on:submit.prevent="onSubmitMethod">
-            <div class="search-form">
-                <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
-            </div>
-        </form>
-        <TabbedFilter v-if="!loading" :valuesInput="filterValues" v-model="filter" />
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <Grid v-if="!loading && itemsFiltered.length > 0" :config="mediaGridConfig()" :items="itemsFiltered"/>
-        <div v-if="!loading && itemsFiltered.length === 0" class="callout warning">
-            <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
-        </div>
-    </div>
+    <v-container fluid>
+        <v-card>
+            <v-toolbar>
+                <form v-on:submit.prevent="onSubmitMethod">
+                    <v-text-field prepend-icon="search" v-model="search">
+                        Recherche
+                    </v-text-field>
+                </form>
+                <v-spacer></v-spacer>
+                <TabbedFilter v-if="!loading" :valuesInput="filterValues" v-model="filter" />
+            </v-toolbar>
+            <v-sheet>
+                <Loading :displayed="loading" />
+                <Grid v-if="!loading && itemsFiltered.length > 0" :config="mediaGridConfig()" :items="itemsFiltered" />
+                <div v-if="!loading && itemsFiltered.length === 0" class="callout warning">
+                    <b>Aucun résultat, veuillez renseigner une valeur valide dans le champ de recherche</b>
+                </div>
+            </v-sheet>
+        </v-card>
+    </v-container>
 </template>
 
 <script lang="ts">
@@ -33,7 +40,7 @@
         components: {Grid, Loading, FlexTable, TabbedFilter}
     })
     export default class Index extends Vue {
-        mediaCardComponent:Function = Card;
+        mediaCardComponent: Function = Card;
         search = "";
         loading = false;
         filter = "";
@@ -47,7 +54,7 @@
                 itemsInput: [],
                 itemsDisplayed: [],
                 tableConfig: tableConfig,
-                filterValues: ['animes','movie','tv']
+                filterValues: ['animes', 'movie', 'tv']
             }
         }
 
@@ -82,18 +89,18 @@
         @Watch('filter')
         onFilterChange() {
             this.loading = true;
-            let search = <string> Session.get('media-search-value');
-            let searchSet:Boolean = (search !== null && search.trim() !== "");
-            let filterSet:Boolean = (this.filter !== null && this.filter.trim() !== "");
+            let search = <string>Session.get('media-search-value');
+            let searchSet: Boolean = (search !== null && search.trim() !== "");
+            let filterSet: Boolean = (this.filter !== null && this.filter.trim() !== "");
 
             this.itemsFiltered = this.itemsInput.filter(item => {
                 let filterResult = true;
                 let searchResult = true;
 
-                if(searchSet){
+                if (searchSet) {
                     searchResult = item.title.toLowerCase().indexOf(search.toLowerCase()) !== -1;
                 }
-                if(filterSet){
+                if (filterSet) {
                     filterResult = item.category === this.filter;
                 }
 
@@ -140,7 +147,7 @@
         }
     }
 
-    .grid-container{
-        max-width : 100%;
+    .grid-container {
+        max-width: 100%;
     }
 </style>

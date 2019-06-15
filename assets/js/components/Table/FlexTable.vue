@@ -150,6 +150,7 @@
         .row {
             padding: 15px;
             border-bottom: 1px solid transparentize(black, .45);
+            color: $dark;
 
             &:last-child {
                 border: none;

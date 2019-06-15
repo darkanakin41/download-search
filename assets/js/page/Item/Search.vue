@@ -1,18 +1,25 @@
 <template>
-    <div class="grid-container">
-        <form v-on:submit.prevent="onSubmitMethod">
-            <div class="search-form">
-                <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
-            </div>
-        </form>
-        <TabbedFilter v-if="!isLoading()" :valuesInput="sourcesState.sources" :initialFilter="filter" :displayedField="'title'" v-model="filter" />
-        <Loading v-if="isLoading()" :displayed="loading" :fixed="false" />
-        <FlexTable v-if="!isLoading() && itemsDisplayed.length > 0" :itemsInput="itemsDisplayed" :configInput="tableConfig" />
-        <div v-if="!isLoading() && itemsDisplayed.length === 0" class="callout warning text-center">
-            <b>Aucun résultat</b>
-        </div>
-        <Pagination :itemsInput="itemsFiltered" :nbPerPage="9" v-model="itemsDisplayed" />
-    </div>
+    <v-container fluid>
+        <v-card>
+            <v-toolbar>
+                <form v-on:submit.prevent="onSubmitMethod">
+                    <v-text-field prepend-icon="search" v-model="search">
+                        Recherche
+                    </v-text-field>
+                </form>
+                <v-spacer></v-spacer>
+                <TabbedFilter v-if="!isLoading()" :valuesInput="sourcesState.sources" :initialFilter="filter" :displayedField="'title'" v-model="filter" />
+            </v-toolbar>
+            <v-sheet>
+                <Loading :displayed="isLoading()" />
+                <FlexTable v-if="!isLoading() && itemsDisplayed.length > 0" :itemsInput="itemsDisplayed" :configInput="tableConfig" />
+                <div v-if="!loading && itemsFiltered.length === 0" class="callout warning text-center">
+                    Aucun résultat
+                </div>
+                <Pagination :itemsInput="itemsFiltered" :nbPerPage="9" v-model="itemsDisplayed" />
+            </v-sheet>
+        </v-card>
+    </v-container>
 </template>
 
 <script lang="ts">
@@ -61,10 +68,10 @@
 
         mounted() {
             console.log(this.sourcesState.loaded);
-            if(!this.sourcesState.loaded){
+            if (!this.sourcesState.loaded) {
                 console.log("on refresh");
                 this.refreshSources();
-            }else{
+            } else {
                 this.refreshSession();
                 if (this.search !== '') {
                     this.onSubmitMethod();
@@ -73,8 +80,8 @@
         }
 
         @Watch('isSourceLoading')
-        onSourceLoadingEnded(){
-            if(this.isSourceLoading){
+        onSourceLoadingEnded() {
+            if (this.isSourceLoading) {
                 return;
             }
             this.refreshSession();
@@ -83,7 +90,7 @@
             }
         }
 
-        isLoading(){
+        isLoading() {
             return this.isSourceLoading || this.loading;
         }
 
@@ -140,36 +147,4 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "../../../libs/theming/mixins";
-    @import "../../../scss/common/config";
-
-    .search-form {
-        position: relative;
-
-        &::before {
-            font-family: $fontawesomeFamily;
-            content: '\f002';
-            font-weight: $fontawesomeSolidWeight;
-            display: block;
-            position: absolute;
-            top: 0.4rem;
-            left: 0.9rem;
-            z-index: 1;
-            font-size: 1.75rem;
-            color: #8a8a8a;
-        }
-
-        input[name="search"] {
-            padding-left: 3rem;
-            font-size: 1.3rem;
-            height: 3.5rem;
-            font-weight: 300;
-            border: 1px solid #e0e0e0;
-            background: rgb(254, 254, 254) none repeat scroll 0 0;
-        }
-    }
-
-    .tab-container {
-        background: $dark;
-    }
 </style>

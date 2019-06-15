@@ -1,13 +1,15 @@
 <template>
-    <div class="card media visual">
-        <div class="banner">
-            <img :src="item.poster" :alt="item.title" :title="item.title">
-        </div>
-        <div class="content">
-            <h1 class="title">{{item.title}}</h1>
-            <span><i class="fa fa-tag"></i> {{ item.category }}</span>
-        </div>
-    </div>
+    <v-layout>
+        <v-card hover :title="item.title" light>
+            <v-img v-if="item.poster.trim() !== 'https://image.tmdb.org/t/p/original/'" :src="item.poster" :alt="item.title" :title="item.title" aspect-ratio="0.66" />
+            <v-card-title primary-title>
+                <div>
+                    <h3 class="headline mb-0">{{item.title}}</h3>
+                    <div class="category"><i class="fa fa-tag"></i> {{ item.category }}</div>
+                </div>
+            </v-card-title>
+        </v-card>
+    </v-layout>
 </template>
 
 <script lang="ts">
@@ -26,65 +28,43 @@
     @import "../../../../libs/theming/mixins";
     @import "../../../../scss/common/config";
 
-    .card {
-        &.visual {
-            width: 100%;
-            position: relative;
-            margin: 0;
-            background: white;
+    .v-card {
+        margin : 5px;
+        max-width: calc(100% - 10px);
 
-            border: 2px solid transparent;
-            @include transition(border-color .35s linear);
+        .v-card__title {
+            padding: .5rem .3rem;
 
-            &:hover {
-                border-color: $mainColor;
-                @include transition(border-color .15s linear);
+            & > div{
+                max-width: 100%;
+            }
+            .headline {
+                font-size: 1.2rem !important;
+                line-height: 1.2 !important;
+                margin: 0;
+                padding: 0;
             }
 
-            .banner {
-                width: 100%;
+            .category {
+                font-weight: $weightMedium;
+                display: inline-block;
+                @include opacity(.6);
+
+                .fa, .fas {
+                    width: 23px;
+                    text-align: center;
+                }
+
+                &:not(:last-child) {
+                    margin-right: 15px;
+                }
+            }
+
+            .headline, .category {
                 overflow: hidden;
-                position: relative;
-
-                img {
-                    width: 100%;
-                }
-            }
-
-            .content {
-                color: $dark;
-                padding: .5rem .3rem;
-                text-align: left;
-                font-weight: $weightExtraBold;
-
-                .title, span {
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    color: inherit;
-                }
-
-                .title {
-                    font-size: 1rem;
-                    margin: 0;
-                    padding: 0;
-                }
-
-                span {
-                    font-weight: $weightMedium;
-                    display: inline-block;
-                    font-size: .8rem;
-                    @include opacity(.6);
-
-                    .fa, .fas {
-                        width: 23px;
-                        text-align: center;
-                    }
-
-                    &:not(:last-child) {
-                        margin-right: 15px;
-                    }
-                }
+                text-overflow: ellipsis;
+                color: inherit;
+                white-space: nowrap;
             }
         }
     }

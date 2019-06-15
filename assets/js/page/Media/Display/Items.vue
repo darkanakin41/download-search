@@ -1,11 +1,9 @@
 <template>
     <div>
         <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <div v-if="!loading && items.length > 0" class="grid grid-x grid-padding-y">
-            <div class="cell medium-12" v-for="item in items">
-                <ItemCard :item="item" />
-            </div>
-        </div>
+        <template v-if="!loading && items.length > 0" v-for="item in items">
+            <ItemCard :item="item" />
+        </template>
     </div>
 </template>
 
@@ -43,4 +41,7 @@
 </script>
 
 <style lang="scss" scoped>
+    .v-card{
+        margin-bottom : 24px;
+    }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div id="loading" v-bind:class="getClasses()" v-if="displayed">
+    <div id="loading" v-bind:class="classes" v-if="displayed">
         <div class="spinner">
             <i class="fa fa-spin fa-spinner"></i>
         </div>
@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
 
     @Component
     export default class Loading extends Vue {
@@ -15,19 +15,34 @@
         @Prop({type: Boolean, default: true}) fixed;
         @Prop({type: String, default: ''}) position;
 
-        mounted(){
-            if(this.position == '' && this.fixed){
-                this.$set(this, 'position', 'fixed');
+        classes: Array<String> = [];
+
+        data() {
+            return {
+                classes: [],
             }
         }
 
-        getClasses(){
-            let classes = [];
-            classes.push(this.position);
-            if(this.displayed){
-                classes.push('active');
+        mounted() {
+            if (this.position == '') {
+                this.classes.push('fixed');
+            } else {
+                this.classes.push(this.position);
             }
-            return classes;
+        }
+
+        @Watch('displayed')
+        onDisplayedUpdated() {
+            let index = this.classes.indexOf('active');
+            if (this.displayed) {
+                if (index === -1) {
+                    this.classes.push('active');
+                }
+            } else {
+                if (index !== -1) {
+                    delete this.classes[index];
+                }
+            }
         }
     }
 </script>
@@ -53,11 +68,13 @@
         @include opacity(0);
 
         &.fixed {
-            position : fixed;
+            position: fixed;
         }
-        &.absolute{
-            position : absolute;
+
+        &.absolute {
+            position: absolute;
         }
+
         &.active {
             visibility: visible;
             @include opacity(1);

@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 let dateMixins = {
     methods: {
         /**
@@ -32,5 +34,7 @@ let dateMixins = {
         }
     }
 };
+
+Vue.mixin(dateMixins);
 
 export default dateMixins;

@@ -1,69 +1,76 @@
 <template>
     <div>
         <div class="drawer-header">
-            <div class="close">
-                <a data-close>
-                    <i class="fas fa-times link-icon"></i>
-                </a>
-                <a @click="onLogout()" v-if="isAuthenticated && !securityState.loading">
-                    <i class="fas fa-sign-out-alt link-icon"></i>
-                </a>
-            </div>
             <template v-if="isAuthenticated && !securityState.loading">
                 <div class="image">
                     <img src="../../../assets/leftmenu-header-background.jpg" alt="Banner profil image">
                 </div>
                 <div class="user">
-                    <div class="avatar">
-                        <img src="../../../assets/avatar.jpg" :alt="securityState.user.username" :title="securityState.user.username" />
-                    </div>
+                    <v-avatar :title="securityState.user.username" :size="90" color="grey lighten-4">
+                        <img src="../../../assets/avatar.jpg" alt="avatar">
+                    </v-avatar>
                     <div class="id">
                         <span class="pseudo">{{securityState.user.username}}</span>
                         <span class="mail">{{securityState.user.email}}</span>
+                        <span class="logout">
+                            <a @click="onLogout()" v-if="isAuthenticated && !securityState.loading">
+                                <i class="fas fa-sign-out-alt link-icon"></i> Déconnexion
+                            </a>
+                        </span>
                     </div>
                 </div>
             </template>
         </div>
-        <ul class="menu vertical accordion-menu" data-accordion-menu>
-            <li v-for="item in menuItems">
+        <v-list>
+            <template v-for="item in menuItems">
                 <template v-if="item.children === undefined">
-                    <router-link :to="{name: item.name}" exact>
-                        <i v-if="item.icon !== undefined" :class="getIconClasses(item.icon)"></i>
-                        {{item.label}}
-                    </router-link>
+                    <v-list-tile :to="{name: item.name}" exact>
+                        <v-list-tile-action>
+                            <v-icon v-if="item.icon !== undefined">{{ item.icon }}</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-title>{{item.label}}</v-list-tile-title>
+                    </v-list-tile>
                 </template>
                 <template v-else>
-                    <a>{{ item.label }}</a>
-                    <ul class="vertical menu nested">
-                        <li v-for="child in item.children">
-                            <router-link :to="{name: child.name}" exact>
-                                <i v-if="child.icon !== undefined" :class="getIconClasses(child.icon)"></i>
-                                <span class="link-label">{{child.label}}</span>
-                            </router-link>
-                        </li>
-                    </ul>
+                    <v-list-group>
+                        <template v-slot:activator>
+                            <v-list-tile>
+                                <v-list-tile-title>{{ item.label }}</v-list-tile-title>
+                            </v-list-tile>
+                        </template>
+
+                        <template v-for="child in item.children">
+                            <v-list-tile :to="{name: child.name}" exact>
+                                <v-list-tile-action>
+                                    <v-icon v-if="child.icon !== undefined">{{ child.icon }}</v-icon>
+                                </v-list-tile-action>
+                                <v-list-tile-title>{{child.label}}</v-list-tile-title>
+                            </v-list-tile>
+                        </template>
+                    </v-list-group>
                 </template>
-            </li>
-            <li v-if="!isAuthenticated">
-                <router-link :to="{name: 'security-sign-in'}" exact>
-                    <i class="fas fa-sign-in-alt link-icon"></i>
-                    Connexion
-                </router-link>
-            </li>
-            <li v-if="!isAuthenticated">
-                <router-link :to="{name: 'security-sign-up'}" exact>
-                    <i class="fas fas fa-user-plus link-icon"></i>
-                    Inscription
-                </router-link>
-            </li>
-        </ul>
+            </template>
+
+            <v-list-tile :to="{name: 'security-sign-in'}" exact v-if="!isAuthenticated">
+                <v-list-tile-action>
+                    <v-icon>fas fa-sign-in-alt</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-title>Connexion</v-list-tile-title>
+            </v-list-tile>
+
+            <v-list-tile :to="{name: 'security-sign-up'}" exact v-if="!isAuthenticated">
+                <v-list-tile-action>
+                    <v-icon>fas fa-user-plus</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-title>Inscription</v-list-tile-title>
+            </v-list-tile>
+        </v-list>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import {Action, Getter, State} from 'vuex-class';
-    import Foundation from 'foundation-sites';
     import VueRouter from "vue-router";
     import Login from "../../app/Security/Login.vue";
     import Loading from "./Loading.vue";
@@ -91,12 +98,7 @@
         }
 
         mounted() {
-            new Foundation.AccordionMenu($(this.$el).find('[data-accordion-menu]'), {});
             this.onUserUpdated();
-        }
-
-        getIconClasses(icon: String) {
-            return icon + " link-icon";
         }
 
         onLogout() {
@@ -108,9 +110,6 @@
         @Watch('isAuthenticated')
         onUserUpdated() {
             this.menuItems = this.filterItems(this.items);
-            this.$nextTick(()=>{
-                new Foundation.AccordionMenu($(this.$el).find('[data-accordion-menu]'), {});
-            })
         }
 
         /**
@@ -151,34 +150,15 @@
 
     .drawer-header {
         position: relative;
-        min-height: 50px;
         z-index: 1;
-        background-color: #161616;
-        @include box-shadow(0 -2px 3px rgba(0, 0, 0, .33), 0 -7px 7px rgba(0, 0, 0, .2), 0 -20px 20px rgba(0, 0, 0, .1));
-        @include transition(all .2s cubic-bezier(.4, 0, .2, 1));
-
-        .close {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 5px;
-            right: 0;
-
-            a {
-                padding: 0 1rem .7rem 1rem;
-                color: white;
-                @include opacity(.5);
-                @include transition(all .2s linear);
-
-                &:hover {
-                    @include opacity(1);
-                }
-            }
-        }
 
         .image {
             height: 144px;
             overflow: hidden;
+
+            img {
+                width: 100%;
+            }
         }
 
         .user {
@@ -191,24 +171,24 @@
             justify-content: center;
             align-content: center;
 
-            .avatar {
+            .v-avatar {
                 margin: 0 auto;
                 width: 90px;
                 height: 90px;
                 border-radius: 50%;
                 overflow: hidden;
-                box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+                @include box-shadow(0 1px 4px rgba(0, 0, 0, .25));
+
+                img {
+                    width: 100%;
+                }
             }
 
             .id {
-                $paddingSides: 16px;
-                padding: 8px $paddingSides;
                 text-align: center;
 
                 & > * {
                     display: block;
-                    max-width: ($drawerWidth - ($paddingSides * 2));
-                    width: ($drawerWidth - ($paddingSides * 2));
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -220,69 +200,36 @@
                     font-weight: bold;
                 }
 
-                .mail {
+                .mail,
+                .logout {
                     font-size: .80em;
                     @include opacity(.4);
                 }
-            }
-        }
-    }
 
-    .menu {
-        li {
-            padding-right: 16px;
-
-            a {
-                height: 40px;
-                padding: 0 12px 0 24px;
-                border-radius: 0 20px 20px 0;
-                line-height: 40px;
-                color: inherit;
-                font-size: 1rem;
-                font-weight: bold;
-                @include transition(all .5s ease);
-
-                .link-icon {
-                    width: 30px;
-                    @include opacity(.5);
-                    text-align: center;
-                }
-
-                .link-label {
-                    @include opacity(.7);
-                    padding-left: 15px;
-                }
-
-                &:hover {
-                    background: transparentize(white, .95);
-                }
-
-                &.active {
-                    background: $mainColor;
-                    color: #333;
-                    @include opacity(1);
-
-                    .link-icon {
-                        @include opacity(1);
-                    }
-                }
-            }
-
-            .submenu {
-                margin-left: 0;
-
-                li {
-                    padding-right: 0;
+                .logout {
+                    @include transition(all .25s $cubicFastInSlowOut);
 
                     a {
-                        padding-left: 1.2rem;
+                        color: inherit;
+                    }
+
+                    &:hover {
+                        @include opacity(1);
+                        @include transition(all .15s $cubicFastInSlowOut);
                     }
                 }
             }
+        }
+    }
 
-            &.drawer-toggle {
-                margin-bottom: 200px;
+    .v-list {
+        color: white;
+
+        .v-icon {
+            &.fa, &.fas, &.fab, &.far {
+                font-size: 18px;
             }
         }
     }
+
 </style>

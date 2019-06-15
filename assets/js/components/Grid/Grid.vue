@@ -1,16 +1,18 @@
 <template>
-    <div class="grid grid-x">
-        <div v-for="item in itemsDisplayed" class="cell" v-bind:class="classes">
-            <template v-if="config.onclick">
-                <a v-on:click="config.onclick(item)">
-                    <component :is="config.component" :item="item"></component>
-                </a>
+    <v-item-group>
+        <v-layout wrap>
+            <template v-for="item in itemsDisplayed">
+                <v-flex v-bind:class="classes">
+                    <a v-on:click="config.onclick(item)">
+                        <v-item class="d-flex align-center">
+                            <component :is="config.component" :item="item"></component>
+                        </v-item>
+                    </a>
+                </v-flex>
             </template>
-        </div>
-        <div class="cell medium-12">
-            <Pagination :itemsInput="items" :nbPerPage="itemsPerPage" v-model="itemsDisplayed" />
-        </div>
-    </div>
+        </v-layout>
+        <Pagination :itemsInput="items" :nbPerPage="itemsPerPage" v-model="itemsDisplayed" />
+    </v-item-group>
 </template>
 
 <script lang="ts">
@@ -23,14 +25,14 @@
     })
     export default class Grid extends Vue {
         @Prop({type: Array}) items;
-        @Prop({type: GridConfig}) config:GridConfig;
+        @Prop({type: GridConfig}) config: GridConfig;
 
         itemsDisplayed: Array<any>;
         itemsPerPage: Number;
         itemsPerRow: Number;
         rowsPerPage: Number;
 
-        classes:Array<String> = [];
+        classes: Array<String> = [];
 
         data() {
             return {
@@ -38,7 +40,7 @@
                 itemsPerPage: 24,
                 itemsPerRow: 8,
                 rowsPerPage: 3,
-                classes : [],
+                classes: [],
             }
         }
 
@@ -63,33 +65,33 @@
             let itemsPerRowMedium = 3;
             let itemsPerRowLarge = 12;
 
-            if(this.config.itemsPerRowForced !== undefined){
+            if (this.config.itemsPerRowForced !== undefined) {
                 this.itemsPerRow = this.config.itemsPerRowForced;
-                this.classes.push('small-6');
-                this.classes.push('medium-' + (12/this.itemsPerRow));
-                this.classes.push('large-' + (12/this.itemsPerRow));
-            }else{
+                this.classes.push('xs6');
+                this.classes.push('md' + (12 / this.itemsPerRow));
+                this.classes.push('lg' + (12 / this.itemsPerRow));
+            } else {
                 // small
-                if(windowWidth <= 375){
+                if (windowWidth <= 375) {
                     this.itemsPerRow = itemsPerRowSmall;
-                }else if (windowWidth <= 768){
+                } else if (windowWidth <= 768) {
                     this.itemsPerRow = itemsPerRowMedium;
-                }else{
+                } else {
                     this.itemsPerRow = itemsPerRowLarge;
                 }
-                this.classes.push('small-' + (12/itemsPerRowSmall));
-                this.classes.push('medium-' + (12/itemsPerRowMedium));
-                this.classes.push('large-' + (12/itemsPerRowLarge));
+                this.classes.push('xs' + (12 / itemsPerRowSmall));
+                this.classes.push('md' + (12 / itemsPerRowMedium));
+                this.classes.push('lg' + (12 / itemsPerRowLarge));
             }
 
-            if(this.config.nbRowsForced !== undefined){
+            if (this.config.nbRowsForced !== undefined) {
                 this.rowsPerPage = this.config.nbRowsForced;
-            }else{
-                if(windowWidth <= 375){
+            } else {
+                if (windowWidth <= 375) {
                     this.rowsPerPage = 4;
-                }else if (windowWidth <= 768){
+                } else if (windowWidth <= 768) {
                     this.rowsPerPage = 4;
-                }else{
+                } else {
                     this.rowsPerPage = 2;
                 }
             }
@@ -100,22 +102,9 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "../../../libs/theming/mixins";
-    @import "../../../scss/common/config";
-
-    .my-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        padding: .5rem 0;
-
-        & > .cell {
-            width: 150px;
-            margin: 6px;
-            &.full-width{
-                margin : 0;
-                width : 100%;
-            }
+    .v-item-group {
+        & > .layout, & > .flex {
+            cursor: auto;
         }
     }
 </style>

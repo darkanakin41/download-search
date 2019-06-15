@@ -1,9 +1,9 @@
 <template>
     <header class="media">
-        <div class="backdrop"></div>
-        <div class="content">
+        <v-img class="backdrop" v-if="media.backdrop.trim() !== 'https://image.tmdb.org/t/p/original/'" :src="media.backdrop" :alt="media.title" :title="media.title" />
+        <v-container fluid class="content">
             <div class="avatar">
-                <img :src="media.poster" :alt="media.title" />
+                <v-img v-if="media.poster.trim() !== 'https://image.tmdb.org/t/p/original/'" :src="media.poster" :alt="media.title" :title="media.title" aspect-ratio="0.66" />
             </div>
             <div class="infos">
                 <h1>{{ media.title }}</h1>
@@ -16,7 +16,8 @@
                 </div>
                 <div class="detail" v-if="media.genres.length > 0">
                     <i class="fa fa-tag"></i> Genre :
-                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}<template v-if="k < media.genres.length-1">, </template>
+                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}
+                        <template v-if="k < media.genres.length-1">,</template>
                     </template>
                 </div>
                 <div class="description"><i class="fa fa-book-open"></i> Résumé : <br /> {{ media.description }}</div>
@@ -30,7 +31,7 @@
                     <i class="far fa-bell-slash"></i>
                 </a>
             </div>
-        </div>
+        </v-container>
     </header>
 </template>
 
@@ -62,8 +63,6 @@
         }
 
         mounted() {
-            document.querySelector("header.media div.backdrop").style.backgroundImage = "url('" + this.media.backdrop + "')";
-
             if (this.isAuthenticated !== null) {
                 this.subscriptionLoading = true;
                 MediaSubscriptionAPI.getForMedia(this.media.id, (subscription: MediaSubscription | undefined) => {
@@ -104,8 +103,7 @@
     header {
         position: relative;
         background: transparentize($subColor, .1);
-        padding: 50px 0;
-
+        font-size : 1.1rem;
         .backdrop {
             content: '';
             z-index: -1;
@@ -114,29 +112,25 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('http://matchs.p-lejeune.com/media/jeu/2-counter-strike-global-offensive/banner-1477230434.jpg');
             background-position: center center;
         }
 
         .content {
-            margin: 0 auto;
             color: white;
-            width: 100%;
-            max-width: 1280px;
             display: flex;
             align-items: center;
 
-            $avatar-width: 200px;
+            $avatar-width: 170px;
 
             .avatar {
                 flex: 0 0 $avatar-width;
                 overflow: hidden;
-                padding: 0 25px;
-                white-space: nowrap;
+                margin: 0 25px;
+                @include border-radius(15px);
+                border: 2px solid $mainColor;
 
                 img {
-                    @include border-radius(15px);
-                    border: 2px solid $mainColor;
+                    width: 100%;
                 }
             }
 
@@ -145,12 +139,11 @@
                 padding: 0 25px;
 
                 h1 {
-                    font-size: 1.4rem;
+                    font-size: 1.6rem;
                     font-weight: bold;
                 }
 
                 .detail, .description {
-                    font-size: 1rem;
                     opacity: .7;
 
                     .fa, .far, .fas, .fab {
@@ -162,6 +155,7 @@
 
             .actions {
                 font-size: 2rem;
+
                 a {
                     color: white;
                     @include opacity(.7);

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
+        <Loading :displayed="loading" />
         <Header v-if="!loading && media" :media="media" />
         <TabbedMenu v-if="!loading" :items="pageRoutes" :isCentered="true"/>
-        <div class="grid-container" v-if="!loading">
+        <v-container fluid class="content">
             <router-view></router-view>
-        </div>
+        </v-container>
     </div>
 </template>
 
@@ -43,8 +43,8 @@
             let id = parseInt(this.$route.params.id);
             MediaAPI.get(id, (media) => {
                 this.media = media;
-                this.loading = false;
                 this.refreshRoutes();
+                this.loading = false;
             });
         }
 

@@ -1,42 +1,70 @@
 <template>
     <div>
-        <div class="callout success">
-            <div class="grid-container">
-                <h1 class="title">Bienvenue sur Download Search</h1>
-                <p>Cette application vous permet de rechercher des liens de téléchargements parmi les suites suivants :</p>
-                <ul>
-                    <li v-for="source in sourcesState.sources">
-                        <a :href="source.baseUrl" target="_blank">{{source.title}}</a>
-                    </li>
-                </ul>
-            </div>
+        <div class="jumbotron green">
+            <h1 class="title">Bienvenue sur Download Search</h1>
+            <p>Cette application vous permet de rechercher des liens de téléchargements parmi les sites suivants :</p>
+            <ul>
+                <li v-for="source in sourcesState.sources">
+                    <a :href="source.baseUrl" target="_blank">{{source.title}}</a>
+                </li>
+            </ul>
         </div>
+
+        <v-divider />
+
         <div class="text-center">
-            <router-link :to="{name: 'item-search'}" exact class="button custom big">
+            <v-btn color="success" :to="{name: 'item-search'}">
                 <i class="fa fa-search"></i> Accéder à la recherche
-            </router-link>
+            </v-btn>
         </div>
-        <section class="grid-container">
-            <h2 class="section-title">
-                Derniers médias sortis
-            </h2>
-            <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :items="lastReleasedMedias" :config="mediaGridConfig()" />
-        </section>
-        <section class="grid-container">
-            <h2 class="section-title">
-                Derniers médias mis à jour
-            </h2>
-            <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :items="lastUpdatedMedias" :config="mediaGridConfig()" />
-        </section>
-        <section class="grid-container">
-            <h2 class="section-title">
-                Derniers médias récupérés
-            </h2>
-            <Loading v-if="mediasLoading" :fixed="false" />
-            <Grid v-if="!mediasLoading" :items="lastDownloadedMedias" :config="mediaGridConfig()" />
-        </section>
+
+        <v-divider />
+
+        <v-card>
+            <v-toolbar>
+                <v-toolbar-title>Derniers médias sortis</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items class="hidden-sm-and-down">
+                    <v-btn flat :to="{name:'media-last-released'}">Voir plus</v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <v-sheet>
+                <Loading displayed="mediasLoading" :position="'absolute'" />
+                <Grid v-if="!mediasLoading" :items="lastReleasedMedias" :config="mediaGridConfig()" />
+            </v-sheet>
+        </v-card>
+
+        <v-divider />
+
+        <v-card>
+            <v-toolbar>
+                <v-toolbar-title>Derniers médias mis à jour</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items class="hidden-sm-and-down">
+                    <v-btn flat :to="{name:'media-last-updated'}">Voir plus</v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <v-sheet>
+                <Loading displayed="mediasLoading" :position="'absolute'" />
+                <Grid v-if="!mediasLoading" :items="lastUpdatedMedias" :config="mediaGridConfig()" />
+            </v-sheet>
+        </v-card>
+
+        <v-divider />
+
+        <v-card>
+            <v-toolbar>
+                <v-toolbar-title>Derniers médias récupérés</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items class="hidden-sm-and-down">
+                    <v-btn flat :to="{name:'media-index'}">Voir plus</v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <v-sheet>
+                <Loading displayed="mediasLoading" :position="'absolute'" />
+                <Grid v-if="!mediasLoading" :items="lastDownloadedMedias" :config="mediaGridConfig()" />
+            </v-sheet>
+        </v-card>
     </div>
 </template>
 
@@ -75,7 +103,7 @@
         }
 
         mounted() {
-            if(!this.sourcesState.loaded){
+            if (!this.sourcesState.loaded) {
                 this.refreshSources();
             }
             this.mediasLoading = true;
@@ -132,5 +160,10 @@
         .grid {
             margin: 0;
         }
+    }
+
+    .v-divider {
+        margin: 10px 0;
+        border: transparent;
     }
 </style>

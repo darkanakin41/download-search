@@ -1,25 +1,27 @@
 <template>
-    <div class="drawer-container" :class="{open:open}">
-        <div class="drawer-overlay" v-on:click="close()"></div>
-        <div class="season-drawer">
-            <template v-if="this.season !== undefined">
-                <div class="drawer-header">
-                    <h3 class="drawer-title">Saison {{ this.season.number }}</h3>
-                    <a v-on:click="close()" class="close-button">
-                        <i class="far fa-times-circle"></i>
-                    </a>
-                </div>
-                <Loading v-if="loading" :displayed="loading" :fixed="false" />
-                <div class="drawer-body" v-if="!loading">
+    <v-bottom-sheet v-model="open">
+        <template v-if="this.season !== undefined">
+            <v-card>
+                <v-toolbar>
+                    <v-toolbar-title>Saison {{ season.number }}</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn flat v-on:click="close()">
+                            <i class="far fa-times-circle"></i>
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-sheet>
+                    <Loading :displayed="loading" :position="'absolute'" />
                     <div v-if="season.description !== ''" class="resume">
                         <i class="fa fa-book-open"></i> Résumé
                         <p>{{season.description}}</p>
                     </div>
-                    <FlexTable :itemsInput="episodes" :configInput="configTable"/>
-                </div>
-            </template>
-        </div>
-    </div>
+                    <FlexTable v-if="!loading" :itemsInput="episodes" :configInput="configTable" />
+                </v-sheet>
+            </v-card>
+        </template>
+    </v-bottom-sheet>
 </template>
 
 <script lang="ts">
@@ -51,6 +53,7 @@
         }
 
         close() {
+            this.episodes = [];
             this.open = false;
             setTimeout(() => {
                 this.$emit("input", undefined);
@@ -71,97 +74,36 @@
         }
 
         @Watch('open')
-        onOpenUpdate(){
+        onOpenUpdate() {
             let body = document.body;
-            if(this.open){
+            if (this.open) {
                 body.classList.add('no-scroll');
-            }else{
+            } else {
                 body.classList.remove('no-scroll');
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     @import "../../../../libs/theming/mixins";
     @import "../../../../scss/common/config";
 
-    .drawer-container {
-        .drawer-overlay {
-            background: linear-gradient(transparentize(black, 1), transparentize(black, .66));
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            top: 0;
-            right: 0;
-
-            overflow: hidden;
-            visibility: hidden;
-            @include opacity(0);
-            @include transition(all 0.25s ease-in-out);
-        }
-
-        .season-drawer {
-            background: #101010;
-            color: white;
-
-            z-index: 1;
-
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            max-height: 70%;
+    .v-bottom-sheet {
+        background: #101010;
+        color: white;
+        max-height: 70% !important;
+        &.v-dialog{
             overflow: auto;
-
-            @include transform(translateY(100%));
-            @include transition(all .25s ease-in-out);
-
-            .drawer-header {
-                .drawer-title {
-                    margin: 0;
-                    font-size: 1.1rem;
-                    padding: .5rem .7rem;
-                    background: transparentize(black, .5);
-                }
-
-                .close-button {
-                    position: absolute;
-                    top: .5rem;
-                    right: .7rem;
-                    font-size : 1rem;
-                    @include opacity(.6);
-                    color:white;
-                    &:hover{
-                        color:white;
-                        @include opacity(1);
-                    }
-                }
-            }
-
-            .drawer-body{
-                font-size : .9rem;
-                padding : .5rem .7rem;
-                max-height: calc(100% - 41px);
-                overflow:auto;
-                .table-list{
-                    background: transparent;
-                }
-            }
         }
 
-        &.open {
-
-            .drawer-overlay {
-                @include opacity(1);
-                visibility: visible;
-                @include transition(all .15s ease-in-out);
-                cursor: pointer;
+        .v-sheet{
+            position : relative;
+            .resume{
+                padding: .5rem .7rem;
             }
-
-            .season-drawer{
-                @include transform(translateY(0));
-                @include transition(all .2s ease-in-out);
+            .table-list {
+                background: white;
             }
         }
     }

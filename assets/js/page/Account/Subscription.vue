@@ -1,16 +1,22 @@
 <template>
-    <div class="grid-container">
-        <form v-on:submit.prevent="onSubmitMethod">
-            <div class="search-form">
-                <input type="text" placeholder="Rechercher ..." spellcheck="false" name="search" v-model="search" />
-            </div>
-        </form>
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
-        <Grid v-if="!loading && itemsFiltered.length > 0" :config="mediaGridConfig()" :items="itemsFiltered"/>
-        <div v-if="!loading && itemsFiltered.length === 0" class="callout warning">
-            <b>Vous n'avez pas d'abonnement à des séries pour le moment. Vous devriez peut être parcourir les séries et ajouter celles qui vous intéressent ?</b>
-        </div>
-    </div>
+    <v-container fluid>
+        <v-card>
+            <v-toolbar>
+                <form v-on:submit.prevent="onSubmitMethod">
+                    <v-text-field prepend-icon="search" v-model="search">
+                        Recherche
+                    </v-text-field>
+                </form>
+            </v-toolbar>
+            <v-sheet>
+                <Loading :displayed="loading" />
+                <Grid v-if="!loading && itemsFiltered.length > 0" :config="mediaGridConfig()" :items="itemsFiltered" />
+                <div v-if="!loading && itemsFiltered.length === 0" class="callout warning">
+                    <b>Vous n'avez pas d'abonnement à des séries pour le moment. Vous devriez peut être parcourir les séries et ajouter celles qui vous intéressent ?</b>
+                </div>
+            </v-sheet>
+        </v-card>
+    </v-container>
 </template>
 
 <script lang="ts">
@@ -46,7 +52,7 @@
                 itemsInput: [],
                 itemsDisplayed: [],
                 tableConfig: tableConfig,
-                filterValues: ['animes','movie','tv'],
+                filterValues: ['animes', 'movie', 'tv'],
                 subscriptions: []
             }
         }
@@ -66,7 +72,7 @@
             MediaSubscriptionAPI.getAll((items) => {
                 this.subscriptions = items;
                 this.itemsInput = [];
-                this.subscriptions.forEach((item:MediaSubscription) => {
+                this.subscriptions.forEach((item: MediaSubscription) => {
                     this.itemsInput.push(item.media);
                 });
                 this.refreshSession();
@@ -86,18 +92,18 @@
         @Watch('filter')
         onFilterChange() {
             this.loading = true;
-            let search = <string> Session.get('media-subscription-search-value');
-            let searchSet:Boolean = (search !== null && search.trim() !== "");
-            let filterSet:Boolean = (this.filter !== null && this.filter.trim() !== "");
+            let search = <string>Session.get('media-subscription-search-value');
+            let searchSet: Boolean = (search !== null && search.trim() !== "");
+            let filterSet: Boolean = (this.filter !== null && this.filter.trim() !== "");
 
             this.itemsFiltered = this.itemsInput.filter(item => {
                 let filterResult = true;
                 let searchResult = true;
 
-                if(searchSet){
+                if (searchSet) {
                     searchResult = item.title.toLowerCase().indexOf(search.toLowerCase()) !== -1;
                 }
-                if(filterSet){
+                if (filterSet) {
                     filterResult = item.category === this.filter;
                 }
 
@@ -144,7 +150,7 @@
         }
     }
 
-    .grid-container{
-        max-width : 100%;
+    .grid-container {
+        max-width: 100%;
     }
 </style>

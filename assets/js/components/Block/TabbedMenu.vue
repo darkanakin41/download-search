@@ -1,14 +1,14 @@
 <template>
-    <div class="tab-menu" v-bind:class="{centered: isCentered}">
-        <ul class="menu">
-            <li v-for="item in items">
-                <router-link :to="{name: item.name}" exact>
+    <v-toolbar class="tab-menu" v-bind:class="{centered: isCentered}">
+        <v-toolbar-items>
+            <template v-for="item in items">
+                <v-btn flat :to="{name: item.name}" active-class="active" exact>
                     <i v-if="item.icon !== undefined" :class="getIconClasses(item.icon)"></i>
                     {{ item.meta.title !== undefined ? item.meta.title : item.name }}
-                </router-link>
-            </li>
-        </ul>
-    </div>
+                </v-btn>
+            </template>
+        </v-toolbar-items>
+    </v-toolbar>
 </template>
 
 
@@ -30,29 +30,16 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
-
         &.centered{
             justify-content: center;
         }
 
-        .menu {
-            li {
-                a {
-                    display: block;
-                    padding: 1rem 1.8rem;
-                    text-transform: uppercase;
-                    font-weight: bold;
-                    @include opacity(.7);
-                    @include transition(all .35s linear);
 
-                    &:hover {
-                        @include opacity(1);
-                        @include transition(all .15s linear);
-                    }
-                    &.active {
-                        @include opacity(1);
-                        background: transparent;
-                    }
+        .v-toolbar__items{
+            .v-btn{
+                &.active{
+                    background: $mainColor;
+                    font-weight : bold;
                 }
             }
         }

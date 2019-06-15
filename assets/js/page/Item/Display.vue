@@ -1,10 +1,10 @@
 <template>
     <div>
         <MediaHeader v-if="!loading && item.media" :media="item.media" />
-        <div class="grid-container">
-            <Loading v-if="loading" :displayed="loading" :fixed="false" />
+        <v-container fluid>
+            <Loading :displayed="loading" />
             <ItemContent v-if="!loading" :item="item" />
-        </div>
+        </v-container>
     </div>
 </template>
 
@@ -43,8 +43,4 @@
 <style lang="scss" scoped>
     @import "../../../libs/theming/mixins";
     @import "../../../scss/common/config";
-
-    .grid-container{
-        margin-top : 15px;
-    }
 </style>

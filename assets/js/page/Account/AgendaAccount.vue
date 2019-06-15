@@ -1,10 +1,10 @@
 <template>
-    <div class="grid-container">
+    <v-container fluid>
         <div id="calendar">
             <FullCalendar ref="agenda" @datesRender="refreshEvents()" defaultView="dayGridMonth" :plugins="calendarPlugins" :events="events" />
         </div>
         <Loading :position="'absolute'" :displayed="loading" />
-    </div>
+    </v-container>
 </template>
 
 <script lang="ts">

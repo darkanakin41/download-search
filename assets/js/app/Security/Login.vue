@@ -1,19 +1,26 @@
 <template>
-    <section>
-        <h1 class="section-title">Connexion</h1>
-        <form v-on:submit.prevent="onSubmitMethod" v-if="!security.loading">
-            <div class="callout alert" v-if="security.error !== null">{{security.error}}</div>
-            <input v-model="username" type="text" placeholder="Identifiant"/>
-            <input v-model="password" type="password" placeholder="Mot de passe"/>
-            <button :disabled="username.length === 0 || password.length === 0 || security.loading" class="button success expanded">Connexion</button>
-        </form>
-        <Loading v-if="security.loading" :fixed="false"/>
-    </section>
+    <v-card class="elevation-12">
+        <v-toolbar dark color="primary">
+            <v-toolbar-title>Connexion</v-toolbar-title>
+        </v-toolbar>
+        <v-form v-on:submit.prevent="onSubmitMethod()">
+            <v-card-text>
+                <div class="callout alert" v-if="security.error !== null">{{security.error}}</div>
+                <v-text-field prepend-icon="person" name="login" label="Identifiant" type="text" v-model="username"></v-text-field>
+                <v-text-field id="password" prepend-icon="lock" name="password" label="Mot de passe" type="password" v-model="password"></v-text-field>
+                <Loading v-if="security.loading" :fixed="false" />
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn :disabled="username.length === 0 || password.length === 0 || security.loading" color="primary" type="submit">Login</v-btn>
+            </v-card-actions>
+        </v-form>
+    </v-card>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import { State, Action } from 'vuex-class';
+    import {Action, State} from 'vuex-class';
     import Loading from "../../components/Block/Loading.vue";
     import {SecurityState} from "../Store/Security/types";
 
@@ -24,18 +31,18 @@
     export default class Login extends Vue {
         @State('security') security: SecurityState;
         @Action('login', {namespace}) login: any;
-        username:String;
-        password:String;
+        username: String;
+        password: String;
 
         data() {
             return {
-                username:"",
-                password:"",
+                username: "",
+                password: "",
             }
         }
 
-        onSubmitMethod(){
-            this.login({login:this.username, password:this.password});
+        onSubmitMethod() {
+            this.login({login: this.username, password: this.password});
         }
     }
 </script>
@@ -43,22 +50,4 @@
 <style lang="scss" scoped>
     @import "../../../libs/theming/mixins";
     @import "../../../scss/common/config";
-
-    section{
-        padding : .5rem 1rem;
-        .section-title{
-            font-size : 1.2rem;
-            font-weight: $weightBold;
-            &::after{
-                display:block;
-                height: 4px;
-                content: " ";
-                background : linear-gradient(to right, $mainColor, transparentize($mainColor, 1));
-                width: 65%;
-            }
-        }
-        .grid{
-            margin : 0;
-        }
-    }
 </style>

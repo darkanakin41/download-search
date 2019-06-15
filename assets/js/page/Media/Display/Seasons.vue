@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
+        <Loading :displayed="loading" />
         <Grid v-if="!loading && items.length > 0" :config="gridConfig()" :items="items" />
         <Drawer v-model="seasonDisplayed" :season="seasonDisplayed" />
     </div>

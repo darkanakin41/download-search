@@ -1,0 +1,12 @@
+.jumbotron {
+    padding: 1rem;
+
+    a {
+        color: inherit;
+    }
+
+    &.green {
+        color: white;
+        background: $green;
+    }
+}

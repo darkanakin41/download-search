@@ -28,7 +28,7 @@ let routes = [
     {
         label: 'Accueil',
         name: 'home',
-        icon: 'fa fa-home'
+        icon: 'home'
     },
     {
         label: 'Items',

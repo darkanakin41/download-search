@@ -1,4 +1,5 @@
 import {RouteConfig} from "vue-router/types/router";
+import Vue from 'vue';
 
 let routerMixins = {
     methods: {
@@ -27,5 +28,7 @@ let routerMixins = {
         }
     }
 };
+
+Vue.mixin(routerMixins);
 
 export default routerMixins;

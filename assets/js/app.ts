@@ -1,27 +1,25 @@
 import $ from 'jquery';
-import 'foundation-sites/dist/css/foundation.min.css';
-import 'foundation-sites/dist/js/foundation.min';
-
-import 'select2/dist/css/select2.min.css';
-import 'select2/dist/js/select2.full.min';
-import 'select2/dist/js/i18n/fr';
-
-require('../scss/select2.foundation.scss');
 require('../scss/app.scss');
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import Vue from 'vue';
+
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css'
+Vue.use(Vuetify, {
+    theme: {
+        primary: "#79c44f",
+    }
+});
+
 import App from './App.vue';
 
 import router from "./config/router";
-import routerMixins from "./app/Mixin/router";
-import dateMixins from "./app/Mixin/date";
+import "./app/Mixin/router";
+import "./app/Mixin/date";
 
 import store from "./app/Store";
-
-Vue.mixin(routerMixins);
-Vue.mixin(dateMixins);
 
 const app = new Vue({
     el: '#app',

@@ -1,11 +1,9 @@
 <template>
-    <div class="tab-container">
-        <ul class="menu">
-            <li v-for="filter in filters" v-bind:class="{active: filter.active}">
-                <a href="#" @click="updateFilter($event, filter)">{{displayFilter(filter)}}</a>
-            </li>
-        </ul>
-    </div>
+    <v-toolbar-items>
+        <template v-for="filter in filters">
+            <v-btn v-bind:class="{active: filter.active}" flat @click="updateFilter($event, filter)">{{ displayFilter(filter) }}</v-btn>
+        </template>
+    </v-toolbar-items>
 </template>
 
 
@@ -72,35 +70,11 @@
     @import "../../../libs/theming/mixins";
     @import "../../../scss/common/config";
 
-    .tab-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-
-        .menu {
-            li {
-                a {
-                    display: block;
-                    padding: 1rem 1.8rem;
-                    text-transform: uppercase;
-                    font-weight: bold;
-                    @include opacity(.7);
-                    @include transition(all .35s linear);
-
-                    &:hover {
-                        @include opacity(1);
-                        @include transition(all .15s linear);
-                    }
-                }
-
-                &.active {
-                    background: transparent;
-
-                    a {
-                        @include opacity(1);
-                        background: transparent;
-                    }
-                }
+    .v-toolbar__items{
+        .v-btn{
+            &.active{
+                background: $mainColor;
+                font-weight : bold;
             }
         }
     }
