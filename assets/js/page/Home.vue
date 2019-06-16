@@ -20,7 +20,7 @@
 
         <v-divider />
 
-        <v-card>
+        <v-card class="card-media-grid">
             <v-toolbar>
                 <v-toolbar-title>Derniers médias sortis</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -29,14 +29,14 @@
                 </v-toolbar-items>
             </v-toolbar>
             <v-sheet>
-                <Loading displayed="mediasLoading" :position="'absolute'" />
+                <Loading :displayed="mediasLoading" :position="'absolute'" />
                 <Grid v-if="!mediasLoading" :items="lastReleasedMedias" :config="mediaGridConfig()" />
             </v-sheet>
         </v-card>
 
         <v-divider />
 
-        <v-card>
+        <v-card class="card-media-grid">
             <v-toolbar>
                 <v-toolbar-title>Derniers médias mis à jour</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -45,14 +45,14 @@
                 </v-toolbar-items>
             </v-toolbar>
             <v-sheet>
-                <Loading displayed="mediasLoading" :position="'absolute'" />
+                <Loading :displayed="mediasLoading" :position="'absolute'" />
                 <Grid v-if="!mediasLoading" :items="lastUpdatedMedias" :config="mediaGridConfig()" />
             </v-sheet>
         </v-card>
 
         <v-divider />
 
-        <v-card>
+        <v-card class="card-media-grid">
             <v-toolbar>
                 <v-toolbar-title>Derniers médias récupérés</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -61,7 +61,7 @@
                 </v-toolbar-items>
             </v-toolbar>
             <v-sheet>
-                <Loading displayed="mediasLoading" :position="'absolute'" />
+                <Loading :displayed="mediasLoading" :position="'absolute'" />
                 <Grid v-if="!mediasLoading" :items="lastDownloadedMedias" :config="mediaGridConfig()" />
             </v-sheet>
         </v-card>
@@ -165,5 +165,12 @@
     .v-divider {
         margin: 10px 0;
         border: transparent;
+    }
+
+    .card-media-grid{
+        .v-sheet{
+            position : relative;
+            min-height:100px;
+        }
     }
 </style>

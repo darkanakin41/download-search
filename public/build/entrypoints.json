@@ -4,11 +4,11 @@
       "js": [
         "build/runtime.d41d8cd9.js",
         "build/vendors~ea1103fa.268b013f.js",
-        "build/app.c9b6443d.js"
+        "build/app.0c24de4f.js"
       ],
       "css": [
         "build/vendors~ea1103fa.42308c73.css",
-        "build/app.acebcf46.css"
+        "build/app.4251e4a2.css"
       ]
     }
   }

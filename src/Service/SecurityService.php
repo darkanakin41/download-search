@@ -5,17 +5,21 @@ namespace App\Service;
 
 
 use App\Entity\User;
+use App\Exception\PasswordInvalidException;
 use App\Exception\RegistrationDuplicateException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @property RegistryInterface registry
+ * @property RegistryInterface            registry
+ * @property UserPasswordEncoderInterface userPasswordEncoder
  */
 class SecurityService
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(RegistryInterface $registry, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->registry = $registry;
+        $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
     /**
@@ -44,6 +48,28 @@ class SecurityService
 
         $user->setPlainPassword(trim($data['password']));
 
+        $this->registry->getManager()->persist($user);
+        $this->registry->getManager()->flush();
+
+        return $user;
+    }
+
+    /**
+     * Register new user
+     *
+     * @param array $data
+     *
+     * @return User
+     * @throws PasswordInvalidException
+     */
+    public function changePassword(User $user, array $data)
+    {
+
+        if (!$this->userPasswordEncoder->isPasswordValid($user, $data['password'])) {
+            throw new PasswordInvalidException();
+        }
+
+        $user->setPlainPassword(trim($data['new_password']));
         $this->registry->getManager()->persist($user);
         $this->registry->getManager()->flush();
 

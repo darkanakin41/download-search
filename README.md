@@ -18,17 +18,17 @@ For connected users :
 * Subscribe to a TV Show
 * Display list of subscribed TV Shows
 * Display a calendar of upcoming episodes from TV Shows subscribed
+* Create a profil page
+* Create an edit password page
 
 ## TODO
 For everyone : 
 * Create an advanced research form
 * Enhance site parsing to retrieve more data
 * Connect to a Video Game DB and a Music DB
-* Add validation mail 
+* Add validation mail
 
 For connected users : 
-* Create a profil page
-* Create an edit password page
 * Add a notification system when a new episode is out on a TV Show or Animes subscribed
 * Add a checkbox which save if the episode/movie have been downloaded
 

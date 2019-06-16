@@ -35,6 +35,14 @@ export default class SecurityAPI {
     }
 
     /**
+     * Register the account of the user
+     * @param payload
+     */
+    static changePassword(payload: Object) {
+        return axios.post(this.baseUrl + 'password-change', payload);
+    }
+
+    /**
      * Logout current user
      */
     static logout() {

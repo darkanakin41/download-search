@@ -68,6 +68,29 @@ final class SecurityController extends AbstractController
     }
 
     /**
+     * @Route("password-change", name="api_security_password_change")
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function passwordChangeAction(Request $request): JsonResponse
+    {
+        try{
+            /** @var User $user */
+            $user = $this->getUser();
+            if($user === null){
+                $this->createAccessDeniedException();
+            }
+            $this->securityService->changePassword($user, $request->request->all());
+            $data = $this->serializer->serialize($user, 'json');
+            return new JsonResponse($data, 200, [], true);
+        }catch(Exception $e){
+            $data = $this->serializer->serialize(['error' => $e->getMessage()], 'json');
+            return new JsonResponse($data, 500, [], true);
+        }
+    }
+
+    /**
      * @Route("logout", name="api_security_logout")
      * @throws RuntimeException
      */

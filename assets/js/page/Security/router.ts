@@ -27,6 +27,19 @@ const securityRoutes: Array<RouteConfig> = [
             return import(/* webpackChunkName: 'security' */ "./Registration.vue")
         }
     },
+    {
+        name: 'security-sign-out',
+        meta: {
+            title: 'Déconnexion',
+            pageTitle: true,
+            leftMenu: true,
+            icon: 'fas fa-sign-out-alt',
+        },
+        path: '/security/sign-out',
+        component: () => {
+            return import(/* webpackChunkName: 'security' */ "./Logout.vue")
+        }
+    },
 ];
 
 export default securityRoutes;

@@ -32,5 +32,12 @@ export const actions: ActionTree<SecurityState, RootState> = {
         return SecurityAPI.loginCheck()
             .then(res => commit('SECURITY_LOGIN', res.data))
             .catch(err => commit('SECURITY_ERROR', err));
+    },
+    changePassword({commit}, payload): any {
+        commit('SECURITY_LOADING');
+
+        return SecurityAPI.changePassword(payload)
+            .then(res => commit('SECURITY_LOGIN', res.data))
+            .catch(err => commit('SECURITY_ERROR', err));
     }
 };

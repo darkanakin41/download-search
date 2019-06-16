@@ -29,6 +29,49 @@ const accountRoutes: Array<RouteConfig> = [
             return import(/* webpackChunkName: 'account' */ "./AgendaAccount.vue")
         }
     },
+    {
+        name: 'account-profile',
+        meta: {
+            title: 'Mon profile',
+            pageTitle: true,
+            leftMenu: true,
+            icon: 'far fa-user',
+            connected: true,
+        },
+        path: '/account/profile',
+        component: () => {
+            return import(/* webpackChunkName: 'account' */ "./Profile.vue")
+        },
+        children: [
+            {
+                name: 'account-profile-password',
+                meta: {
+                    title: 'Modifier mon mot de passe',
+                    pageTitle: true,
+                    leftMenu: false,
+                    connected: true,
+                },
+                path: '/account/profile/password',
+                component: () => {
+                    return import(/* webpackChunkName: 'account' */ "./Profile/ChangePasswordPage.vue")
+                },
+            },
+        ]
+    },
+    {
+        name: 'security-sign-out',
+        meta: {
+            title: 'Déconnexion',
+            pageTitle: true,
+            leftMenu: true,
+            icon: 'fas fa-sign-out-alt',
+            connected: true,
+        },
+        path: '/security/sign-out',
+        component: () => {
+            return import(/* webpackChunkName: 'security' */ "../Security/Logout.vue")
+        }
+    },
 ];
 
 export default accountRoutes;
