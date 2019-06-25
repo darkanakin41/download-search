@@ -21,6 +21,18 @@ For connected users :
 * Create a profil page
 * Create an edit password page
 
+System commands : 
+```bash
+# command to update items no processed yet
+php bin/console app:item:update
+
+# command to update all medias
+php bin/console app:media:update
+
+# command to update series
+php bin/console app:media:tv:update
+```
+
 ## TODO
 For everyone : 
 * Create an advanced research form
@@ -34,4 +46,3 @@ For connected users :
 
 For the system :
 * Add a command to retrieve last uploaded items
-* Add a command to update series

@@ -44,10 +44,11 @@
             this.loading = true;
             MediaSeasonEpisodeAPI.calendar(start, end, this.isUser(), (items: Array<MediaSeasonEpisode>) => {
                 this.events = [];
-                items.forEach((item) => {
+                items.forEach((item:MediaSeasonEpisode) => {
                     this.events.push({
                         title: item.season.media.title + " - s" + item.season.number + "e" + item.number,
-                        date: this.extractYearMonthDay(item.releaseDate)
+                        date: this.extractYearMonthDay(item.releaseDate),
+                        url: this.$router.resolve({name:'media-view-items', params: {'id': item.season.media.id}}).href
                     });
                     this.loading = false;
                 });
