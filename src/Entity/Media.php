@@ -28,7 +28,9 @@ class Media
 
     private $averageNote;
 
-    private $theMovieDbId;
+    private $sourceId;
+
+    private $source;
 
     private $genres;
 
@@ -78,11 +80,6 @@ class Media
         return $this;
     }
 
-    public function getPosterFullURL()
-    {
-        return TheMovieDB::MEDIA_URL."/".$this->getPoster();
-    }
-
     public function getPoster(): ?string
     {
         return $this->poster;
@@ -107,21 +104,16 @@ class Media
         return $this;
     }
 
-    public function getTheMovieDbId(): ?int
+    public function getSourceId(): ?int
     {
-        return $this->theMovieDbId;
+        return $this->sourceId;
     }
 
-    public function setTheMovieDbId(?int $theMovieDbId): self
+    public function setSourceId(?int $sourceId): self
     {
-        $this->theMovieDbId = $theMovieDbId;
+        $this->sourceId = $sourceId;
 
         return $this;
-    }
-
-    public function getBackdropFullURL()
-    {
-        return TheMovieDB::MEDIA_URL."/".$this->getBackdrop();
     }
 
     public function getBackdrop(): ?string
@@ -197,4 +189,17 @@ class Media
 
         return $this;
     }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(?string $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
 }

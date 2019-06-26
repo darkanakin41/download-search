@@ -122,9 +122,9 @@
             overflow-y: auto;
         }
 
-        .fc-day-header {
+        .fc-day-top {
             &.fc-today {
-                background: transparentize($subColor, .2);
+                background: transparentize($mainColor, .2);
                 color: white;
             }
         }

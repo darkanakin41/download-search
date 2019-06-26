@@ -5,7 +5,7 @@ export default class MediaSeason {
     title: String;
     description: String;
     number: Number;
-    poster: String;
+    poster: String|null;
     updated: String;
     theMovieDbId: String;
     releaseDate: Date|undefined = undefined;
@@ -16,12 +16,12 @@ export default class MediaSeason {
         this.title = data.title;
         this.description = data.description;
         this.number = data.number;
-        this.poster = data.posterFullURL;
         this.updated = data.updated;
         this.theMovieDbId = data.theMovieDbId;
         if(data.releaseDate !== null){
             this.releaseDate = new Date(data.releaseDate);
         }
         this.media = new Media(data.media);
+        this.poster = this.media.toFullURL(data.poster);
     }
 }

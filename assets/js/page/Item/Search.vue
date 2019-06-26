@@ -67,9 +67,7 @@
         }
 
         mounted() {
-            console.log(this.sourcesState.loaded);
             if (!this.sourcesState.loaded) {
-                console.log("on refresh");
                 this.refreshSources();
             } else {
                 this.refreshSession();

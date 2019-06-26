@@ -1,7 +1,7 @@
 <template>
     <v-layout>
         <v-card hover :title="item.title" light>
-            <v-img v-if="item.poster.trim() !== 'https://image.tmdb.org/t/p/original/'" :src="item.poster" :alt="'Saison ' + item.title" :title="'Saison ' + item.title" aspect-ratio="0.66" />
+            <v-img v-if="item.poster !== null" :src="item.poster" :alt="'Saison ' + item.title" :title="'Saison ' + item.title" aspect-ratio="0.66" />
             <v-card-title primary-title>
                 <div>
                     <h3 class="headline mb-0">Saison {{item.number}}</h3>

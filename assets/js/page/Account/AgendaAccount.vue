@@ -65,6 +65,6 @@
     @import '~@fullcalendar/daygrid/main.css';
 
     .grid-container {
-        position: relative;
+        position: relative
     }
 </style>

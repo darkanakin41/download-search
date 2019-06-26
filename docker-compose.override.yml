@@ -1,18 +1,20 @@
 version: '3.2'
 
 networks:
-  nginx-proxy:
-    external:
-      name: nginx-proxy
+    nginx-proxy:
+        external:
+            name: nginx-proxy
 
 services:
-  http:
-    environment:
-      - VIRTUAL_HOST=download-search.test
-      - XDEBUG_CONFIG=idekey=remote-debug remote_host=192.168.72.1
-    networks:
-      - default
-      - nginx-proxy
-  database:
-    ports:
-      - "9701:3306"
+    http:
+        environment:
+            - VIRTUAL_HOST=download-search.test
+        networks:
+            - default
+            - nginx-proxy
+    database:
+        ports:
+            - "9701:3306"
+    php:
+        environment:
+            - XDEBUG_CONFIG=idekey=remote-debug remote_host=192.168.72.1

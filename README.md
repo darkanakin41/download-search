@@ -18,8 +18,8 @@ For connected users :
 * Subscribe to a TV Show
 * Display list of subscribed TV Shows
 * Display a calendar of upcoming episodes from TV Shows subscribed
-* Create a profil page
-* Create an edit password page
+* Access his profile page
+* Edit password
 
 System commands : 
 ```bash

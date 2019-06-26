@@ -41,7 +41,10 @@ App\Entity\Media:
         averageNote:
             type: float
             nullable: true
-        theMovieDbId:
+        source:
+            type: string
+            nullable: true
+        sourceId:
             type: integer
             nullable: true
 

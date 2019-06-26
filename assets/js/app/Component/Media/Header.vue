@@ -1,9 +1,9 @@
 <template>
     <header class="media">
-        <v-img class="backdrop" v-if="media.backdrop.trim() !== 'https://image.tmdb.org/t/p/original/'" :src="media.backdrop" :alt="media.title" :title="media.title" />
+        <v-img class="backdrop" v-if="media.backdrop !== null" :src="media.backdrop" :alt="media.title" :title="media.title" />
         <v-container fluid class="content">
             <div class="avatar">
-                <v-img v-if="media.poster.trim() !== 'https://image.tmdb.org/t/p/original/'" :src="media.poster" :alt="media.title" :title="media.title" aspect-ratio="0.66" />
+                <v-img v-if="media.poster !== null" :src="media.poster" :alt="media.title" :title="media.title" aspect-ratio="0.66" />
             </div>
             <div class="infos">
                 <h1>{{ media.title }}</h1>
@@ -16,9 +16,7 @@
                 </div>
                 <div class="detail" v-if="media.genres.length > 0">
                     <i class="fa fa-tag"></i> Genre :
-                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}
-                        <template v-if="k < media.genres.length-1">,</template>
-                    </template>
+                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}<template v-if="k < media.genres.length-1">, </template></template>
                 </div>
                 <div class="description"><i class="fa fa-book-open"></i> Résumé : <br /> {{ media.description }}</div>
             </div>
@@ -103,10 +101,11 @@
     header {
         position: relative;
         background: transparentize($subColor, .1);
-        font-size : 1.1rem;
+        font-size: 1.1rem;
+
         .backdrop {
             content: '';
-            z-index: -1;
+            z-index: 0;
             position: absolute;
             top: 0;
             left: 0;
@@ -119,6 +118,11 @@
             color: white;
             display: flex;
             align-items: center;
+
+            z-index: 1;
+
+            background: transparentize($subColor, .2);
+            position: relative;
 
             $avatar-width: 170px;
 

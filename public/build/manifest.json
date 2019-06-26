@@ -1,6 +1,8 @@
 {
   "build/account.css": "/build/account.css",
   "build/account.js": "/build/account.js",
+  "build/account~home~item~media.css": "/build/account~home~item~media.css",
+  "build/account~home~item~media.js": "/build/account~home~item~media.js",
   "build/account~home~media.css": "/build/account~home~media.css",
   "build/account~home~media.js": "/build/account~home~media.js",
   "build/account~item~media.css": "/build/account~item~media.css",

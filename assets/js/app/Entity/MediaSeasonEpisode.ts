@@ -5,7 +5,7 @@ export default class MediaSeasonEpisode {
 
     title: String;
     description: String;
-    poster: String;
+    poster: String|null;
     updated: String;
     theMovieDbId: String;
 
@@ -20,7 +20,6 @@ export default class MediaSeasonEpisode {
         this.title = data.title;
         this.description = data.description;
         this.number = data.number;
-        this.poster = data.posterFullURL;
         this.updated = data.updated;
         this.theMovieDbId = data.theMovieDbId;
         if(data.releaseDate !== null){
@@ -28,5 +27,6 @@ export default class MediaSeasonEpisode {
         }
         this.averageNote = data.averageNote;
         this.season = new MediaSeason(data.season);
+        this.poster = this.season.media.toFullURL(data.poster);
     }
 }

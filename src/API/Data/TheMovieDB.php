@@ -3,6 +3,7 @@
 namespace App\API\Data;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class TheMovieDB
 {
@@ -103,7 +104,11 @@ class TheMovieDB
             "include_image_language" => "fr",
         ];
 
-        $response = $client->get(sprintf('movie/%d?%s', $id, http_build_query($urlParameters)));
+        try{
+            $response = $client->get(sprintf('movie/%d?%s', $id, http_build_query($urlParameters)));
+        }catch(ClientException $e){
+            return null;
+        }
 
         $data = json_decode($response->getBody()->getContents(), true);
         if (isset($data['status_code'])) {

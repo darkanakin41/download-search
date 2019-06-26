@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Loading v-if="loading" :displayed="loading" :fixed="false" />
+        <Loading :displayed="loading" />
         <template v-if="!loading && items.length > 0" v-for="item in items">
             <ItemCard :item="item" />
         </template>
