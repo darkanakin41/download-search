@@ -24,7 +24,7 @@ final class Version20190625164134 extends AbstractMigration
 
         $this->addSql('ALTER TABLE media ADD source VARCHAR(255) DEFAULT NULL, CHANGE the_movie_db_id source_id INT DEFAULT NULL');
         $this->addSql('UPDATE media SET source = \'themoviedb\'');
-        $this->addSql('UPDATE item SET category = NULL, media_id = NULL WHERE category IN (\'animes\', \'tv\')');
+        $this->addSql('UPDATE item SET category = NULL, media_id = NULL WHERE media_id IN (SELECT id FROM media WHERE category IN (\'animes\', \'tv\'))');
         $this->addSql('DELETE FROM media_subscription');
         $this->addSql('DELETE FROM media_season_episode');
         $this->addSql('DELETE FROM media_season');
