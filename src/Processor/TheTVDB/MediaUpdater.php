@@ -106,7 +106,7 @@ final class MediaUpdater extends AbstractMediaUpdater
         if (isset($data['genre'])) {
             $genreRepository = $this->registry->getRepository(Genre::class);
             foreach ($data['genre'] as $g) {
-                if(strcasecmp($g, 'anime')){
+                if(strcasecmp($g, 'anime') === 0){
                     $media->setCategory(CategoryNomenclature::ANIME);
                 }
                 $genre = $genreRepository->findOneBy(['title' => $g]);
