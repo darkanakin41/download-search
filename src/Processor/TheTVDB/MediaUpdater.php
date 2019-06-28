@@ -11,6 +11,7 @@ use App\Entity\Item;
 use App\Entity\Media;
 use App\Entity\MediaSeason;
 use App\Entity\MediaSeasonEpisode;
+use App\Nomenclature\CategoryNomenclature;
 use App\Processor\AbstractMediaUpdater;
 use App\Service\MediaService;
 use DateTime;
@@ -105,6 +106,9 @@ final class MediaUpdater extends AbstractMediaUpdater
         if (isset($data['genre'])) {
             $genreRepository = $this->registry->getRepository(Genre::class);
             foreach ($data['genre'] as $g) {
+                if(strcasecmp($g, 'anime')){
+                    $media->setCategory(CategoryNomenclature::ANIME);
+                }
                 $genre = $genreRepository->findOneBy(['title' => $g]);
                 if ($genre === null) {
                     $genre = new Genre();

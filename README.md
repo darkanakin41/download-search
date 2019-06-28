@@ -8,7 +8,9 @@ The main functionality is the aggregation of multiple download sites into one wi
 For everyone : 
 * Search for *Item* on different Download sites (Extreme Download and Annuaire Telechargement) and provide the original link
 * Access the detail of the specific *Item* retrieved from a Download Site
-* Display the list of available *Media* stored (linked to [themoviedb](https://www.themoviedb.org/?language=fr))
+* Display the list of available *Media* stored, in relation with following Databases : 
+    * [themoviedb](https://www.themoviedb.org/?language=fr)
+    * [thetvdb](https://www.thetvdb.com/)
 * Access the detail of a *Media* and see all available *Item*
 * Display a calendar of upcoming episodes from TV Shows
 * User can log in
