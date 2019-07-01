@@ -194,6 +194,10 @@ class AnnuaireTelechargement implements AbstractAPI
                 $item->setCategory(CategoryNomenclature::GAME);
             } elseif (stripos($node->nodeValue, "musique") !== false) {
                 $item->setCategory(CategoryNomenclature::MUSIC);
+            } elseif (stripos($node->nodeValue, "documentaires") !== false) {
+                $item->setCategory(CategoryNomenclature::TV_PROGRAM);
+            } elseif (stripos($node->nodeValue, "divertissements") !== false) {
+                $item->setCategory(CategoryNomenclature::TV_PROGRAM);
             }
         }
     }

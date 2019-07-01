@@ -77,10 +77,18 @@ final class MediaUpdater extends AbstractMediaUpdater
         $media->setDescription($data['overview']);
 
         $posters = $this->theTVDB->getShowImage($media->getSourceId(), 'poster');
-        $media->setPoster($posters[0]['fileName']);
+        foreach($posters as $poster){
+            if($this->theTVDB->isPosterOK($poster['fileName']))
+            $media->setPoster($poster['fileName']);
+            break;
+        }
 
         $posters = $this->theTVDB->getShowImage($media->getSourceId(), 'fanart');
-        $media->setBackdrop($posters[0]['fileName']);
+        foreach($posters as $poster){
+            if($this->theTVDB->isPosterOK($poster['fileName']))
+                $media->setBackdrop($poster['fileName']);
+            break;
+        }
 
         if (isset($data['siteRating'])) {
             $media->setAverageNote($data['siteRating']);
@@ -194,7 +202,11 @@ final class MediaUpdater extends AbstractMediaUpdater
             $mediaSeason->setTheMovieDbId($data['airedSeasonID']);
 
             $posters = $this->theTVDB->getSeasonPoster($media->getSourceId(), $data['airedSeason']);
-            $mediaSeason->setPoster($posters[0]['fileName']);
+            foreach($posters as $poster){
+                if($this->theTVDB->isPosterOK($poster['fileName']))
+                    $media->setPoster($poster['fileName']);
+                break;
+            }
 
             $this->registry->getManager()->persist($mediaSeason);
             $this->registry->getManager()->flush();

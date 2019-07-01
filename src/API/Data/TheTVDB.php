@@ -273,4 +273,15 @@ class TheTVDB
 
         return $data['data'];
     }
+
+    public function isPosterOK($url){
+        $client = $this->getClient();
+
+        try {
+            $client->get(sprintf('https://www.thetvdb.com/banners/%s', $url));
+        } catch (ClientException $e) {
+            return false;
+        }
+        return true;
+    }
 }

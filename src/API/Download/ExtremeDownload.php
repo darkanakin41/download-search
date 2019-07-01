@@ -183,6 +183,10 @@ class ExtremeDownload implements AbstractAPI
                 $item->setCategory(CategoryNomenclature::GAME);
             } elseif (stripos($node->nodeValue, "musique") !== false) {
                 $item->setCategory(CategoryNomenclature::MUSIC);
+            } elseif (stripos($node->nodeValue, "news") !== false) {
+                $item->setCategory(CategoryNomenclature::NEWS);
+            } elseif (stripos($node->nodeValue, "logiciels") !== false) {
+                $item->setCategory(CategoryNomenclature::SOFTWARE);
             }
         }
     }

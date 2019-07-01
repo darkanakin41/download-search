@@ -41,6 +41,7 @@ For everyone :
 * Enhance site parsing to retrieve more data
 * Connect to a Video Game DB and a Music DB
 * Add validation mail
+* On media refresh from thetvdb, check if the image is fine, otherwise, get number 2, ...
 
 For connected users : 
 * Add a notification system when a new episode is out on a TV Show or Animes subscribed
@@ -48,3 +49,4 @@ For connected users :
 
 For the system :
 * Add a command to retrieve last uploaded items
+* Implement [vue-meta](https://github.com/nuxt/vue-meta)
