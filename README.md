@@ -22,6 +22,7 @@ For connected users :
 * Display a calendar of upcoming episodes from TV Shows subscribed
 * Access his profile page
 * Edit password
+* Notification system when a new episode is out on a TV Show or Animes subscribed
 
 System commands : 
 ```bash
@@ -33,6 +34,9 @@ php bin/console app:media:update
 
 # command to update series
 php bin/console app:media:tv:update
+
+# command to generate notifications
+php bin/console app:notification generate
 ```
 
 ## TODO
@@ -41,11 +45,11 @@ For everyone :
 * Enhance site parsing to retrieve more data
 * Connect to a Video Game DB and a Music DB
 * Add validation mail
-* On media refresh from thetvdb, check if the image is fine, otherwise, get number 2, ...
 
 For connected users : 
-* Add a notification system when a new episode is out on a TV Show or Animes subscribed
 * Add a checkbox which save if the episode/movie have been downloaded
+* Add link on notifications
+* Add a page displaying all notifications
 
 For the system :
 * Add a command to retrieve last uploaded items

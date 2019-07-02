@@ -47,3 +47,8 @@ services:
         class: App\Security\HashPasswordListener
         tags:
             - { name: doctrine.event_subscriber }
+
+    app.subscriber.item:
+        class: App\EventSubscriber\ItemSubscriber
+        tags:
+            - { name: doctrine.event_subscriber }

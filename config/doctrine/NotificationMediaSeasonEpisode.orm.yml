@@ -1,0 +1,12 @@
+App\Entity\NotificationMediaSeasonEpisode:
+    type: entity
+    table: notification_media_season_episode
+
+    manyToOne:
+        media_season_episode:
+            targetEntity: App\Entity\MediaSeasonEpisode
+            joinColumn:
+                name: media_season_episode_id
+                referencedColumnName: id
+
+    lifecycleCallbacks: {  }

@@ -130,9 +130,8 @@
                 itemsPerRowForced: 6,
                 nbRowsForced: 1,
                 pagination: false,
-                onclick: (item: Media) => {
-                    this.$router.push({name: 'media-view-items', params: {'id': item.id}});
-                    return false;
+                to: (item: Media) => {
+                    return {name: 'media-view-items', params: {'id': item.id}};
                 }
             });
         }
@@ -167,10 +166,10 @@
         border: transparent;
     }
 
-    .card-media-grid{
-        .v-sheet{
-            position : relative;
-            min-height:100px;
+    .card-media-grid {
+        .v-sheet {
+            position: relative;
+            min-height: 100px;
         }
     }
 </style>

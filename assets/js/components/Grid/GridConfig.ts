@@ -4,6 +4,7 @@ export default class GridSetting {
     nbRowsForced: Number | undefined;
     pagination: Boolean = true;
     onclick: Function | undefined;
+    to: Function | undefined;
 
     constructor(data: any) {
         this.component = data.component;
@@ -11,5 +12,6 @@ export default class GridSetting {
         this.nbRowsForced = data.nbRowsForced;
         this.pagination = data.pagination || true;
         this.onclick = data.onclick;
+        this.to = data.to;
     }
 }

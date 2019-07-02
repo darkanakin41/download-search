@@ -1,0 +1,35 @@
+App\Entity\Notification:
+    type: entity
+    table: notification
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: type
+        type: string
+    discriminatorMap:
+        media: App\Entity\NotificationMedia
+        media_season_episode: App\Entity\NotificationMediaSeasonEpisode
+    repositoryClass: App\Repository\NotificationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        action:
+            type: string
+            nullable: false
+        date:
+            type: datetime
+            nullable: false
+        readed:
+            type: boolean
+
+    manyToOne:
+        user:
+            targetEntity: App\Entity\User
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+
+    lifecycleCallbacks: {  }

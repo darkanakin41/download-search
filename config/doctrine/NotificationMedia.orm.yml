@@ -1,0 +1,12 @@
+App\Entity\NotificationMedia:
+    type: entity
+    table: notification_media
+
+    manyToOne:
+        media:
+            targetEntity: App\Entity\Media
+            joinColumn:
+                name: media_id
+                referencedColumnName: id
+
+    lifecycleCallbacks: {  }

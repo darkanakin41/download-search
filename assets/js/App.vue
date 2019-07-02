@@ -6,6 +6,10 @@
         <v-toolbar app id="top-bar">
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title>{{ pageName }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <template v-if="isAuthenticated">
+                <NotificationMenu />
+            </template>
         </v-toolbar>
         <v-content>
             <Loading :displayed="loading" />
@@ -33,11 +37,13 @@
 
     import leftmenuItems from "./config/leftmenu";
     import Login from "./app/Security/Login.vue";
+    import NotificationList from "./components/Block/NotificationList.vue";
+    import NotificationMenu from "./components/Block/NotificationMenu.vue";
 
     const namespace: string = 'security';
 
     @Component({
-        components: {Login, LeftMenu, Loading, TopBar}
+        components: {NotificationMenu, Login, LeftMenu, Loading, TopBar}
     })
     export default class App extends Vue {
         @Prop({type: Boolean, default: false}) loading;
@@ -56,7 +62,6 @@
             }
         }
         mounted() {
-            // new Foundation.OffCanvas($(this.$el).find('[data-off-canvas]'), {});
             this.checkAuthentification();
         }
 

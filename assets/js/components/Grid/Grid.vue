@@ -3,11 +3,20 @@
         <v-layout wrap>
             <template v-for="item in itemsDisplayed">
                 <v-flex v-bind:class="classes">
-                    <a v-on:click="config.onclick(item)">
-                        <v-item class="d-flex align-center">
-                            <component :is="config.component" :item="item"></component>
-                        </v-item>
-                    </a>
+                    <template v-if="getAttributes(item)['to'] !== undefined">
+                        <router-link :to="getAttributes(item)['to']">
+                            <v-item class="d-flex align-center" >
+                                <component :is="config.component" :item="item"></component>
+                            </v-item>
+                        </router-link>
+                    </template>
+                    <template v-if="getAttributes(item)['onclick'] !== undefined">
+                        <a v-on:click="getAttributes(item)['onclick']">
+                            <v-item class="d-flex align-center" >
+                                <component :is="config.component" :item="item"></component>
+                            </v-item>
+                        </a>
+                    </template>
                 </v-flex>
             </template>
         </v-layout>
@@ -97,6 +106,18 @@
             }
 
             this.itemsPerPage = this.itemsPerRow * this.rowsPerPage;
+        }
+
+        getAttributes(item) {
+            let attributes = {};
+            if (this.config.to !== undefined) {
+                attributes['to'] = this.config.to(item);
+                // attributes['href'] = this.$router.resolve(this.config.to(item)).href;
+            }
+            if (this.config.onclick !== undefined) {
+                attributes['onclick'] = this.config.onclick(item);
+            }
+            return attributes;
         }
     }
 </script>

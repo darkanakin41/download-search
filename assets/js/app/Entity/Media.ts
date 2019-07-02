@@ -2,15 +2,15 @@ import Genre from "./Genre";
 
 export default class Media {
     id: number;
-    title: String;
-    description: String;
-    category: String;
-    poster: String|null;
-    backdrop: String|null;
-    updated: String;
-    source: String;
-    sourceId: String;
-    status: String;
+    title: string;
+    description: string;
+    category: string;
+    poster: string|null;
+    backdrop: string|null;
+    updated: string;
+    source: string;
+    sourceId: string;
+    status: string;
     releaseDate: Date|undefined = undefined;
     averageNote: Number;
     genres: Array<Genre> = [];
@@ -35,7 +35,7 @@ export default class Media {
         this.backdrop = this.toFullURL(data.backdrop);
     }
 
-    toFullURL(url: String|null){
+    toFullURL(url: string|null){
         if(url === null || url.trim() === ""){
             return null;
         }

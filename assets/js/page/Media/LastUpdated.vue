@@ -68,9 +68,8 @@
         mediaGridConfig() {
             return new GridConfig({
                 component: Card,
-                onclick: (item: Media) => {
-                    this.$router.push({name: 'media-view-items', params: {'id': item.id}});
-                    return false;
+                to: (item: Media) => {
+                    return {name: 'media-view-items', params: {'id': item.id}};
                 }
             });
         }
