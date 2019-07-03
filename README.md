@@ -48,8 +48,6 @@ For everyone :
 
 For connected users : 
 * Add a checkbox which save if the episode/movie have been downloaded
-* Add link on notifications
-* Add a page displaying all notifications
 
 For the system :
 * Add a command to retrieve last uploaded items

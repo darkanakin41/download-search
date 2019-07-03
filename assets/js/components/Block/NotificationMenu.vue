@@ -6,7 +6,7 @@
                 <i class="fa fa-spinner fa-spin" v-if="isLoading"></i>
             </v-btn>
         </template>
-        <NotificationList :v-if="!isLoading" :maxItems="5" :items="notificationsState.notifications" />
+        <NotificationList :v-if="!isLoading" :maxItems="5" :items="notificationsState.notifications" :moreLinkName="'account-profile-notifications'"/>
     </v-menu>
 </template>
 

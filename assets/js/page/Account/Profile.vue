@@ -10,6 +10,11 @@
                                 <i class="fa fa-unlock-alt"></i> Modifier mon mot de passe
                             </v-btn>
                         </v-list-tile>
+                        <v-list-tile>
+                            <v-btn :to="{name:'account-profile-notifications'}" block exact>
+                                <i class="far fa-bell"></i> Mes notifications
+                            </v-btn>
+                        </v-list-tile>
                     </v-list>
                 </v-container>
             </v-flex>

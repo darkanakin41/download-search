@@ -30,3 +30,9 @@ body {
 .text-center {
     text-align: center;
 }
+
+.notification-list{
+    .v-list__tile{
+        height: 60px;
+    }
+}

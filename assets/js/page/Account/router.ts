@@ -56,6 +56,19 @@ const accountRoutes: Array<RouteConfig> = [
                     return import(/* webpackChunkName: 'account' */ "./Profile/ChangePasswordPage.vue")
                 },
             },
+            {
+                name: 'account-profile-notifications',
+                meta: {
+                    title: 'Mes notifications',
+                    pageTitle: true,
+                    leftMenu: false,
+                    connected: true,
+                },
+                path: '/account/profile/notifications',
+                component: () => {
+                    return import(/* webpackChunkName: 'account' */ "./Profile/NotificationsPage.vue")
+                },
+            },
         ]
     },
     {
