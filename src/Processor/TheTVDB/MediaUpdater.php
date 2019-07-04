@@ -44,9 +44,9 @@ final class MediaUpdater extends AbstractMediaUpdater
     {
 
         $data = $this->theTVDB->searchShow($item->getTitle());
-        if($data === null){
+        if ($data === null) {
             $tmdbData = $this->theMovieDB->searchTvShow($item->getTitle());
-            if($tmdbData !== null){
+            if ($tmdbData !== null) {
                 $data = $this->theTVDB->searchShow(isset($tmdbData['title']) ? $tmdbData['title'] : $tmdbData['name']);
             }
         }
@@ -77,17 +77,21 @@ final class MediaUpdater extends AbstractMediaUpdater
         $media->setDescription($data['overview']);
 
         $posters = $this->theTVDB->getShowImage($media->getSourceId(), 'poster');
-        foreach($posters as $poster){
-            if($this->theTVDB->isPosterOK($poster['fileName']))
-            $media->setPoster($poster['fileName']);
-            break;
+        if ($posters !== null) {
+            foreach ($posters as $poster) {
+                if ($this->theTVDB->isPosterOK($poster['fileName']))
+                    $media->setPoster($poster['fileName']);
+                break;
+            }
         }
 
         $posters = $this->theTVDB->getShowImage($media->getSourceId(), 'fanart');
-        foreach($posters as $poster){
-            if($this->theTVDB->isPosterOK($poster['fileName']))
-                $media->setBackdrop($poster['fileName']);
-            break;
+        if ($posters !== null) {
+            foreach ($posters as $poster) {
+                if ($this->theTVDB->isPosterOK($poster['fileName']))
+                    $media->setBackdrop($poster['fileName']);
+                break;
+            }
         }
 
         if (isset($data['siteRating'])) {
@@ -114,7 +118,7 @@ final class MediaUpdater extends AbstractMediaUpdater
         if (isset($data['genre'])) {
             $genreRepository = $this->registry->getRepository(Genre::class);
             foreach ($data['genre'] as $g) {
-                if(strcasecmp($g, 'anime') === 0 || strcasecmp($g, 'animation') === 0){
+                if (strcasecmp($g, 'anime') === 0 || strcasecmp($g, 'animation') === 0) {
                     $media->setCategory(CategoryNomenclature::ANIME);
                 }
                 $genre = $genreRepository->findOneBy(['title' => $g]);
@@ -149,25 +153,26 @@ final class MediaUpdater extends AbstractMediaUpdater
             $this->parseDataEpisodes($media, $data['data']);
             if ($data['links']['next'] !== null) {
                 $data = $this->theTVDB->getEpisodes($media->getSourceId(), $data['links']['next']);
-            }else{
+            } else {
                 break;
             }
         } while (true);
     }
 
-    private function parseDataEpisodes(Media $media, array $data){
+    private function parseDataEpisodes(Media $media, array $data)
+    {
         $mediaEpisodeRegistry = $this->registry->getRepository(MediaSeasonEpisode::class);
-        foreach($data as $row){
+        foreach ($data as $row) {
             $mediaSeason = $this->handleSeason($media, $row);
 
             $mediaEpisode = $mediaEpisodeRegistry->findOneBy(['season' => $mediaSeason->getId(), 'theMovieDbId' => $row['id']]);
-            if($mediaEpisode === null){
+            if ($mediaEpisode === null) {
                 $mediaEpisode = new MediaSeasonEpisode();
                 $mediaEpisode->setSeason($mediaSeason);
             }
 
             $mediaEpisode->setNumber($row['airedEpisodeNumber']);
-            $mediaEpisode->setTitle($row['episodeName'] !== null ? $row['episodeName'] : 'Episode ' . $mediaEpisode->getNumber());
+            $mediaEpisode->setTitle($row['episodeName'] !== null ? $row['episodeName'] : 'Episode '.$mediaEpisode->getNumber());
             $mediaEpisode->setTheMovieDbId($row['id']);
             $mediaEpisode->setDescription($row['overview']);
             $mediaEpisode->setPoster($row['filename']);
@@ -191,10 +196,11 @@ final class MediaUpdater extends AbstractMediaUpdater
      *
      * @return MediaSeason|object|null
      */
-    private function handleSeason(Media $media, array $data){
+    private function handleSeason(Media $media, array $data)
+    {
         $mediaSeasonRegistry = $this->registry->getRepository(MediaSeason::class);
         $mediaSeason = $mediaSeasonRegistry->findOneBy(['media' => $media->getId(), 'theMovieDbId' => $data['airedSeasonID']]);
-        if($mediaSeason === null){
+        if ($mediaSeason === null) {
             $mediaSeason = new MediaSeason();
             $mediaSeason->setMedia($media);
             $mediaSeason->setNumber($data['airedSeason']);
@@ -202,10 +208,12 @@ final class MediaUpdater extends AbstractMediaUpdater
             $mediaSeason->setTheMovieDbId($data['airedSeasonID']);
 
             $posters = $this->theTVDB->getSeasonPoster($media->getSourceId(), $data['airedSeason']);
-            foreach($posters as $poster){
-                if($this->theTVDB->isPosterOK($poster['fileName']))
-                    $media->setPoster($poster['fileName']);
-                break;
+            if ($posters !== null) {
+                foreach ($posters as $poster) {
+                    if ($this->theTVDB->isPosterOK($poster['fileName']))
+                        $media->setPoster($poster['fileName']);
+                    break;
+                }
             }
 
             $this->registry->getManager()->persist($mediaSeason);

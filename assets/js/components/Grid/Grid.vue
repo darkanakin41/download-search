@@ -3,19 +3,24 @@
         <v-layout wrap>
             <template v-for="item in itemsDisplayed">
                 <v-flex v-bind:class="classes">
-                    <template v-if="getAttributes(item)['to'] !== undefined">
-                        <router-link :to="getAttributes(item)['to']">
+                    <template v-if="getAttributes(item,'to') !== undefined">
+                        <router-link :to="getAttributes(item,'to')">
                             <v-item class="d-flex align-center" >
                                 <component :is="config.component" :item="item"></component>
                             </v-item>
                         </router-link>
                     </template>
-                    <template v-if="getAttributes(item)['onclick'] !== undefined">
-                        <a v-on:click="getAttributes(item)['onclick']">
+                    <template v-else-if="getAttributes(item,'onclick') !== undefined">
+                        <a v-on:click="getAttributes(item,'onclick')(item)">
                             <v-item class="d-flex align-center" >
                                 <component :is="config.component" :item="item"></component>
                             </v-item>
                         </a>
+                    </template>
+                    <template v-else>
+                        <v-item class="d-flex align-center" >
+                            <component :is="config.component" :item="item"></component>
+                        </v-item>
                     </template>
                 </v-flex>
             </template>
@@ -28,6 +33,7 @@
     import {Component, Prop, Vue} from "vue-property-decorator";
     import Pagination from "../Pagination.vue";
     import GridConfig from "./GridConfig";
+    import Callback from "../../app/Types/callback";
 
     @Component({
         components: {Pagination}
@@ -108,16 +114,18 @@
             this.itemsPerPage = this.itemsPerRow * this.rowsPerPage;
         }
 
-        getAttributes(item) {
-            let attributes = {};
-            if (this.config.to !== undefined) {
-                attributes['to'] = this.config.to(item);
-                // attributes['href'] = this.$router.resolve(this.config.to(item)).href;
+        getAttributes(item, name) {
+            if(this.config[name] !== undefined){
+                let value = this.config[name];
+                if(value instanceof Callback){
+                    return value.callable;
+                }
+                if(value instanceof Function){
+                    return value(item);
+                }
+                return value
             }
-            if (this.config.onclick !== undefined) {
-                attributes['onclick'] = this.config.onclick(item);
-            }
-            return attributes;
+            return undefined;
         }
     }
 </script>

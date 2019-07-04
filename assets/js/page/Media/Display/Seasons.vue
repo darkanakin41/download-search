@@ -9,21 +9,20 @@
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
     import Loading from "../../../components/Block/Loading.vue";
-
-    import Item from "../../../app/Entity/Item";
     import Card from "../../../app/Component/MediaSeason/Card.vue";
     import MediaSeasonAPI from "../../../app/API/MediaSeasonAPI";
     import Grid from "../../../components/Grid/Grid.vue";
     import GridConfig from "../../../components/Grid/GridConfig";
     import MediaSeason from "../../../app/Entity/MediaSeason";
     import Drawer from "../../../app/Component/MediaSeason/Drawer.vue";
+    import Callback from "../../../app/Types/callback";
 
     @Component({
         components: {Drawer, Grid, Card, Loading}
     })
 
     export default class Seasons extends Vue {
-        items: Array<Item>;
+        items: Array<MediaSeason>;
         loading: Boolean;
         seasonDisplayed: MediaSeason | undefined;
 
@@ -40,10 +39,10 @@
             return new GridConfig({
                 component: Card,
                 itemsPerRowForced: 6,
-                onclick: (item: MediaSeason) => {
+                onclick: new Callback((item: MediaSeason) => {
                     this.seasonDisplayed = item;
                     return false;
-                }
+                })
             });
         }
 

@@ -1,9 +1,8 @@
 import axios from 'axios';
-import Media from "../Entity/Media";
 import MediaSubscription from "../Entity/MediaSubscription";
 
 export default class MediaSubscriptionAPI {
-    static baseUrl:String = '/api/media-subscription/';
+    static baseUrl: String = '/api/media-subscription/';
 
     /**
      * Search on the server
@@ -25,11 +24,11 @@ export default class MediaSubscriptionAPI {
      * @param mediaId
      * @param callback the code to be executed on success
      */
-    static getForMedia(mediaId:number, callback: any) {
-        axios.post(this.baseUrl + 'retrieve', {'media' : mediaId})
+    static getForMedia(mediaId: number, callback: any) {
+        axios.post(this.baseUrl + 'retrieve', {'media': mediaId})
             .then((response) => {
-                let subscription:MediaSubscription|undefined = undefined;
-                if(response.data !== null){
+                let subscription: MediaSubscription | undefined = undefined;
+                if (response.data !== null) {
                     subscription = this.convert(response.data);
                 }
                 callback(subscription);
@@ -41,11 +40,11 @@ export default class MediaSubscriptionAPI {
      * @param mediaId
      * @param callback the code to be executed on success
      */
-    static add(mediaId:number, callback: any) {
-        axios.post(this.baseUrl + 'add', {'media' : mediaId})
+    static add(mediaId: number, callback: any) {
+        axios.post(this.baseUrl + 'add', {'media': mediaId})
             .then((response) => {
-                let subscription:MediaSubscription|undefined = undefined;
-                if(response.data !== null){
+                let subscription: MediaSubscription | undefined = undefined;
+                if (response.data !== null) {
                     subscription = this.convert(response.data);
                 }
                 callback(subscription);
@@ -57,8 +56,8 @@ export default class MediaSubscriptionAPI {
      * @param mediaId
      * @param callback the code to be executed on success
      */
-    static remove(mediaId:number, callback: any) {
-        axios.post(this.baseUrl + 'remove', {'media' : mediaId})
+    static remove(mediaId: number, callback: any) {
+        axios.post(this.baseUrl + 'remove', {'media': mediaId})
             .then((response) => {
                 callback(undefined);
             });

@@ -16,7 +16,9 @@
                 </div>
                 <div class="detail" v-if="media.genres.length > 0">
                     <i class="fa fa-tag"></i> Genre :
-                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}<template v-if="k < media.genres.length-1">, </template></template>
+                    <template v-for="(genre, k, i) in media.genres">{{genre.title}}
+                        <template v-if="k < media.genres.length-1">,</template>
+                    </template>
                 </div>
                 <div class="description"><i class="fa fa-book-open"></i> Résumé : <br /> {{ media.description }}</div>
             </div>
@@ -61,7 +63,7 @@
         }
 
         mounted() {
-            if (this.isAuthenticated !== null) {
+            if (this.isAuthenticated) {
                 this.subscriptionLoading = true;
                 MediaSubscriptionAPI.getForMedia(this.media.id, (subscription: MediaSubscription | undefined) => {
                     this.subscription = subscription;
