@@ -1,30 +1,53 @@
 <template>
     <v-app dark>
-        <v-navigation-drawer app v-model="drawer">
-            <LeftMenu :items="leftMenuItems" />
-        </v-navigation-drawer>
-        <v-toolbar app id="top-bar">
-            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-toolbar-title>{{ pageName }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <template v-if="isAuthenticated">
-                <NotificationMenu />
-            </template>
-        </v-toolbar>
-        <v-content>
-            <Loading :displayed="loading" />
+        <template v-if="isCheckingAuthentication">
+            <v-content>
+                <v-container fluid fill-height>
+                    <v-layout align-center justify-center>
+                        <v-flex xs3>
+                            <v-card class="elevation-12 app-loading">
+                                <v-card-text>
+                                    <h1 class="app-title">
+                                        <i class="fa fa-search"></i>
+                                        Download Search
+                                    </h1>
+                                    <div class="loading">
+                                        <i class="fa fa-spinner fa-spin"></i>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-content>
+        </template>
+        <template v-else>
+            <v-navigation-drawer app v-model="drawer">
+                <LeftMenu :items="leftMenuItems" />
+            </v-navigation-drawer>
+            <v-toolbar app id="top-bar">
+                <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+                <v-toolbar-title>{{ pageName }}</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <template v-if="isAuthenticated">
+                    <NotificationMenu />
+                </template>
+            </v-toolbar>
+            <v-content>
+                <Loading :displayed="loading" />
                 <router-view></router-view>
-        </v-content>
-        <v-footer app height="auto">
-            <p class="copyright">
-                <i class="far fa-copyright"></i> Copyright Pierre LEJEUNE, tous droits réservés.
-            </p>
-            <div class="social">
-                <a href="https://gitlab.com/pierrelejeune/download-search" target="_blank" class="gitlab"><i class="fab fa-gitlab"></i></a>
-                <a href="https://twitter.com/dark_csgo" target="_blank" class="twitter"><i class="fab fa-twitter"></i></a>
-                <a href="https://www.linkedin.com/in/pierre-lejeune/" target="_blank" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-        </v-footer>
+            </v-content>
+            <v-footer app height="auto">
+                <p class="copyright">
+                    <i class="far fa-copyright"></i> Copyright Pierre LEJEUNE, tous droits réservés.
+                </p>
+                <div class="social">
+                    <a href="https://gitlab.com/pierrelejeune/download-search" target="_blank" class="gitlab"><i class="fab fa-gitlab"></i></a>
+                    <a href="https://twitter.com/dark_csgo" target="_blank" class="twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/pierre-lejeune/" target="_blank" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </v-footer>
+        </template>
     </v-app>
 </template>
 
@@ -37,7 +60,6 @@
 
     import leftmenuItems from "./config/leftmenu";
     import Login from "./app/Security/Login.vue";
-    import NotificationList from "./components/Block/NotificationList.vue";
     import NotificationMenu from "./components/Block/NotificationMenu.vue";
 
     const namespace: string = 'security';
@@ -56,13 +78,16 @@
         leftMenuItems = leftmenuItems;
         pageName = "";
 
-        data(){
+        data() {
             return {
                 drawer: true,
             }
         }
+
         mounted() {
-            this.checkAuthentification();
+            if (!this.isAuthenticated) {
+                this.checkAuthentification();
+            }
         }
 
         @Watch('$route')
@@ -92,6 +117,16 @@
     @import "../scss/common/config";
 
     @include importGoogleFont("Roboto|Material Icons");
+
+
+    .app-loading {
+        text-align: center;
+
+        .loading {
+            font-size: 3rem;
+            padding: 15px 0;
+        }
+    }
 
     footer {
         margin-top: 15px;
@@ -123,14 +158,14 @@
         }
     }
 
-    .v-toolbar{
-        &#top-bar{
-            background : $mainColor;
+    .v-toolbar {
+        &#top-bar {
+            background: $mainColor;
         }
     }
 
-    @media (max-width: $breakpointSmall){
-        .v-footer{
+    @media (max-width: $breakpointSmall) {
+        .v-footer {
             flex-direction: column;
             height: auto !important;
         }

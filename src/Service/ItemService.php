@@ -54,7 +54,7 @@ final class ItemService
      *
      * @param array $items
      */
-    private function saveAll(array &$items)
+    public function saveAll(array &$items)
     {
         $repository = $this->registry->getRepository(Item::class);
         $manager = $this->registry->getManager();

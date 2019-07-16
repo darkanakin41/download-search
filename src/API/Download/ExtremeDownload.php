@@ -7,11 +7,13 @@ namespace App\API\Download;
 use App\DTO\ExtremeDownload\SearchItemDTO;
 use App\Entity\Item;
 use App\Entity\Source;
+use App\Entity\SourceWatch;
 use App\Nomenclature\CategoryNomenclature;
 use DOMDocument;
 use DOMNode;
 use DOMNodeList;
 use DOMXPath;
+use ErrorException;
 use GuzzleHttp\Client;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -144,6 +146,24 @@ class ExtremeDownload implements AbstractAPI
         $response = $client->get($item->getUrl());
 
         return $this->parsePage($item, $response->getBody()->getContents());
+    }
+
+
+
+    /**
+     * Parse the sourceWatch page in order to extract new items
+     *
+     * @param SourceWatch $sourceWatch
+     *
+     * @return Item[]
+     */
+    public function watch(SourceWatch $sourceWatch)
+    {
+        $client = $this->getClient();
+
+        $response = $client->get($sourceWatch->getUrl());
+
+        return $this->parseSearchResults($response->getBody()->getContents());
     }
 
     /**

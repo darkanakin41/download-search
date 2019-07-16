@@ -36,7 +36,10 @@ php bin/console app:media:update
 php bin/console app:media:tv:update
 
 # command to generate notifications
-php bin/console app:notification generate
+php bin/console app:notification:generate
+
+# command to retrieve last items
+php bin/console app:source:watch
 ```
 
 ## TODO
@@ -50,5 +53,4 @@ For connected users :
 * Add a checkbox which save if the episode/movie have been downloaded
 
 For the system :
-* Add a command to retrieve last uploaded items
 * Implement [vue-meta](https://github.com/nuxt/vue-meta)

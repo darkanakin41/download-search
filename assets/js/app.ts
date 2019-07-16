@@ -32,13 +32,4 @@ const app = new Vue({
 
 app.title = document.getElementsByTagName("title")[0].innerHTML;
 
-router.beforeEach((to, from, next) => {
-    app.loading = true;
-    window.scroll(0, 0);
-    next();
-});
 
-router.afterEach((to, from) => {
-    app.loading = false;
-    $("#drawer").find('a[data-close]').trigger('click');
-});

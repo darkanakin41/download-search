@@ -5,6 +5,8 @@ namespace App\API\Download;
 
 
 use App\Entity\Item;
+use App\Entity\SourceWatch;
+use App\Service\ItemService;
 use App\Service\MediaService;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -51,6 +53,25 @@ class GlobalAPI
         }
 
         return $retour;
+    }
+
+    /**
+     * Search in all API the requested item
+     *
+     * @param SourceWatch $sourceWatch
+     *
+     * @return Item[]
+     * @throws Exception
+     */
+    public function watch(SourceWatch $sourceWatch)
+    {
+        if(!isset(self::CLASSES[$sourceWatch->getSource()->getTitle()])){
+            throw new Exception('Unhandled source ' . $sourceWatch->getSource()->getTitle());
+        }
+
+        /** @var AbstractAPI $service */
+        $service = $this->container->get(self::CLASSES[$sourceWatch->getSource()->getTitle()]);
+        return $service->watch($sourceWatch);
     }
 
     /**

@@ -7,6 +7,7 @@ namespace App\API\Download;
 use App\DTO\AnnuaireTelechargement\SearchItemDTO;
 use App\Entity\Item;
 use App\Entity\Source;
+use App\Entity\SourceWatch;
 use App\Nomenclature\CategoryNomenclature;
 use CloudflareBypass\Storage;
 use DOMDocument;
@@ -76,12 +77,12 @@ class AnnuaireTelechargement implements AbstractAPI
             'base_uri' => $this->getBaseURL(),
             'headers' => [
                 'Referer' => $this->getBaseURL(),
-                'Host' => str_ireplace(['https://','/'], '', $this->getBaseURL()),
+                'Host' => str_ireplace(['https://', '/'], '', $this->getBaseURL()),
                 'X-Requested-With' => 'XMLHttpRequest',
             ]
         ]);
         $handler = $client->getConfig('handler');
-        $handler->push(Middleware::create(    ['cache' => new Storage($this->parameterBag->get('kernel.cache_dir') . "/guzzle")]));
+        $handler->push(Middleware::create(['cache' => new Storage($this->parameterBag->get('kernel.cache_dir')."/guzzle")]));
         return $client;
     }
 
@@ -102,7 +103,11 @@ class AnnuaireTelechargement implements AbstractAPI
     {
         $domDocument = new DOMDocument();
         $internalErrors = libxml_use_internal_errors(true);
-        $domDocument->loadHTML("<body>".$html."</body>");
+        if (stripos($html, '<body>')) {
+            $domDocument->loadHTML($html);
+        } else {
+            $domDocument->loadHTML("<body>".$html."</body>");
+        }
         libxml_use_internal_errors($internalErrors);
 
         $domXPath = new DOMXPath($domDocument);
@@ -145,6 +150,24 @@ class AnnuaireTelechargement implements AbstractAPI
         }
 
         return $this->source;
+    }
+
+
+    /**
+     * Parse the sourceWatch page in order to extract new items
+     *
+     * @param SourceWatch $sourceWatch
+     *
+     * @return Item[]
+     * @throws ErrorException
+     */
+    public function watch(SourceWatch $sourceWatch)
+    {
+        $client = $this->getClient();
+
+        $response = $client->get($sourceWatch->getUrl());
+
+        return $this->parseSearchResults($response->getBody()->getContents());
     }
 
     /**
