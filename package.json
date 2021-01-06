@@ -22,7 +22,7 @@
         "@fullcalendar/daygrid": "^4.2.0",
         "@fullcalendar/vue": "^4.2.2",
         "@types/jquery": "^3.3.29",
-        "axios": "^0.18.0",
+        "axios": "^0.21.1",
         "encore": "^0.0.30-beta",
         "inputmask": "^4.0.6",
         "jquery": "^3.4.1",
