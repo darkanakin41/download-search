@@ -3,7 +3,7 @@
         "@symfony/webpack-encore": "^0.21.0",
         "eslint": "^4.19.0",
         "fork-ts-checker-webpack-plugin": "^0.4.1",
-        "node-sass": "^4.11.0",
+        "node-sass": "^7.0.0",
         "sass-loader": "^7.1.0",
         "ts-loader": "^5.3.0",
         "typescript": "^3.4.5"
