@@ -27,7 +27,7 @@
         "inputmask": "^4.0.6",
         "jquery": "^3.4.1",
         "moment": "^2.24.0",
-        "select2": "^4.0.6-rc.1",
+        "select2": "^4.0.6",
         "vue": "^2.6.10",
         "vue-loader": "^15.7.0",
         "vue-property-decorator": "^8.1.1",
