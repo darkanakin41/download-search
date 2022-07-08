@@ -26,7 +26,7 @@
         "encore": "^0.0.30-beta",
         "inputmask": "^4.0.6",
         "jquery": "^3.4.1",
-        "moment": "^2.24.0",
+        "moment": "^2.29.4",
         "select2": "^4.0.6-rc.1",
         "vue": "^2.6.10",
         "vue-loader": "^15.7.0",
